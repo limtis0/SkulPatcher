@@ -5,7 +5,7 @@ A small mod for Skul: The Hero Slayer
 
 # Setup
 - Extract [unstripped Unity 2020.3.34f1 files](https://unity.bepinex.dev/libraries/2020.3.34.zip) and [unstripped CoreLibs](https://unity.bepinex.dev/corlibs/2020.3.34.zip) into `$(SkulFolder)/SkulData/Managed/`, where `$(SkulFolder)` is a folder where the game is located
-- Download the mod from "Releases" page or build it yourself
+- Download the mod from ["Releases" page](https://github.com/limtis0/SkulPatcher/releases) or build it yourself
 - Inject the DLL into the game using [SharpMonoInjector](https://github.com/warbler/SharpMonoInjector), [MInjector](https://github.com/EquiFox/MInjector) or anything similar. The information for injector is provided below
 
 | Namespace | Class | Method |
