@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using SkulPatcher.Misc;
 using System.Reflection;
 using UnityEngine;
 
@@ -6,7 +7,7 @@ namespace SkulPatcher
 {
     public static class Main
     {
-        public static GameObject cheatObject;
+        public static GameObject menu;
         public static Harmony harmony;
 
         public static void Init()
@@ -14,9 +15,11 @@ namespace SkulPatcher
             harmony = new Harmony("com.limtis.SkulPatcher");
             harmony.PatchAll(Assembly.GetExecutingAssembly());
 
-            cheatObject = new GameObject();
-            cheatObject.AddComponent<Menu>();
-            Object.DontDestroyOnLoad(cheatObject);
+            menu = new GameObject();
+            menu.AddComponent<Menu>();
+            Object.DontDestroyOnLoad(menu);
+
+            TurboActions.Init();
         }
     }
 }

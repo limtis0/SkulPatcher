@@ -10,15 +10,17 @@ namespace SkulPatcher
         private static readonly Ability invulnerableStatus = new GetInvulnerable();
         private static readonly LevelManager level = Singleton<Service>.Instance.levelManager;
 
-        public static void On()
+        public static void Set()
         {
-            invulnerableStatus.duration = float.MaxValue;
-            level.player.invulnerable.Attach(invulnerableStatus);
-        }
-
-        public static void Off()
-        {
-            level.player.invulnerable.Detach(invulnerableStatus);
+            if (Config.godmodeOn)
+            {
+                invulnerableStatus.duration = float.MaxValue;
+                level.player.invulnerable.Attach(invulnerableStatus);
+            }
+            else
+            {
+                level.player.invulnerable.Detach(invulnerableStatus);
+            }
         }
     }
 }

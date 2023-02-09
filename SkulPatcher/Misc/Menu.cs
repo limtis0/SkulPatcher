@@ -3,6 +3,7 @@ using Characters.Gear.Quintessences;
 using Characters.Gear.Weapons;
 using Data;
 using GameResources;
+using SkulPatcher.Misc;
 using System;
 using UnityEngine;
 
@@ -164,8 +165,11 @@ namespace SkulPatcher
             int tempRow = 0;
             foreach (ItemReference itemRef in GearSpawn.gear.items)
             {
-                if (GUI.Button(new Rect(0, unit * tempRow * 1.5f, scrollWidth, unit), $"{Localization.GetLocalizedString(itemRef.displayNameKey)}"))
+                if (GUI.Button(new Rect(0, unit * tempRow * 1.5f, scrollWidth, unit), 
+                    $"{Localization.GetLocalizedString(itemRef.displayNameKey)}"))
+                {
                     GearSpawn.SpawnGear<Item>(itemRef);
+                }
 
                 tempRow++;
             }
@@ -181,8 +185,11 @@ namespace SkulPatcher
             tempRow = 0;
             foreach (WeaponReference skullRef in GearSpawn.gear.weapons)
             {
-                if (GUI.Button(new Rect(0, unit * tempRow * 1.5f, scrollWidth, unit), $"{Localization.GetLocalizedString(skullRef.displayNameKey)}"))
+                if (GUI.Button(new Rect(0, unit * tempRow * 1.5f, scrollWidth, unit), 
+                    $"{Localization.GetLocalizedString(skullRef.displayNameKey)}"))
+                {
                     GearSpawn.SpawnGear<Weapon>(skullRef);
+                }
                 tempRow++;
             }
             GUI.EndScrollView();
@@ -199,8 +206,11 @@ namespace SkulPatcher
             tempRow = 0;
             foreach (EssenceReference essenceRef in GearSpawn.gear.essences)
             {
-                if (GUI.Button(new Rect(0, unit * tempRow * 1.5f, scrollWidth, unit), $"{Localization.GetLocalizedString(essenceRef.displayNameKey)}"))
+                if (GUI.Button(new Rect(0, unit * tempRow * 1.5f, scrollWidth, unit), 
+                    $"{Localization.GetLocalizedString(essenceRef.displayNameKey)}"))
+                {
                     GearSpawn.SpawnGear<Quintessence>(essenceRef);
+                }
                 tempRow++;
             }
             GUI.EndScrollView();
@@ -215,21 +225,24 @@ namespace SkulPatcher
 
             // God mode
             Config.godmodeOn = GUI.Toggle(new Rect(unit, unit * row * 1.5f, scrollWidth, unit),
-                         Config.godmodeOn,
-                         $"God mode");
+                                          Config.godmodeOn,
+                                          $"God mode");
             if (Config.godmodeOn != Config.godmodePreviousState)
             {
-                if (Config.godmodeOn)
-                {
-                    Godmode.On();
-                    Config.godmodePreviousState = true;
-                }
-                else
-                {
-                    Godmode.Off();
-                    Config.godmodePreviousState = false;
-                }
+                Godmode.Set();
+                Config.godmodePreviousState = Config.godmodeOn;
             }
+            row++;
+
+            // Turbo-attack
+            Config.turboAttackOn = GUI.Toggle(new Rect(unit, unit * row * 1.5f, scrollWidth, unit),
+                         Config.turboAttackOn,
+                         $"Turbo-attack");
+            row++;
+
+            Config.turboDashOn = GUI.Toggle(new Rect(unit, unit * row * 1.5f, scrollWidth, unit),
+                         Config.turboDashOn,
+                         $"Turbo-dash");
         }
     }
 }

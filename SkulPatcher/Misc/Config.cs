@@ -24,5 +24,10 @@
         // God Mode
         public static bool godmodeOn = false;
         public static bool godmodePreviousState = false;
+
+        // Turbo Actions
+        public static bool turboAttackOn = true;
+        public static bool turboSkillsOn = true;
+        public static bool turboDashOn = true;
     }
 }

@@ -241,6 +241,7 @@
     <Compile Include="Misc\Godmode.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Misc\Menu.cs" />
+    <Compile Include="Misc\TurboActions.cs" />
     <Compile Include="Patches\CurrencyPatch.cs" />
     <Compile Include="Patches\EasyPatch.cs" />
     <Compile Include="Patches\LuckyPatch.cs" />
