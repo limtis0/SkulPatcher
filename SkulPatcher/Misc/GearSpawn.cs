@@ -9,17 +9,19 @@ namespace SkulPatcher
     public static class GearSpawn
     {
         public static readonly GearResource gear = GearResource.instance;
-        private static readonly LevelManager level = Singleton<Service>.Instance.levelManager;
 
         public static void SpawnGear<T>(GearReference gearRef) where T : Gear
         {
+            if (!Config.GameStarted)
+                return;
+
             GearRequest request = gearRef.LoadAsync();
             request.WaitForCompletion();
 
             T gear = (T)request.asset;
             gear.name = gearRef.name;
 
-            level.DropGear(gear, level.player.transform.position);
+            Config.level.DropGear(gear, Config.level.player.transform.position);
         }
     }
 }

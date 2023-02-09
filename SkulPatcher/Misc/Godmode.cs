@@ -8,18 +8,20 @@ namespace SkulPatcher
     static class Godmode
     {
         private static readonly Ability invulnerableStatus = new GetInvulnerable();
-        private static readonly LevelManager level = Singleton<Service>.Instance.levelManager;
 
         public static void Set()
         {
+            if (!Config.GameStarted)
+                return;
+
             if (Config.godmodeOn)
             {
                 invulnerableStatus.duration = float.MaxValue;
-                level.player.invulnerable.Attach(invulnerableStatus);
+                Config.level.player.invulnerable.Attach(invulnerableStatus);
             }
             else
             {
-                level.player.invulnerable.Detach(invulnerableStatus);
+                Config.level.player.invulnerable.Detach(invulnerableStatus);
             }
         }
     }

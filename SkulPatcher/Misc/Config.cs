@@ -1,4 +1,8 @@
-﻿namespace SkulPatcher
+﻿using Level;
+using Services;
+using Singletons;
+
+namespace SkulPatcher
 {
     public static class Config
     {
@@ -29,5 +33,9 @@
         public static bool turboAttackOn = true;
         public static bool turboSkillsOn = true;
         public static bool turboDashOn = true;
+
+        // Misc
+        public static readonly LevelManager level = Singleton<Service>.Instance.levelManager;
+        public static bool GameStarted => !(level.player is null);
     }
 }

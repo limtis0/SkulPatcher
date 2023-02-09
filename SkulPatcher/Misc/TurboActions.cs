@@ -41,7 +41,10 @@ namespace SkulPatcher.Misc
 
         private static void SetActionsValue(List<Action.Type> actionTypes, int value)
         {
-            List<Action> actions = Singleton<Service>.Instance.levelManager.player.actions.Where(x => actionTypes.Contains(x.type)).ToList();
+            if (!Config.GameStarted)
+                return;
+
+            List<Action> actions = Config.level.player.actions.Where(x => actionTypes.Contains(x.type)).ToList();
 
             foreach (Action action in actions)
                 Traverse.Create(action).Field("_inputMethod").SetValue(value);
