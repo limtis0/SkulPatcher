@@ -1,8 +1,5 @@
 ﻿using Characters.Gear;
 using GameResources;
-using Level;
-using Services;
-using Singletons;
 
 namespace SkulPatcher
 {

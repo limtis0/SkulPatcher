@@ -1,7 +1,5 @@
 ﻿using Characters.Actions;
 using HarmonyLib;
-using Services;
-using Singletons;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
