@@ -1,4 +1,5 @@
-﻿using Level;
+﻿using GameResources;
+using Level;
 using Services;
 using Singletons;
 
@@ -10,6 +11,10 @@ namespace SkulPatcher
         public static bool luckBoostOn = true;
         public static int luckBoostPercent = 50;
         public static bool luckBoostContinuous = true;
+
+        // DuplicateGear
+        public static bool allowDuplicateItems = false;
+        public static bool allowDuplicateSkulls = false;
 
         // CurrencyPatch
         public static bool goldMultOn = true;
@@ -36,6 +41,8 @@ namespace SkulPatcher
 
         // Misc
         public static readonly LevelManager level = Singleton<Service>.Instance.levelManager;
+        public static readonly GearResource gear = GearResource.instance;
+
         public static bool GameStarted => !(level.player is null);
     }
 }

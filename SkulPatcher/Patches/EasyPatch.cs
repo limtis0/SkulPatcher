@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace SkulPatcher.Patches
 {
-    [HarmonyPatch()]
+    [HarmonyPatch]
     public static class EasyPatch
     {
         public static bool Prefix(PlayerEasyModeBuff __instance)

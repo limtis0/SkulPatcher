@@ -5,8 +5,6 @@ namespace SkulPatcher
 {
     public static class GearSpawn
     {
-        public static readonly GearResource gear = GearResource.instance;
-
         public static void SpawnGear<T>(GearReference gearRef) where T : Gear
         {
             if (!Config.GameStarted)

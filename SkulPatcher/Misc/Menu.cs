@@ -51,13 +51,17 @@ namespace SkulPatcher
             // Luck boost
             Config.luckBoostOn = GUI.Toggle(luckBoostToggleRect,
                                             Config.luckBoostOn,
-                                            $"Boost item rarity with {Config.luckBoostPercent}% chance");
+                                            $"Boost gear rarity with {Config.luckBoostPercent}% chance");
 
             Config.luckBoostPercent = (int)GUI.HorizontalSlider(luckBoostSliderRect, Config.luckBoostPercent, 0, 100);
 
             Config.luckBoostContinuous = GUI.Toggle(luckBoostContinuousToggleRect,
                                                     Config.luckBoostContinuous,
                                                     $"Continue boosting rarity if the roll was successful");
+
+            // Duplicate gear
+            Config.allowDuplicateItems = GUI.Toggle(duplicateItemsToggleRect, Config.allowDuplicateItems, "Allow duplicate items");
+            Config.allowDuplicateSkulls = GUI.Toggle(duplicateSkullsToggleRect, Config.allowDuplicateSkulls, "Allow duplicate skulls");
 
 
             // Gold multiplier
@@ -121,9 +125,9 @@ namespace SkulPatcher
                                                 GUIStyle.none,
                                                 GUIStyle.none);
 
-            for (int i = 0; i < GearSpawn.gear.items.Count; i++)
+            for (int i = 0; i < Config.gear.items.Count; i++)
             {
-                ItemReference itemRef = GearSpawn.gear.items[i];
+                ItemReference itemRef = Config.gear.items[i];
                 if (GUI.Button(itemScrollButtonsRects[i], Localization.GetLocalizedString(itemRef.displayNameKey)))
                 {
                     GearSpawn.SpawnGear<Item>(itemRef);
@@ -140,9 +144,9 @@ namespace SkulPatcher
                                                  GUIStyle.none,
                                                  GUIStyle.none);
 
-            for (int i = 0; i < GearSpawn.gear.weapons.Count; i++)
+            for (int i = 0; i < Config.gear.weapons.Count; i++)
             {
-                WeaponReference skullRef = GearSpawn.gear.weapons[i];
+                WeaponReference skullRef = Config.gear.weapons[i];
                 if (GUI.Button(skullScrollButtonsRects[i], Localization.GetLocalizedString(skullRef.displayNameKey)))
                 {
                     GearSpawn.SpawnGear<Weapon>(skullRef);
@@ -160,9 +164,9 @@ namespace SkulPatcher
                                                    GUIStyle.none,
                                                    GUIStyle.none);
 
-            for (int i = 0; i < GearSpawn.gear.essences.Count; i++)
+            for (int i = 0; i < Config.gear.essences.Count; i++)
             {
-                EssenceReference essenceRef = GearSpawn.gear.essences[i];
+                EssenceReference essenceRef = Config.gear.essences[i];
                 if (GUI.Button(essenceScrollButtonsRects[i], Localization.GetLocalizedString(essenceRef.displayNameKey)))
                 {
                     GearSpawn.SpawnGear<Quintessence>(essenceRef);
@@ -213,6 +217,9 @@ namespace SkulPatcher
         private Rect luckBoostToggleRect;
         private Rect luckBoostSliderRect;
         private Rect luckBoostContinuousToggleRect;
+
+        private Rect duplicateItemsToggleRect;
+        private Rect duplicateSkullsToggleRect;
 
         private Rect goldMultToggleRect;
         private Rect goldMultSliderRect;
@@ -296,6 +303,10 @@ namespace SkulPatcher
             row++;
 
             luckBoostContinuousToggleRect = new Rect(unit, unit * row * 1.5f, menuWidth - unit, unit);
+            row++;
+
+            duplicateItemsToggleRect = new Rect(unit, unit * row * 1.5f, menuWidth / 2 - unit, unit);
+            duplicateSkullsToggleRect = new Rect(menuWidth / 2, unit * row * 1.5f, menuWidth / 2 - unit, unit);
 
             row += 2;
 
@@ -358,20 +369,20 @@ namespace SkulPatcher
             row++;
 
             itemScrollPosRect = new Rect(unit, unit * row * 1.5f, scrollWidth, scrollHeight);
-            itemScrollViewRect = new Rect(0, 0, scrollWidth, unit * 1.5f * GearSpawn.gear.items.Count);
+            itemScrollViewRect = new Rect(0, 0, scrollWidth, unit * 1.5f * Config.gear.items.Count);
 
             itemScrollButtonsRects = new List<Rect>();
-            for (int i = 0; i < GearSpawn.gear.items.Count; i++)
+            for (int i = 0; i < Config.gear.items.Count; i++)
             {
                 itemScrollButtonsRects.Add(new Rect(0, unit * i * 1.5f, scrollWidth, unit));
             }
 
             // Skull spawn
             skullScrollPosRect = new Rect(scrollWidth + unit, unit * row * 1.5f, scrollWidth, scrollHeight);
-            skullScrollViewRect = new Rect(0, 0, scrollWidth, unit * 1.5f * GearSpawn.gear.weapons.Count);
+            skullScrollViewRect = new Rect(0, 0, scrollWidth, unit * 1.5f * Config.gear.weapons.Count);
 
             skullScrollButtonsRects = new List<Rect>();
-            for (int i = 0; i < GearSpawn.gear.weapons.Count; i++)
+            for (int i = 0; i < Config.gear.weapons.Count; i++)
             {
                 skullScrollButtonsRects.Add(new Rect(0, unit * i * 1.5f, scrollWidth, unit));
             }
@@ -382,10 +393,10 @@ namespace SkulPatcher
             essenceLabelRect = essenceLabelRect = new Rect(scrollWidth + unit, unit * row * 1.5f, scrollWidth, unit);
 
             essenceScrollPosRect = new Rect(scrollWidth + unit + 1, (unit + 1) * row * 1.5f, scrollWidth, scrollHeight);
-            essenceScrollViewRect = new Rect(0, 0, scrollWidth, (unit + 1) * 1.5f * GearSpawn.gear.essences.Count);
+            essenceScrollViewRect = new Rect(0, 0, scrollWidth, (unit + 1) * 1.5f * Config.gear.essences.Count);
 
             essenceScrollButtonsRects = new List<Rect>();
-            for (int i = 0; i < GearSpawn.gear.essences.Count; i++)
+            for (int i = 0; i < Config.gear.essences.Count; i++)
             {
                 essenceScrollButtonsRects.Add(new Rect(0, unit * i * 1.5f, scrollWidth, unit));
             }

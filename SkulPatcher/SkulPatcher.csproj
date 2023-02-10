@@ -243,6 +243,7 @@
     <Compile Include="Misc\Menu.cs" />
     <Compile Include="Misc\TurboActions.cs" />
     <Compile Include="Patches\CurrencyPatch.cs" />
+    <Compile Include="Patches\DuplicateGearPatch.cs" />
     <Compile Include="Patches\EasyPatch.cs" />
     <Compile Include="Patches\LuckyPatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
