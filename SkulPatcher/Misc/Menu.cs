@@ -3,15 +3,20 @@ using Characters.Gear.Quintessences;
 using Characters.Gear.Weapons;
 using Data;
 using GameResources;
-using SkulPatcher.Misc;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SkulPatcher
 {
     public class Menu : MonoBehaviour
     {
-        private static bool showMenu = true;
+        private bool init = false;
+        private bool showMenu = true;
+
+        // Menu config
+        private int screenWidthPrevious;
+        private int screenHeightPrevious;
 
         public void Update()
         {
@@ -22,31 +27,245 @@ namespace SkulPatcher
             }
         }
 
-        // Menu config
-        private static int menuWidth = Screen.width / 4;
-        private static int menuHeight = Screen.height / 3;
-        private const int menuCornerSpace = 20;
-
-        private Rect windowRect = new Rect(Screen.width - menuWidth - menuCornerSpace, menuCornerSpace, menuWidth, menuHeight);
-        private static int unit = Screen.height / 25;  // Default unit for sizing
-        private static int fontSize = (int)(unit * 0.8);
-
-        // Scroll views
-        private static Vector2 itemScrollVec = Vector2.zero;
-        private static Vector2 skullScrollVec = Vector2.zero;
-        private static Vector2 essenceScrollVec = Vector2.zero;
-
-        public void Start()
-        {
-            GUI.skin.toggle.alignment = TextAnchor.MiddleLeft;
-        }
-
         public void OnGUI()
         {
             if (!showMenu)
                 return;
 
-            // Dynamic sizing
+            if (!init || Screen.height != screenHeightPrevious || Screen.width != screenWidthPrevious)
+            {
+                Resize();
+
+                init = true;
+                screenHeightPrevious = Screen.height;
+                screenWidthPrevious = Screen.width;
+            }
+
+            windowRect = GUI.Window(0, windowRect, FillMenu, "SkulPatcher - F7 to toggle");
+        }
+
+        private void FillMenu(int windowID)
+        {
+            GUI.DragWindow(dragWindowRect);
+
+            // Luck boost
+            Config.luckBoostOn = GUI.Toggle(luckBoostToggleRect,
+                                            Config.luckBoostOn,
+                                            $"Boost item rarity with {Config.luckBoostPercent}% chance");
+
+            Config.luckBoostPercent = (int)GUI.HorizontalSlider(luckBoostSliderRect, Config.luckBoostPercent, 0, 100);
+
+            Config.luckBoostContinuous = GUI.Toggle(luckBoostContinuousToggleRect,
+                                                    Config.luckBoostContinuous,
+                                                    $"Continue boosting rarity if the roll was successful");
+
+
+            // Gold multiplier
+            Config.goldMultOn = GUI.Toggle(goldMultToggleRect,
+                                           Config.goldMultOn,
+                                           $"Multiply incoming Gold by x{Config.goldMult}");
+
+            Config.goldMult = (int)GUI.HorizontalSlider(goldMultSliderRect, Config.goldMult, 1, 50);
+
+
+            // Dark quartz multiplier
+            Config.dQuartzMultOn = GUI.Toggle(dQuartzMultToggleRect,
+                                              Config.dQuartzMultOn,
+                                              $"Multiply incoming Dark Quartz by x{Config.dQuartzMult}");
+
+            Config.dQuartzMult = (int)GUI.HorizontalSlider(dQuartzMultSliderRect, Config.dQuartzMult, 1, 50);
+
+
+            // Bones multiplier
+            Config.bonesMultOn = GUI.Toggle(bonesMultToggleRect,
+                                            Config.bonesMultOn,
+                                            $"Multiply incoming Bones by x{Config.bonesMult}");
+
+            Config.bonesMult = (int)GUI.HorizontalSlider(bonesMultSliderRect, Config.bonesMult, 1, 50);
+
+
+            // Heart quartz multiplier
+            Config.hQuartzMultOn = GUI.Toggle(hQuartzMultToggleRect,
+                                     Config.hQuartzMultOn,
+                                     $"Multiply incoming Heart Quartz by x{Config.hQuartzMult}");
+
+            Config.hQuartzMult = (int)GUI.HorizontalSlider(hQuartzMultSliderRect, Config.hQuartzMult, 1, 50);
+
+
+            // Gold value
+            GUI.Label(goldLabelRect, "Gold");
+            GameData.Currency.gold.balance = Convert.ToInt32(GUI.TextField(goldTextFieldRect, GameData.Currency.gold.balance.ToString()));
+
+            // Dark Quartz value
+            GUI.Label(dQuartzLabelRect, "Dark Quartz");
+            GameData.Currency.darkQuartz.balance = Convert.ToInt32(GUI.TextField(dQuartzTextFieldRect, GameData.Currency.darkQuartz.balance.ToString()));
+
+            // Bones value
+            GUI.Label(bonesLabelRect, "Bones");
+            GameData.Currency.bone.balance = Convert.ToInt32(GUI.TextField(bonesTextFieldRect, GameData.Currency.bone.balance.ToString()));
+
+            // Heart Quartz value
+            GUI.Label(hQuartzLabelRect, "Heart Quartz");
+            GameData.Currency.heartQuartz.balance = Convert.ToInt32(GUI.TextField(hQuartzTextFieldRect, GameData.Currency.heartQuartz.balance.ToString()));
+
+            // Gear spawn
+            float scrollWidth = menuWidth / 2 - unit;
+
+            GUI.Label(spawnItemLabelRect, "Spawn item");
+            GUI.Label(spawnSkullLabelRect, "Spawn skull");
+
+            // Items
+            itemScrollVec = GUI.BeginScrollView(itemScrollPosRect,
+                                                itemScrollVec,
+                                                itemScrollViewRect,
+                                                GUIStyle.none,
+                                                GUIStyle.none);
+
+            for (int i = 0; i < GearSpawn.gear.items.Count; i++)
+            {
+                ItemReference itemRef = GearSpawn.gear.items[i];
+                if (GUI.Button(itemScrollButtonsRects[i], Localization.GetLocalizedString(itemRef.displayNameKey)))
+                {
+                    GearSpawn.SpawnGear<Item>(itemRef);
+                }
+            }
+
+            GUI.EndScrollView();
+
+
+            // Skulls
+            skullScrollVec = GUI.BeginScrollView(skullScrollPosRect,
+                                                 skullScrollVec,
+                                                 skullScrollViewRect,
+                                                 GUIStyle.none,
+                                                 GUIStyle.none);
+
+            for (int i = 0; i < GearSpawn.gear.weapons.Count; i++)
+            {
+                WeaponReference skullRef = GearSpawn.gear.weapons[i];
+                if (GUI.Button(skullScrollButtonsRects[i], Localization.GetLocalizedString(skullRef.displayNameKey)))
+                {
+                    GearSpawn.SpawnGear<Weapon>(skullRef);
+                }
+            }
+
+            GUI.EndScrollView();
+
+
+            // Quintessences
+            GUI.Label(essenceLabelRect, "Spawn quintessence");
+            essenceScrollVec = GUI.BeginScrollView(essenceScrollPosRect,
+                                                   essenceScrollVec,
+                                                   essenceScrollViewRect,
+                                                   GUIStyle.none,
+                                                   GUIStyle.none);
+
+            for (int i = 0; i < GearSpawn.gear.essences.Count; i++)
+            {
+                EssenceReference essenceRef = GearSpawn.gear.essences[i];
+                if (GUI.Button(essenceScrollButtonsRects[i], Localization.GetLocalizedString(essenceRef.displayNameKey)))
+                {
+                    GearSpawn.SpawnGear<Quintessence>(essenceRef);
+                }
+            }
+
+            GUI.EndScrollView();
+
+
+            // Easy mode
+            Config.forceEasyModeOn = GUI.Toggle(easyModeToggleRect,
+                                                Config.forceEasyModeOn,
+                                                $"Force easy-mode");
+
+            // God mode
+            Config.godmodeOn = GUI.Toggle(godModeToggleRect,
+                                          Config.godmodeOn,
+                                          $"God mode");
+
+            if (Config.godmodeOn != Config.godmodePreviousState)
+            {
+                Godmode.Set();
+                Config.godmodePreviousState = Config.godmodeOn;
+            }
+
+            // Turbo-attack
+            Config.turboAttackOn = GUI.Toggle(turboAttackToggleRect,
+                                              Config.turboAttackOn,
+                                              $"Turbo-attack");
+
+            // Turbo-dash
+            Config.turboDashOn = GUI.Toggle(turboDashToggleRect,
+                                            Config.turboDashOn,
+                                            $"Turbo-dash");
+        }
+
+        // Sizing values
+        private int menuWidth;
+        private int menuHeight;
+
+        private int unit;
+        private int fontSize;
+
+        // Menu elements
+        private Rect dragWindowRect;
+        private Rect windowRect;
+
+        private Rect luckBoostToggleRect;
+        private Rect luckBoostSliderRect;
+        private Rect luckBoostContinuousToggleRect;
+
+        private Rect goldMultToggleRect;
+        private Rect goldMultSliderRect;
+
+        private Rect dQuartzMultToggleRect;
+        private Rect dQuartzMultSliderRect;
+
+        private Rect bonesMultToggleRect;
+        private Rect bonesMultSliderRect;
+
+        private Rect hQuartzMultToggleRect;
+        private Rect hQuartzMultSliderRect;
+
+        private Rect goldLabelRect;
+        private Rect goldTextFieldRect;
+
+        private Rect dQuartzLabelRect;
+        private Rect dQuartzTextFieldRect;
+
+        private Rect bonesLabelRect;
+        private Rect bonesTextFieldRect;
+
+        private Rect hQuartzLabelRect;
+        private Rect hQuartzTextFieldRect;
+
+        private Rect spawnItemLabelRect;
+        private Rect spawnSkullLabelRect;
+
+        private Rect itemScrollPosRect;
+        private Rect itemScrollViewRect;
+        private Vector2 itemScrollVec = Vector2.zero;
+        private List<Rect> itemScrollButtonsRects;
+
+        private Rect skullScrollPosRect;
+        private Rect skullScrollViewRect;
+        private Vector2 skullScrollVec = Vector2.zero;
+        private List<Rect> skullScrollButtonsRects;
+
+        private Rect essenceLabelRect;
+
+        private Rect essenceScrollPosRect;
+        private Rect essenceScrollViewRect;
+        private Vector2 essenceScrollVec = Vector2.zero;
+        private List<Rect> essenceScrollButtonsRects;
+
+        private Rect easyModeToggleRect;
+        private Rect godModeToggleRect;
+
+        private Rect turboAttackToggleRect;
+        private Rect turboDashToggleRect;
+
+        private void Resize()
+        {
             menuWidth = Screen.width / 4;
             menuHeight = (int)(Screen.height * 0.9);
             unit = Screen.height / 50;
@@ -57,192 +276,134 @@ namespace SkulPatcher
             GUI.skin.button.fontSize = fontSize;
             GUI.skin.textField.fontSize = fontSize;
 
-            windowRect.width = menuWidth;
-            windowRect.height = menuHeight;
-            windowRect = GUI.Window(0, windowRect, FillMenu, "SkulPatcher");
-        }
+            windowRect = new Rect(Screen.width - menuWidth - 20, 20, menuWidth, menuHeight)
+            {
+                width = menuWidth,
+                height = menuHeight
+            };
 
-        private void FillMenu(int windowID)
-        {
             int row = 0;
 
-            GUI.DragWindow(new Rect(0, 0, menuWidth, unit));
+            dragWindowRect = new Rect(0, 0, menuWidth, unit);
             row++;
+
 
             // Luck boost
-            Config.luckBoostOn = GUI.Toggle(new Rect(unit, unit * row * 1.5f, menuWidth - unit, unit),
-                                     Config.luckBoostOn,
-                                     $"Boost item rarity with {Config.luckBoostPercent}% chance");
+            luckBoostToggleRect = new Rect(unit, unit * row * 1.5f, menuWidth - unit, unit);
             row++;
 
-            Config.luckBoostPercent = (int)GUI.HorizontalSlider(new Rect(unit, unit * row * 1.5f, menuWidth - 2 * unit, unit), Config.luckBoostPercent, 0, 100);
+            luckBoostSliderRect = new Rect(unit, unit * row * 1.5f, menuWidth - 2 * unit, unit);
             row++;
 
-            Config.luckBoostContinuous = GUI.Toggle(new Rect(unit, unit * row * 1.5f, menuWidth - unit, unit),
-                                     Config.luckBoostContinuous,
-                                     $"Continue boosting rarity if the roll was successful");
+            luckBoostContinuousToggleRect = new Rect(unit, unit * row * 1.5f, menuWidth - unit, unit);
+
             row += 2;
 
 
             // Gold multiplier
-            Config.goldMultOn = GUI.Toggle(new Rect(unit, unit * row * 1.5f, menuWidth - unit, unit),
-                                     Config.goldMultOn,
-                                     $"Multiply incoming Gold by x{Config.goldMult}");
+            goldMultToggleRect = new Rect(unit, unit * row * 1.5f, menuWidth - unit, unit);
             row++;
 
-            Config.goldMult = (int)GUI.HorizontalSlider(new Rect(unit, unit * row * 1.5f, menuWidth - 2 * unit, unit), Config.goldMult, 1, 50);
+            goldMultSliderRect = new Rect(unit, unit * row * 1.5f, menuWidth - 2 * unit, unit);
             row++;
 
-
-            // Dark Quartz multiplier
-            Config.dQuartzMultOn = GUI.Toggle(new Rect(unit, unit * row * 1.5f, menuWidth - unit, unit),
-                                     Config.dQuartzMultOn,
-                                     $"Multiply incoming Dark Quartz by x{Config.dQuartzMult}");
+            // Dark quartz multiplier
+            dQuartzMultToggleRect = new Rect(unit, unit * row * 1.5f, menuWidth - unit, unit);
             row++;
 
-            Config.dQuartzMult = (int)GUI.HorizontalSlider(new Rect(unit, unit * row * 1.5f, menuWidth - 2 * unit, unit), Config.dQuartzMult, 1, 50);
+            dQuartzMultSliderRect = new Rect(unit, unit * row * 1.5f, menuWidth - 2 * unit, unit);
             row++;
-
 
             // Bones multiplier
-            Config.bonesMultOn = GUI.Toggle(new Rect(unit, unit * row * 1.5f, menuWidth - unit, unit),
-                                     Config.bonesMultOn,
-                                     $"Multiply incoming Bones by x{Config.bonesMult}");
+            bonesMultToggleRect = new Rect(unit, unit * row * 1.5f, menuWidth - unit, unit);
             row++;
 
-            Config.bonesMult = (int)GUI.HorizontalSlider(new Rect(unit, unit * row * 1.5f, menuWidth - 2 * unit, unit), Config.bonesMult, 1, 50);
+            bonesMultSliderRect = new Rect(unit, unit * row * 1.5f, menuWidth - 2 * unit, unit);
             row++;
 
-
-            // Heart Quartz multiplier
-            Config.hQuartzMultOn = GUI.Toggle(new Rect(unit, unit * row * 1.5f, menuWidth - unit, unit),
-                                     Config.hQuartzMultOn,
-                                     $"Multiply incoming Heart Quartz by x{Config.hQuartzMult}");
+            // Heart quartz multiplier
+            hQuartzMultToggleRect = new Rect(unit, unit * row * 1.5f, menuWidth - unit, unit);
             row++;
 
-            Config.hQuartzMult = (int)GUI.HorizontalSlider(new Rect(unit, unit * row * 1.5f, menuWidth - 2 * unit, unit), Config.hQuartzMult, 1, 50);
+            hQuartzMultSliderRect = new Rect(unit, unit * row * 1.5f, menuWidth - 2 * unit, unit);
             row++;
 
 
             // Gold value
-            GUI.Label(new Rect(unit, unit * row * 1.5f, unit * 5, unit * 1.2f), "Gold");
-            GameData.Currency.gold.balance = Convert.ToInt32(
-                GUI.TextField(new Rect(unit, unit * (row + 1) * 1.5f, unit * 4, unit), GameData.Currency.gold.balance.ToString()));
+            goldLabelRect = new Rect(unit, unit * row * 1.5f, unit * 5, unit * 1.2f);
+            goldTextFieldRect = new Rect(unit, unit * (row + 1) * 1.5f, unit * 4, unit);
 
-            // Dark Quartz value
-            GUI.Label(new Rect(unit * 6.5f, unit * row * 1.5f, unit * 5, unit * 1.2f), "Dark Quartz");
-            GameData.Currency.darkQuartz.balance = Convert.ToInt32(
-                GUI.TextField(new Rect(unit * 6.5f, unit * (row + 1) * 1.5f, unit * 4, unit), GameData.Currency.darkQuartz.balance.ToString()));
+            // Dark quartz value
+            dQuartzLabelRect = new Rect(unit * 6.5f, unit * row * 1.5f, unit * 5, unit * 1.2f);
+            dQuartzTextFieldRect = new Rect(unit * 6.5f, unit * (row + 1) * 1.5f, unit * 4, unit);
 
             // Bones value
-            GUI.Label(new Rect(unit * 12f, unit * row * 1.5f, unit * 5, unit * 1.2f), "Bones");
-            GameData.Currency.bone.balance = Convert.ToInt32(
-                GUI.TextField(new Rect(unit * 12f, unit * (row + 1) * 1.5f, unit * 4, unit), GameData.Currency.bone.balance.ToString()));
+            bonesLabelRect = new Rect(unit * 12f, unit * row * 1.5f, unit * 5, unit * 1.2f);
+            bonesTextFieldRect = new Rect(unit * 12f, unit * (row + 1) * 1.5f, unit * 4, unit);
 
-            // Heart Quartz value
-            GUI.Label(new Rect(unit * 17.5f, unit * row * 1.5f, unit * 5, unit * 1.2f), "Heart Quartz");
-            GameData.Currency.heartQuartz.balance = Convert.ToInt32(
-                GUI.TextField(new Rect(unit * 17.5f, unit * (row + 1) * 1.5f, unit * 4, unit), GameData.Currency.heartQuartz.balance.ToString()));
+            // Heart quartz value
+            hQuartzLabelRect = new Rect(unit * 17.5f, unit * row * 1.5f, unit * 5, unit * 1.2f);
+            hQuartzTextFieldRect = new Rect(unit * 17.5f, unit * (row + 1) * 1.5f, unit * 4, unit);
 
             row += 3;
 
 
             // Gear spawn
-
             float scrollWidth = menuWidth / 2 - unit;
             float scrollHeight = unit * 8;
 
-            GUI.Label(new Rect(unit, unit * row * 1.5f, scrollWidth, unit), "Spawn item");
-            GUI.Label(new Rect(scrollWidth + unit, unit * row * 1.5f, scrollWidth, unit), "Spawn skull");
+            // Item spawn
+            spawnItemLabelRect = new Rect(unit, unit * row * 1.5f, scrollWidth, unit);
+            spawnSkullLabelRect = new Rect(scrollWidth + unit, unit * row * 1.5f, scrollWidth, unit);
             row++;
 
-            // Items
-            itemScrollVec = GUI.BeginScrollView(new Rect(unit, unit * row * 1.5f, scrollWidth, scrollHeight),
-                                                itemScrollVec,
-                                                new Rect(0, 0, scrollWidth, unit * 1.5f * GearSpawn.gear.items.Count),
-                                                GUIStyle.none,
-                                                GUIStyle.none);
-            int tempRow = 0;
-            foreach (ItemReference itemRef in GearSpawn.gear.items)
+            itemScrollPosRect = new Rect(unit, unit * row * 1.5f, scrollWidth, scrollHeight);
+            itemScrollViewRect = new Rect(0, 0, scrollWidth, unit * 1.5f * GearSpawn.gear.items.Count);
+
+            itemScrollButtonsRects = new List<Rect>();
+            for (int i = 0; i < GearSpawn.gear.items.Count; i++)
             {
-                if (GUI.Button(new Rect(0, unit * tempRow * 1.5f, scrollWidth, unit), 
-                    $"{Localization.GetLocalizedString(itemRef.displayNameKey)}"))
-                {
-                    GearSpawn.SpawnGear<Item>(itemRef);
-                }
-
-                tempRow++;
+                itemScrollButtonsRects.Add(new Rect(0, unit * i * 1.5f, scrollWidth, unit));
             }
-            GUI.EndScrollView();
 
+            // Skull spawn
+            skullScrollPosRect = new Rect(scrollWidth + unit, unit * row * 1.5f, scrollWidth, scrollHeight);
+            skullScrollViewRect = new Rect(0, 0, scrollWidth, unit * 1.5f * GearSpawn.gear.weapons.Count);
 
-            // Skulls
-            skullScrollVec = GUI.BeginScrollView(new Rect(scrollWidth + unit, unit * row * 1.5f, scrollWidth, scrollHeight),
-                                                skullScrollVec,
-                                                new Rect(0, 0, scrollWidth, unit * 1.5f * GearSpawn.gear.weapons.Count),
-                                                GUIStyle.none,
-                                                GUIStyle.none);
-            tempRow = 0;
-            foreach (WeaponReference skullRef in GearSpawn.gear.weapons)
+            skullScrollButtonsRects = new List<Rect>();
+            for (int i = 0; i < GearSpawn.gear.weapons.Count; i++)
             {
-                if (GUI.Button(new Rect(0, unit * tempRow * 1.5f, scrollWidth, unit), 
-                    $"{Localization.GetLocalizedString(skullRef.displayNameKey)}"))
-                {
-                    GearSpawn.SpawnGear<Weapon>(skullRef);
-                }
-                tempRow++;
+                skullScrollButtonsRects.Add(new Rect(0, unit * i * 1.5f, scrollWidth, unit));
             }
-            GUI.EndScrollView();
 
-
-            // Quintessences
             row += 6;
-            GUI.Label(new Rect(scrollWidth + unit, unit * row * 1.5f, scrollWidth, unit), "Spawn quintessence");
-            essenceScrollVec = GUI.BeginScrollView(new Rect(scrollWidth + unit + 1, (unit + 1) * row * 1.5f, scrollWidth, scrollHeight),
-                                                essenceScrollVec,
-                                                new Rect(0, 0, scrollWidth, (unit + 1) * 1.5f * GearSpawn.gear.essences.Count),
-                                                GUIStyle.none,
-                                                GUIStyle.none);
-            tempRow = 0;
-            foreach (EssenceReference essenceRef in GearSpawn.gear.essences)
-            {
-                if (GUI.Button(new Rect(0, unit * tempRow * 1.5f, scrollWidth, unit), 
-                    $"{Localization.GetLocalizedString(essenceRef.displayNameKey)}"))
-                {
-                    GearSpawn.SpawnGear<Quintessence>(essenceRef);
-                }
-                tempRow++;
-            }
-            GUI.EndScrollView();
 
+            // Essence spawn
+            essenceLabelRect = essenceLabelRect = new Rect(scrollWidth + unit, unit * row * 1.5f, scrollWidth, unit);
+
+            essenceScrollPosRect = new Rect(scrollWidth + unit + 1, (unit + 1) * row * 1.5f, scrollWidth, scrollHeight);
+            essenceScrollViewRect = new Rect(0, 0, scrollWidth, (unit + 1) * 1.5f * GearSpawn.gear.essences.Count);
+
+            essenceScrollButtonsRects = new List<Rect>();
+            for (int i = 0; i < GearSpawn.gear.essences.Count; i++)
+            {
+                essenceScrollButtonsRects.Add(new Rect(0, unit * i * 1.5f, scrollWidth, unit));
+            }
 
             // Easy mode
-            Config.forceEasyModeOn = GUI.Toggle(new Rect(unit, unit * row * 1.5f, scrollWidth, unit),
-                         Config.forceEasyModeOn,
-                         $"Force easy-mode");
+            easyModeToggleRect = new Rect(unit, unit * row * 1.5f, scrollWidth, unit);
             row++;
 
-
             // God mode
-            Config.godmodeOn = GUI.Toggle(new Rect(unit, unit * row * 1.5f, scrollWidth, unit),
-                                          Config.godmodeOn,
-                                          $"God mode");
-            if (Config.godmodeOn != Config.godmodePreviousState)
-            {
-                Godmode.Set();
-                Config.godmodePreviousState = Config.godmodeOn;
-            }
+            godModeToggleRect = new Rect(unit, unit * row * 1.5f, scrollWidth, unit);
             row++;
 
             // Turbo-attack
-            Config.turboAttackOn = GUI.Toggle(new Rect(unit, unit * row * 1.5f, scrollWidth, unit),
-                         Config.turboAttackOn,
-                         $"Turbo-attack");
+            turboAttackToggleRect = new Rect(unit, unit * row * 1.5f, scrollWidth, unit);
             row++;
 
-            Config.turboDashOn = GUI.Toggle(new Rect(unit, unit * row * 1.5f, scrollWidth, unit),
-                         Config.turboDashOn,
-                         $"Turbo-dash");
+            // Turbo-attack
+            turboDashToggleRect = new Rect(unit, unit * row * 1.5f, scrollWidth, unit);
         }
     }
 }
