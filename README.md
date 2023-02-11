@@ -8,7 +8,6 @@ A small mod for Skul: The Hero Slayer
 - Download the mod from ["Releases" page](https://github.com/limtis0/SkulPatcher/releases) or build it yourself
 - Open the game and load into your save
 - Inject the DLL into the game using [SharpMonoInjector](https://github.com/warbler/SharpMonoInjector), [MInjector](https://github.com/EquiFox/MInjector) or anything similar. The information for injector is provided below
-- Press F7 to turn the menu On/Off
 
 | Namespace | Class | Method |
 | --------- | ----- | ------ |
