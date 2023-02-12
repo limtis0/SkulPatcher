@@ -67,33 +67,33 @@ namespace SkulPatcher
             // Gold multiplier
             Config.goldMultOn = GUI.Toggle(goldMultToggleRect,
                                            Config.goldMultOn,
-                                           $"Multiply incoming Gold by x{Config.goldMult}");
+                                           $"Multiply incoming Gold by x{Config.goldMultValue}");
 
-            Config.goldMult = (int)GUI.HorizontalSlider(goldMultSliderRect, Config.goldMult, 1, 50);
+            Config.goldMultValue = (int)GUI.HorizontalSlider(goldMultSliderRect, Config.goldMultValue, 1, 50);
 
 
             // Dark quartz multiplier
             Config.dQuartzMultOn = GUI.Toggle(dQuartzMultToggleRect,
                                               Config.dQuartzMultOn,
-                                              $"Multiply incoming Dark Quartz by x{Config.dQuartzMult}");
+                                              $"Multiply incoming Dark Quartz by x{Config.dQuartzMultValue}");
 
-            Config.dQuartzMult = (int)GUI.HorizontalSlider(dQuartzMultSliderRect, Config.dQuartzMult, 1, 50);
+            Config.dQuartzMultValue = (int)GUI.HorizontalSlider(dQuartzMultSliderRect, Config.dQuartzMultValue, 1, 50);
 
 
             // Bones multiplier
             Config.bonesMultOn = GUI.Toggle(bonesMultToggleRect,
                                             Config.bonesMultOn,
-                                            $"Multiply incoming Bones by x{Config.bonesMult}");
+                                            $"Multiply incoming Bones by x{Config.bonesMultValue}");
 
-            Config.bonesMult = (int)GUI.HorizontalSlider(bonesMultSliderRect, Config.bonesMult, 1, 50);
+            Config.bonesMultValue = (int)GUI.HorizontalSlider(bonesMultSliderRect, Config.bonesMultValue, 1, 50);
 
 
             // Heart quartz multiplier
             Config.hQuartzMultOn = GUI.Toggle(hQuartzMultToggleRect,
-                                     Config.hQuartzMultOn,
-                                     $"Multiply incoming Heart Quartz by x{Config.hQuartzMult}");
+                                              Config.hQuartzMultOn,
+                                              $"Multiply incoming Heart Quartz by x{Config.hQuartzMultValue}");
 
-            Config.hQuartzMult = (int)GUI.HorizontalSlider(hQuartzMultSliderRect, Config.hQuartzMult, 1, 50);
+            Config.hQuartzMultValue = (int)GUI.HorizontalSlider(hQuartzMultSliderRect, Config.hQuartzMultValue, 1, 50);
 
 
             // Gold value
@@ -113,8 +113,6 @@ namespace SkulPatcher
             GameData.Currency.heartQuartz.balance = Convert.ToInt32(GUI.TextField(hQuartzTextFieldRect, GameData.Currency.heartQuartz.balance.ToString()));
 
             // Gear spawn
-            float scrollWidth = menuWidth / 2 - unit;
-
             GUI.Label(spawnItemLabelRect, "Spawn item");
             GUI.Label(spawnSkullLabelRect, "Spawn skull");
 
@@ -201,6 +199,9 @@ namespace SkulPatcher
             Config.turboDashOn = GUI.Toggle(turboDashToggleRect,
                                             Config.turboDashOn,
                                             $"Turbo-dash");
+
+            if (GUI.Button(saveConfigButtonRect, "Save config"))
+                Config.Save();
         }
 
         // Sizing values
@@ -270,6 +271,8 @@ namespace SkulPatcher
 
         private Rect turboAttackToggleRect;
         private Rect turboDashToggleRect;
+
+        private Rect saveConfigButtonRect;
 
         private void Resize()
         {
@@ -415,6 +418,9 @@ namespace SkulPatcher
 
             // Turbo-attack
             turboDashToggleRect = new Rect(unit, unit * row * 1.5f, scrollWidth, unit);
+
+            row += 2;
+            saveConfigButtonRect = new Rect(unit, unit * row * 1.5f, scrollWidth / 2, unit);
         }
     }
 }

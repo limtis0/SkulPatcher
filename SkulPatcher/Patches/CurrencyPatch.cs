@@ -21,22 +21,22 @@ namespace SkulPatcher.Patches
             {
                 case goldKey:
                     if (Config.goldMultOn)
-                        amount *= Config.goldMult;
+                        amount *= Config.goldMultValue;
                     break;
 
                 case dQuartzKey:
                     if (Config.dQuartzMultOn)
-                        amount *= Config.dQuartzMult;
+                        amount *= Config.dQuartzMultValue;
                     break;
 
                 case boneKey:
                     if (Config.bonesMultOn)
-                        amount *= Config.bonesMult;
+                        amount *= Config.bonesMultValue;
                     break;
 
                 case hQuartzKey:
                     if (Config.hQuartzMultOn)
-                        amount *= Config.hQuartzMult;
+                        amount *= Config.hQuartzMultValue;
                     break;
             }
         }
