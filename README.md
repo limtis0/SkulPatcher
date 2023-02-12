@@ -1,7 +1,7 @@
 # SkulPatcher
 A small mod for Skul: The Hero Slayer
 
-<img width="960" alt="Untitled" src="https://user-images.githubusercontent.com/45824078/218150426-c41380ac-4882-4484-93e0-894ff66cd94e.png">
+<img width="960" alt="Preview" src="https://user-images.githubusercontent.com/45824078/218286510-17d003cf-8d4c-407e-a995-0a189d023891.png">
 
 # Setup
 - Extract **with replacement** [unstripped Unity 2020.3.34f1 files](https://unity.bepinex.dev/libraries/2020.3.34.zip) and [unstripped CoreLibs](https://unity.bepinex.dev/corlibs/2020.3.34.zip) into `$(SkulFolder)/SkulData/Managed/`, where `$(SkulFolder)` is a folder where the game is located (if this didn't worked, try [these files](https://mega.nz/folder/hnICRaYb#hZKCIBME5rKMemDnHmWd4g) instead)
