@@ -28,12 +28,14 @@ namespace SkulPatcher
         public static int bonesMultValue = PlayerPrefs.GetInt("bonesMultValue", 1);
         public static int hQuartzMultValue = PlayerPrefs.GetInt("hQuartzMultValue", 1);
 
+        // Boss rush
+        public static bool bossRushOn = PlayerPrefs.GetInt("bossRushOn", 0) != 0;
+
         // EasyPatch
         public static bool forceEasyModeOn = PlayerPrefs.GetInt("forceEasyModeOn", 0) != 0;
 
         // God Mode
         public static bool godmodeOn = PlayerPrefs.GetInt("godmodeOn", 0) != 0;
-        public static bool godmodePreviousState = godmodeOn;
 
         // Turbo Actions
         public static bool turboAttackOn = PlayerPrefs.GetInt("turboAttackOn", 1) != 0;
@@ -63,6 +65,8 @@ namespace SkulPatcher
             PlayerPrefs.SetInt("dQuartzMultValue", dQuartzMultValue);
             PlayerPrefs.SetInt("bonesMultValue", bonesMultValue);
             PlayerPrefs.SetInt("hQuartzMultValue", hQuartzMultValue);
+
+            PlayerPrefs.SetInt("bossRushOn", bossRushOn ? 1 : 0);
 
             PlayerPrefs.SetInt("forceEasyModeOn", forceEasyModeOn ? 1 : 0);
 

@@ -18,8 +18,6 @@ namespace SkulPatcher
             menu = new GameObject();
             menu.AddComponent<Menu>();
             Object.DontDestroyOnLoad(menu);
-
-            TurboActions.Init();
         }
     }
 }

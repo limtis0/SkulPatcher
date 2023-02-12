@@ -242,10 +242,11 @@
     <Compile Include="Main.cs" />
     <Compile Include="Misc\Menu.cs" />
     <Compile Include="Misc\TurboActions.cs" />
-    <Compile Include="Patches\CurrencyPatch.cs" />
+    <Compile Include="Patches\BossRushPatch.cs" />
+    <Compile Include="Patches\CurrencyMultPatch.cs" />
     <Compile Include="Patches\DuplicateGearPatch.cs" />
-    <Compile Include="Patches\EasyPatch.cs" />
-    <Compile Include="Patches\LuckyPatch.cs" />
+    <Compile Include="Patches\EasyModPatch.cs" />
+    <Compile Include="Patches\BoostRarityPatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

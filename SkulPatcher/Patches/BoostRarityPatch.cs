@@ -7,7 +7,7 @@ using System.Reflection;
 namespace SkulPatcher.Patches
 {
     [HarmonyPatch]
-    public static class LuckyPatch
+    public static class BoostRarityPatch
     {
         public static void Prefix(Random random, ref Rarity rarity)
         {
@@ -50,7 +50,7 @@ namespace SkulPatcher.Patches
             return rarity;
         }
 
-        static IEnumerable<MethodBase> TargetMethods()
+        public static IEnumerable<MethodBase> TargetMethods()
         {
             var overloadSignature = new Type[] { typeof(Random), typeof(Rarity) };
             yield return AccessTools.Method(typeof(GearManager), nameof(GearManager.GetItemToTake), overloadSignature);

@@ -3,8 +3,10 @@ using Characters.Gear.Quintessences;
 using Characters.Gear.Weapons;
 using Data;
 using GameResources;
+using SkulPatcher.Misc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace SkulPatcher
@@ -17,6 +19,12 @@ namespace SkulPatcher
         // Menu config
         private int screenWidthPrevious;
         private int screenHeightPrevious;
+
+        public void Start()
+        {
+            Godmode.Init();
+            TurboActions.Init();
+        }
 
         public void Update()
         {
@@ -123,10 +131,13 @@ namespace SkulPatcher
                                                 GUIStyle.none,
                                                 GUIStyle.none);
 
-            for (int i = 0; i < Config.gear.items.Count; i++)
+            // Sort alphabetically
+            var items = Config.gear.items.OrderBy(itemRef => Localization.GetLocalizedString(itemRef.displayNameKey));
+
+            int itemInd = 0;
+            foreach (ItemReference itemRef in items)
             {
-                ItemReference itemRef = Config.gear.items[i];
-                if (GUI.Button(itemScrollButtonsRects[i], Localization.GetLocalizedString(itemRef.displayNameKey)))
+                if (GUI.Button(itemScrollButtonsRects[itemInd++], Localization.GetLocalizedString(itemRef.displayNameKey)))
                 {
                     GearSpawn.SpawnGear<Item>(itemRef);
                 }
@@ -162,10 +173,13 @@ namespace SkulPatcher
                                                    GUIStyle.none,
                                                    GUIStyle.none);
 
-            for (int i = 0; i < Config.gear.essences.Count; i++)
+            // Sort alphabetically
+            var essences = Config.gear.essences.OrderBy(essenceRef => Localization.GetLocalizedString(essenceRef.displayNameKey));  
+
+            int essenceInd = 0;
+            foreach (EssenceReference essenceRef in essences)
             {
-                EssenceReference essenceRef = Config.gear.essences[i];
-                if (GUI.Button(essenceScrollButtonsRects[i], Localization.GetLocalizedString(essenceRef.displayNameKey)))
+                if (GUI.Button(essenceScrollButtonsRects[essenceInd++], Localization.GetLocalizedString(essenceRef.displayNameKey)))
                 {
                     GearSpawn.SpawnGear<Quintessence>(essenceRef);
                 }
@@ -173,6 +187,11 @@ namespace SkulPatcher
 
             GUI.EndScrollView();
 
+
+            // Boss rush
+            Config.bossRushOn = GUI.Toggle(bossRushToggleRect,
+                                           Config.bossRushOn,
+                                           "Boss rush");
 
             // Easy mode
             Config.forceEasyModeOn = GUI.Toggle(easyModeToggleRect,
@@ -183,12 +202,6 @@ namespace SkulPatcher
             Config.godmodeOn = GUI.Toggle(godModeToggleRect,
                                           Config.godmodeOn,
                                           $"God mode");
-
-            if (Config.godmodeOn != Config.godmodePreviousState)
-            {
-                Godmode.Set();
-                Config.godmodePreviousState = Config.godmodeOn;
-            }
 
             // Turbo-attack
             Config.turboAttackOn = GUI.Toggle(turboAttackToggleRect,
@@ -265,6 +278,8 @@ namespace SkulPatcher
         private Rect essenceScrollViewRect;
         private Vector2 essenceScrollVec = Vector2.zero;
         private List<Rect> essenceScrollButtonsRects;
+
+        private Rect bossRushToggleRect;
 
         private Rect easyModeToggleRect;
         private Rect godModeToggleRect;
@@ -404,6 +419,10 @@ namespace SkulPatcher
                 essenceScrollButtonsRects.Add(new Rect(0, unit * i * 1.5f, scrollWidth, unit));
             }
 
+            // Boss rush
+            bossRushToggleRect = new Rect(unit, unit * row * 1.5f, scrollWidth, unit);
+            row++;
+
             // Easy mode
             easyModeToggleRect = new Rect(unit, unit * row * 1.5f, scrollWidth, unit);
             row++;
@@ -418,9 +437,9 @@ namespace SkulPatcher
 
             // Turbo-attack
             turboDashToggleRect = new Rect(unit, unit * row * 1.5f, scrollWidth, unit);
+            row++;
 
-            row += 2;
-            saveConfigButtonRect = new Rect(unit, unit * row * 1.5f, scrollWidth / 2, unit);
+            saveConfigButtonRect = new Rect(unit, unit * row * 1.5f + unit, scrollWidth / 2, unit);
         }
     }
 }

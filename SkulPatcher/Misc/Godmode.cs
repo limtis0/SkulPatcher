@@ -1,12 +1,29 @@
 ﻿using Characters.Abilities;
+using System.Collections;
+using UnityEngine;
 
 namespace SkulPatcher
 {
     static class Godmode
     {
+        public static void Init()
+        {
+            Main.menu.GetComponent<Menu>().StartCoroutine(GodmodeCoroutine());
+        }
+
+        private static IEnumerator GodmodeCoroutine()
+        {
+            while (true)
+            {
+                SetGodmode();
+
+                yield return new WaitForSeconds(1f);    
+            }
+        }
+
         private static readonly Ability invulnerableStatus = new GetInvulnerable();
 
-        public static void Set()
+        private static void SetGodmode()
         {
             if (!Config.GameStarted)
                 return;

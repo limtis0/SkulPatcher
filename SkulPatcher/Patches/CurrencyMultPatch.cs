@@ -5,7 +5,7 @@ using System;
 namespace SkulPatcher.Patches
 {
     [HarmonyPatch(typeof(GameData.Currency), nameof(GameData.Currency.Earn), new Type[] { typeof(double) })]
-    public static class CurrencyPatch
+    public static class CurrencyMultPatch
     {
         private const string goldKey = "gold";
         private const string dQuartzKey = "darkQuartz";
