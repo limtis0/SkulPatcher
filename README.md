@@ -20,7 +20,7 @@ Assuming you have .NET runtime and Visual Studio installed
 - Complete the first step of a [setup instruction](#setup)
 - Clone the project into Visual Studio
 - Install "Lib.Harmony", "ILMerge", "ILMerge.MSBuild.Task" packages via NuGet
-- Add "Assembly-CSharp" and all "Plugins." "Unity." "UnityEngine." dll files from `$(SkulFolder)/SkulData/Managed/` to the references
+- Add "Assembly-CSharp" and all "Plugins." "Unity." "UnityEngine." .dll files from `$(SkulFolder)/SkulData/Managed/` to the references
 - For each reference, except "0Harmony" set the "Copy Local" property to "False"
 - For "0Harmony" reference set the "Copy Local" property to "True"
 - Build the solution
