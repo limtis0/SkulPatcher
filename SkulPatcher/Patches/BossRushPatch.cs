@@ -13,7 +13,6 @@ namespace SkulPatcher.Patches
     {
         public static int bossRoomIndex;
         public static (PathNode, PathNode)[] bossRoomNodes;
-        public static (PathNode, PathNode) bossRoomNodes2;
 
         public static bool newPathGenerated;
 
@@ -59,10 +58,14 @@ namespace SkulPatcher.Patches
             if (GeneratedPath.bossRoomNodes.Contains(chapter.currentStage.currentMapPath))
                 return;
 
-            MethodInfo m = typeof(Chapter).GetMethod("LoadStage", BindingFlags.NonPublic | BindingFlags.Instance);
-            m.Invoke(Config.level.currentChapter, new object[] { GeneratedPath.bossRoomIndex, 0 });
-
             GeneratedPath.newPathGenerated = false;
+            LoadStage(GeneratedPath.bossRoomIndex);
+        }
+
+        private static void LoadStage(int pathIndex, int gateIndex = 0)
+        {
+            MethodInfo m = typeof(Chapter).GetMethod("LoadStage", BindingFlags.NonPublic | BindingFlags.Instance);
+            m.Invoke(Config.level.currentChapter, new object[] { pathIndex, gateIndex });
         }
     }
 }
