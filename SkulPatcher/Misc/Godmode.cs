@@ -6,12 +6,7 @@ namespace SkulPatcher
 {
     static class Godmode
     {
-        public static void Init()
-        {
-            Main.menu.GetComponent<Menu>().StartCoroutine(GodmodeCoroutine());
-        }
-
-        private static IEnumerator GodmodeCoroutine()
+        public static IEnumerator Coroutine()
         {
             while (true)
             {
@@ -25,7 +20,7 @@ namespace SkulPatcher
 
         private static void SetGodmode()
         {
-            if (!Config.GameStarted)
+            if (!Config.IsInGame)
                 return;
 
             if (Config.godmodeOn)

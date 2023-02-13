@@ -5,16 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace SkulPatcher.Misc
+namespace SkulPatcher
 {
     public static class TurboActions
     {
-        public static void Init()
-        {
-            Main.menu.GetComponent<Menu>().StartCoroutine(TurboCoroutine());
-        }
-
-        private static IEnumerator TurboCoroutine()
+        public static IEnumerator Coroutine()
         {
             while (true)
             {
@@ -39,7 +34,7 @@ namespace SkulPatcher.Misc
 
         private static void SetActionsValue(List<Action.Type> actionTypes, int value)
         {
-            if (!Config.GameStarted)
+            if (!Config.IsInGame)
                 return;
 
             List<Action> actions = Config.level.player.actions.Where(x => actionTypes.Contains(x.type)).ToList();

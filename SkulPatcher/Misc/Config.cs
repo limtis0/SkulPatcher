@@ -45,7 +45,7 @@ namespace SkulPatcher
         public static readonly LevelManager level = Singleton<Service>.Instance.levelManager;
         public static readonly GearResource gear = GearResource.instance;
 
-        public static bool GameStarted => !(level.player is null);
+        public static bool IsInGame => !(level.player is null);
 
         public static void Save()
         {

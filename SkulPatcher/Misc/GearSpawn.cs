@@ -7,7 +7,7 @@ namespace SkulPatcher
     {
         public static void SpawnGear<T>(GearReference gearRef) where T : Gear
         {
-            if (!Config.GameStarted)
+            if (!Config.IsInGame)
                 return;
 
             GearRequest request = gearRef.LoadAsync();

@@ -3,7 +3,6 @@ using Characters.Gear.Quintessences;
 using Characters.Gear.Weapons;
 using Data;
 using GameResources;
-using SkulPatcher.Misc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,8 +21,8 @@ namespace SkulPatcher
 
         public void Start()
         {
-            Godmode.Init();
-            TurboActions.Init();
+            StartCoroutine(Godmode.Coroutine());
+            StartCoroutine(TurboActions.Coroutine());
         }
 
         public void Update()
