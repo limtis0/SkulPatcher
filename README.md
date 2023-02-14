@@ -1,7 +1,7 @@
 # SkulPatcher
 A small mod for Skul: The Hero Slayer
 
-<img width="960" alt="Preview" src="https://user-images.githubusercontent.com/45824078/218347284-60734aae-5e13-4338-a2f1-aa29aa76e589.png">
+<img width="960" alt="Preview" src="https://user-images.githubusercontent.com/45824078/218730883-8b3f610a-b18c-4f58-89ef-800ab9d9a66b.png">
 
 # Setup
 - Extract **with replacement** [unstripped Unity 2020.3.34f1 files](https://unity.bepinex.dev/libraries/2020.3.34.zip) and [unstripped CoreLibs](https://unity.bepinex.dev/corlibs/2020.3.34.zip) into `$(SkulFolder)/SkulData/Managed/`, where `$(SkulFolder)` is a location of the game. (If you still are getting "Injection failed: mono_object_get_class() returned NULL" error, then try [these files](https://mega.nz/folder/hnICRaYb#hZKCIBME5rKMemDnHmWd4g) instead)
