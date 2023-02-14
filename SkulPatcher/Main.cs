@@ -1,4 +1,6 @@
 ﻿using HarmonyLib;
+using SkulPatcher.Patches;
+using SkulPatcher.UI;
 using System.Reflection;
 using UnityEngine;
 
@@ -6,17 +8,16 @@ namespace SkulPatcher
 {
     public static class Main
     {
-        public static GameObject menu;
-        public static Harmony harmony;
-
         public static void Init()
         {
-            harmony = new Harmony("com.limtis.SkulPatcher");
-            harmony.PatchAll(Assembly.GetExecutingAssembly());
+            Config.harmony = new Harmony("com.limtis.SkulPatcher");
+            Config.harmony.PatchAll(Assembly.GetExecutingAssembly());
 
-            menu = new GameObject();
-            menu.AddComponent<Menu>();
-            Object.DontDestroyOnLoad(menu);
+            BossRushPatch.PatchAll();
+
+            Config.menu = new GameObject();
+            Config.menu.AddComponent<Menu>();
+            Object.DontDestroyOnLoad(Config.menu);
         }
     }
 }

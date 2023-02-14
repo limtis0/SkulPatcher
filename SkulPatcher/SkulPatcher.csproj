@@ -46,6 +46,18 @@
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Skul\Skul_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Platforms">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Skul\Skul_Data\Managed\Platforms.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Platforms.Common">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Skul\Skul_Data\Managed\Platforms.Common.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Platforms.Steam">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Skul\Skul_Data\Managed\Platforms.Steam.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Plugins.Common">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Skul\Skul_Data\Managed\Plugins.Common.dll</HintPath>
       <Private>False</Private>
@@ -238,11 +250,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="UI\RouteMenu.cs" />
     <Compile Include="Misc\Config.cs" />
     <Compile Include="Misc\GearSpawn.cs" />
     <Compile Include="Misc\Godmode.cs" />
     <Compile Include="Main.cs" />
-    <Compile Include="Misc\Menu.cs" />
+    <Compile Include="UI\Menu.cs" />
     <Compile Include="Misc\TurboActions.cs" />
     <Compile Include="Patches\BossRushPatch.cs" />
     <Compile Include="Patches\CurrencyMultPatch.cs" />

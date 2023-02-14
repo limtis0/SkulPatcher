@@ -3,19 +3,25 @@ using Characters.Gear.Quintessences;
 using Characters.Gear.Weapons;
 using Data;
 using GameResources;
+using HarmonyLib;
+using Platforms;
+using Singletons;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace SkulPatcher
+namespace SkulPatcher.UI
 {
     public class Menu : MonoBehaviour
     {
+        public static int unit;
+        public static int fontSize;
+
         private bool init = false;
         private bool showMenu = true;
+        private bool showRouteMenu = true;
 
-        // Menu config
         private int screenWidthPrevious;
         private int screenHeightPrevious;
 
@@ -23,6 +29,8 @@ namespace SkulPatcher
         {
             StartCoroutine(Godmode.Coroutine());
             StartCoroutine(TurboActions.Coroutine());
+
+            Traverse.Create(PersistentSingleton<PlatformManager>.Instance.platform).Property("cheatEnabled").SetValue(true);
         }
 
         public void Update()
@@ -41,17 +49,22 @@ namespace SkulPatcher
 
             if (!init || Screen.height != screenHeightPrevious || Screen.width != screenWidthPrevious)
             {
+                CalculateSizing();
                 Resize();
+                RouteMenu.Resize();
 
                 init = true;
                 screenHeightPrevious = Screen.height;
                 screenWidthPrevious = Screen.width;
             }
 
-            windowRect = GUI.Window(0, windowRect, FillMenu, "SkulPatcher - F7 to toggle");
+            windowRect = GUI.Window(0, windowRect, Fill, "SkulPatcher - F7 to toggle");
+
+            if (showRouteMenu)
+                RouteMenu.windowRect = GUI.Window(1, RouteMenu.windowRect, RouteMenu.Fill, "Route menu");
         }
 
-        private void FillMenu(int windowID)
+        private void Fill(int _)
         {
             GUI.DragWindow(dragWindowRect);
 
@@ -173,7 +186,7 @@ namespace SkulPatcher
                                                    GUIStyle.none);
 
             // Sort alphabetically
-            var essences = Config.gear.essences.OrderBy(essenceRef => Localization.GetLocalizedString(essenceRef.displayNameKey));  
+            var essences = Config.gear.essences.OrderBy(essenceRef => Localization.GetLocalizedString(essenceRef.displayNameKey));
 
             int essenceInd = 0;
             foreach (EssenceReference essenceRef in essences)
@@ -186,11 +199,6 @@ namespace SkulPatcher
 
             GUI.EndScrollView();
 
-
-            // Boss rush
-            Config.bossRushOn = GUI.Toggle(bossRushToggleRect,
-                                           Config.bossRushOn,
-                                           "Boss rush");
 
             // Easy mode
             Config.forceEasyModeOn = GUI.Toggle(easyModeToggleRect,
@@ -212,18 +220,17 @@ namespace SkulPatcher
                                             Config.turboDashOn,
                                             $"Turbo-dash");
 
+            if (GUI.Button(routeMenuButtonRect, "Route menu"))
+                showRouteMenu = !showRouteMenu;
+
             if (GUI.Button(saveConfigButtonRect, "Save config"))
                 Config.Save();
         }
 
-        // Sizing values
+        // Menu elements
         private int menuWidth;
         private int menuHeight;
 
-        private int unit;
-        private int fontSize;
-
-        // Menu elements
         private Rect dragWindowRect;
         private Rect windowRect;
 
@@ -278,20 +285,17 @@ namespace SkulPatcher
         private Vector2 essenceScrollVec = Vector2.zero;
         private List<Rect> essenceScrollButtonsRects;
 
-        private Rect bossRushToggleRect;
-
         private Rect easyModeToggleRect;
         private Rect godModeToggleRect;
 
         private Rect turboAttackToggleRect;
         private Rect turboDashToggleRect;
 
+        private Rect routeMenuButtonRect;
         private Rect saveConfigButtonRect;
 
-        private void Resize()
+        private void CalculateSizing()
         {
-            menuWidth = Screen.width / 4;
-            menuHeight = (int)(Screen.height * 0.9);
             unit = Screen.height / 50;
             fontSize = (int)(unit * 0.75);
 
@@ -299,12 +303,15 @@ namespace SkulPatcher
             GUI.skin.toggle.fontSize = fontSize;
             GUI.skin.button.fontSize = fontSize;
             GUI.skin.textField.fontSize = fontSize;
+        }
 
-            windowRect = new Rect(Screen.width - menuWidth - 20, 20, menuWidth, menuHeight)
-            {
-                width = menuWidth,
-                height = menuHeight
-            };
+        private void Resize()
+        {
+
+            menuWidth = Screen.width / 4;
+            menuHeight = unit * 46;
+
+            windowRect = new Rect(Screen.width - menuWidth - 20, 20, menuWidth, menuHeight);
 
             int row = 0;
 
@@ -324,7 +331,6 @@ namespace SkulPatcher
 
             duplicateItemsToggleRect = new Rect(unit, unit * row * 1.5f, menuWidth / 2 - unit, unit);
             duplicateSkullsToggleRect = new Rect(menuWidth / 2, unit * row * 1.5f, menuWidth / 2 - unit, unit);
-
             row += 2;
 
 
@@ -372,7 +378,6 @@ namespace SkulPatcher
             // Heart quartz value
             hQuartzLabelRect = new Rect(unit * 17.5f, unit * row * 1.5f, unit * 5, unit * 1.2f);
             hQuartzTextFieldRect = new Rect(unit * 17.5f, unit * (row + 1) * 1.5f, unit * 4, unit);
-
             row += 3;
 
 
@@ -403,7 +408,6 @@ namespace SkulPatcher
             {
                 skullScrollButtonsRects.Add(new Rect(0, unit * i * 1.5f, scrollWidth, unit));
             }
-
             row += 6;
 
             // Essence spawn
@@ -417,10 +421,6 @@ namespace SkulPatcher
             {
                 essenceScrollButtonsRects.Add(new Rect(0, unit * i * 1.5f, scrollWidth, unit));
             }
-
-            // Boss rush
-            bossRushToggleRect = new Rect(unit, unit * row * 1.5f, scrollWidth, unit);
-            row++;
 
             // Easy mode
             easyModeToggleRect = new Rect(unit, unit * row * 1.5f, scrollWidth, unit);
@@ -436,6 +436,10 @@ namespace SkulPatcher
 
             // Turbo-attack
             turboDashToggleRect = new Rect(unit, unit * row * 1.5f, scrollWidth, unit);
+            row++;
+
+            // Route menu
+            routeMenuButtonRect = new Rect(unit, unit * row * 1.5f + unit, scrollWidth / 2, unit);
             row++;
 
             saveConfigButtonRect = new Rect(unit, unit * row * 1.5f + unit, scrollWidth / 2, unit);
