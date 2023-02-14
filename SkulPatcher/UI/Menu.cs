@@ -3,9 +3,6 @@ using Characters.Gear.Quintessences;
 using Characters.Gear.Weapons;
 using Data;
 using GameResources;
-using HarmonyLib;
-using Platforms;
-using Singletons;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,8 +26,6 @@ namespace SkulPatcher.UI
         {
             StartCoroutine(Godmode.Coroutine());
             StartCoroutine(TurboActions.Coroutine());
-
-            Traverse.Create(PersistentSingleton<PlatformManager>.Instance.platform).Property("cheatEnabled").SetValue(true);
         }
 
         public void Update()
