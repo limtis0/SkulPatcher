@@ -74,10 +74,7 @@ namespace SkulPatcher.Patches
         public static void Toggle()
         {
             if (Config.bossRushOn)
-            {
                 BuildPathQueue();
-                return;
-            }
         }
 
         private static void OnNewStagePatch(StageInfo __instance)
