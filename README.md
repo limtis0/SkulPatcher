@@ -1,5 +1,5 @@
 # SkulPatcher
-A small mod for Skul: The Hero Slayer
+An all-in-one mod for Skul: The Hero Slayer
 <img width="960" alt="Preview" src="https://user-images.githubusercontent.com/45824078/218730883-8b3f610a-b18c-4f58-89ef-800ab9d9a66b.png">
 
 
