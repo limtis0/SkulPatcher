@@ -41,9 +41,15 @@ namespace SkulPatcher
 
         // Boss rush
         public static bool bossRushOn = PlayerPrefs.GetInt("bossRushOn", 0) != 0;
+        public static bool bossRushOnPreviousState = bossRushOn;
+
         public static bool bossRushSkipRewards = PlayerPrefs.GetInt("bossRushSkipRewards", 1) != 0;
+
         public static bool bossRushIncludeShops = PlayerPrefs.GetInt("bossRushAllowShops", 1) != 0;
+        public static bool bossRushShopsPreviousState = bossRushIncludeShops;
+
         public static bool bossRushIncludeArachne = PlayerPrefs.GetInt("bossRushAllowArachne", 1) != 0;
+        public static bool bossRushArachnePreviousState = bossRushIncludeArachne;
 
         // Misc
         public static Harmony harmony;

@@ -11,9 +11,27 @@ namespace SkulPatcher.UI
             GUI.DragWindow(dragWindowRect);
 
             Config.bossRushOn = GUI.Toggle(bossRushToggleRect, Config.bossRushOn, "Boss rush");
+            if (Config.bossRushOn != Config.bossRushOnPreviousState)
+            {
+                Config.bossRushOnPreviousState = Config.bossRushOn;
+                BossRushPatch.Toggle();
+            }
+
             Config.bossRushSkipRewards = GUI.Toggle(bossRushSkipRewardsRect, Config.bossRushSkipRewards, "Skip rewards");
+
             Config.bossRushIncludeShops = GUI.Toggle(bossRushIncludeShopsRect, Config.bossRushIncludeShops, "Include shops");
+            if (Config.bossRushIncludeShops != Config.bossRushShopsPreviousState)
+            {
+                Config.bossRushShopsPreviousState = Config.bossRushIncludeShops;
+                BossRushPatch.Toggle();
+            }
+
             Config.bossRushIncludeArachne = GUI.Toggle(bossRushIncludeArachneRect, Config.bossRushIncludeArachne, "Include Arachne");
+            if (Config.bossRushIncludeArachne != Config.bossRushArachnePreviousState)
+            {
+                Config.bossRushArachnePreviousState = Config.bossRushIncludeArachne;
+                BossRushPatch.Toggle();
+            }
 
             if (GUI.Button(chapter1ButtonRect, "Chapter 1"))
                 BossRushPatch.LoadChapter(Chapter.Type.Chapter1);

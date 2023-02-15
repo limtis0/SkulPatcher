@@ -35,13 +35,16 @@ namespace SkulPatcher.Patches
         private static bool newStage;
         private static bool newMap;
 
-        private static readonly Queue<(int pathIndex, bool isBoss)> pathQueue = new Queue<(int, bool)>();
+        private static (PathNode, PathNode)[] originalPath = new (PathNode, PathNode)[] { };
+        private static readonly Queue<(int pathIndex, Gate.Type type)> pathQueue = new Queue<(int, Gate.Type)>();
 
         private static readonly Gate.Type[] bossGates = new Gate.Type[] { Gate.Type.Adventurer, Gate.Type.Boss };
 
         private static bool IsInStartChapter => Config.level.currentChapter.type == Chapter.Type.Chapter1 || Config.level.currentChapter.type == Chapter.Type.HardmodeChapter1;
 
         private static bool IsInEndChapter => Config.level.currentChapter.type == Chapter.Type.Chapter5 || Config.level.currentChapter.type == Chapter.Type.HardmodeChapter5;
+
+        private const int HealAmountAfterBossFight = 100;
 
         public static void PatchAll()
         {
@@ -68,29 +71,45 @@ namespace SkulPatcher.Patches
             Config.harmony.Patch(OnBossChest, postfix: new HarmonyMethod(OnMapRewardsPatch));
         }
 
+        public static void Toggle()
+        {
+            if (Config.bossRushOn)
+            {
+                BuildPathQueue();
+                return;
+            }
+        }
+
         private static void OnNewStagePatch(StageInfo __instance)
         {
+            originalPath = __instance._path;
+
             if (!Config.bossRushOn)
                 return;
 
-            newStage = true;
-            pathQueue.Clear();
+            BuildPathQueue();
+        }
 
-            for (int pathIndex = 0; pathIndex < __instance._path.Length; pathIndex++)
+        private static void BuildPathQueue()
+        {
+            pathQueue.Clear();
+            newStage = true;
+            
+            for (int pathIndex = 0; pathIndex < originalPath.Length; pathIndex++)
             {
                 // We don't need to check both of the gates, as either they are equal or the second one is null
-                Gate.Type gate = __instance._path[pathIndex].type1.gate;
+                Gate.Type gate = originalPath[pathIndex].Item1.gate;
 
                 if (bossGates.Contains(gate))
                 {
-                    pathQueue.Enqueue((pathIndex, gate == Gate.Type.Boss));
+                    pathQueue.Enqueue((pathIndex, gate));
                     continue;
                 }
 
                 // Shop gate is represented as Gate.Type.Npc
                 if (Config.bossRushIncludeShops && gate == Gate.Type.Npc)
                 {
-                    pathQueue.Enqueue((pathIndex, false));
+                    pathQueue.Enqueue((pathIndex, gate));
                 }
             }
         }
@@ -130,13 +149,18 @@ namespace SkulPatcher.Patches
 
             Chapter chapter = Config.level.currentChapter;
 
-            (int pathIndex, bool isBoss) = pathQueue.Dequeue();
+            int pathIndex; 
+            Gate.Type type;
+            
+            // While ahead of the generated path
+            do (pathIndex, type) = pathQueue.Dequeue();
+            while (chapter.currentStage.pathIndex > pathIndex && pathQueue.Count != 0);
 
             // If already moved to the next stage through the door
-            if (chapter.currentStage.pathIndex == pathIndex)
+            if (pathIndex == chapter.currentStage.pathIndex)
                 return;
 
-            if (isBoss)
+            if (type == Gate.Type.Boss)
             {
                 Config.level.LoadNextStage();
                 return;
@@ -149,6 +173,13 @@ namespace SkulPatcher.Patches
         {
             if (!Config.bossRushOn || !Config.bossRushSkipRewards)
                 return;
+
+            // On boss-reward skip
+            Gate.Type gate = Config.level.currentChapter.currentStage.currentMapPath.node1.gate;
+            if (gate == Gate.Type.None)
+            {
+                Config.level.player.health.Heal(HealAmountAfterBossFight);
+            }
 
             Config.level.LoadNextMap();
         }
