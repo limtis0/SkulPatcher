@@ -26,6 +26,6 @@ Assuming you have .NET Framework 4.8.1 and Visual Studio installed
 - Build the solution
 
 
-# Compability
+# Compatibility
 - [Skul: The Hero Slayer v1.7.0+](https://store.steampowered.com/news/app/1147560/view/5283318909430116714) (Built on [Unity 2020.3.34f1](https://unity.com/releases/editor/whats-new/2020.3.34); Should work for future releases if nothing drastically changes)
 - [Harmony v2.2.2](https://github.com/pardeike/Harmony/releases/tag/v2.2.2.0)
