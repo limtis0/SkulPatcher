@@ -1,6 +1,6 @@
 # SkulPatcher
 An all-in-one mod for Skul: The Hero Slayer
-<img width="960" alt="Preview" src="https://user-images.githubusercontent.com/45824078/218730883-8b3f610a-b18c-4f58-89ef-800ab9d9a66b.png">
+<img width="960" alt="Untitled" src="https://user-images.githubusercontent.com/45824078/219701252-5056858f-4361-4e11-8a62-a9317a71830c.png">
 
 
 # Setup
