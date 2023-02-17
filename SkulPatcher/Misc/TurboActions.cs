@@ -37,7 +37,7 @@ namespace SkulPatcher
             if (!Config.IsInGame)
                 return;
 
-            List<Action> actions = Config.level.player.actions.Where(x => actionTypes.Contains(x.type)).ToList();
+            List<Action> actions = Config.Level.player.actions.Where(x => actionTypes.Contains(x.type)).ToList();
 
             foreach (Action action in actions)
                 Traverse.Create(action).Field("_inputMethod").SetValue(value);

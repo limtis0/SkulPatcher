@@ -1,11 +1,5 @@
-﻿using Characters.Gear.Items;
-using Characters.Gear.Quintessences;
-using Characters.Gear.Weapons;
-using Data;
-using GameResources;
+﻿using Data;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace SkulPatcher.UI
@@ -17,7 +11,8 @@ namespace SkulPatcher.UI
 
         private bool init = false;
         private bool showMenu = true;
-        private bool showRouteMenu = true;
+        private bool showRouteMenu = false;
+        private bool showGearMenu = false;
 
         private int screenWidthPrevious;
         private int screenHeightPrevious;
@@ -45,8 +40,10 @@ namespace SkulPatcher.UI
             if (!init || Screen.height != screenHeightPrevious || Screen.width != screenWidthPrevious)
             {
                 CalculateSizing();
+
                 Resize();
                 RouteMenu.Resize();
+                GearMenu.Resize();
 
                 init = true;
                 screenHeightPrevious = Screen.height;
@@ -55,8 +52,11 @@ namespace SkulPatcher.UI
 
             windowRect = GUI.Window(0, windowRect, Fill, "SkulPatcher - F7 to toggle");
 
+            if (showGearMenu)
+                GearMenu.windowRect = GUI.Window(1, GearMenu.windowRect, GearMenu.Fill, "Gear menu");
+
             if (showRouteMenu)
-                RouteMenu.windowRect = GUI.Window(1, RouteMenu.windowRect, RouteMenu.Fill, "Route menu");
+                RouteMenu.windowRect = GUI.Window(2, RouteMenu.windowRect, RouteMenu.Fill, "Route menu");
         }
 
         private void Fill(int _)
@@ -127,74 +127,6 @@ namespace SkulPatcher.UI
             GUI.Label(hQuartzLabelRect, "Heart Quartz");
             GameData.Currency.heartQuartz.balance = Convert.ToInt32(GUI.TextField(hQuartzTextFieldRect, GameData.Currency.heartQuartz.balance.ToString()));
 
-            // Gear spawn
-            GUI.Label(spawnItemLabelRect, "Spawn item");
-            GUI.Label(spawnSkullLabelRect, "Spawn skull");
-
-            // Items
-            itemScrollVec = GUI.BeginScrollView(itemScrollPosRect,
-                                                itemScrollVec,
-                                                itemScrollViewRect,
-                                                GUIStyle.none,
-                                                GUIStyle.none);
-
-            // Sort alphabetically
-            var items = Config.gear.items.OrderBy(itemRef => Localization.GetLocalizedString(itemRef.displayNameKey));
-
-            int itemInd = 0;
-            foreach (ItemReference itemRef in items)
-            {
-                if (GUI.Button(itemScrollButtonsRects[itemInd++], Localization.GetLocalizedString(itemRef.displayNameKey)))
-                {
-                    GearSpawn.SpawnGear<Item>(itemRef);
-                }
-            }
-
-            GUI.EndScrollView();
-
-
-            // Skulls
-            skullScrollVec = GUI.BeginScrollView(skullScrollPosRect,
-                                                 skullScrollVec,
-                                                 skullScrollViewRect,
-                                                 GUIStyle.none,
-                                                 GUIStyle.none);
-
-            for (int i = 0; i < Config.gear.weapons.Count; i++)
-            {
-                WeaponReference skullRef = Config.gear.weapons[i];
-                if (GUI.Button(skullScrollButtonsRects[i], Localization.GetLocalizedString(skullRef.displayNameKey)))
-                {
-                    GearSpawn.SpawnGear<Weapon>(skullRef);
-                }
-            }
-
-            GUI.EndScrollView();
-
-
-            // Quintessences
-            GUI.Label(essenceLabelRect, "Spawn quintessence");
-            essenceScrollVec = GUI.BeginScrollView(essenceScrollPosRect,
-                                                   essenceScrollVec,
-                                                   essenceScrollViewRect,
-                                                   GUIStyle.none,
-                                                   GUIStyle.none);
-
-            // Sort alphabetically
-            var essences = Config.gear.essences.OrderBy(essenceRef => Localization.GetLocalizedString(essenceRef.displayNameKey));
-
-            int essenceInd = 0;
-            foreach (EssenceReference essenceRef in essences)
-            {
-                if (GUI.Button(essenceScrollButtonsRects[essenceInd++], Localization.GetLocalizedString(essenceRef.displayNameKey)))
-                {
-                    GearSpawn.SpawnGear<Quintessence>(essenceRef);
-                }
-            }
-
-            GUI.EndScrollView();
-
-
             // Easy mode
             Config.forceEasyModeOn = GUI.Toggle(easyModeToggleRect,
                                                 Config.forceEasyModeOn,
@@ -215,12 +147,16 @@ namespace SkulPatcher.UI
                                             Config.turboDashOn,
                                             $"Turbo-dash");
 
+            if (GUI.Button(gearMenuButtonRect, "Gear menu"))
+                showGearMenu = !showGearMenu;
+
             if (GUI.Button(routeMenuButtonRect, "Route menu"))
                 showRouteMenu = !showRouteMenu;
 
             if (GUI.Button(saveConfigButtonRect, "Save config"))
                 Config.Save();
         }
+
 
         // Menu elements
         private int menuWidth;
@@ -260,32 +196,13 @@ namespace SkulPatcher.UI
         private Rect hQuartzLabelRect;
         private Rect hQuartzTextFieldRect;
 
-        private Rect spawnItemLabelRect;
-        private Rect spawnSkullLabelRect;
-
-        private Rect itemScrollPosRect;
-        private Rect itemScrollViewRect;
-        private Vector2 itemScrollVec = Vector2.zero;
-        private List<Rect> itemScrollButtonsRects;
-
-        private Rect skullScrollPosRect;
-        private Rect skullScrollViewRect;
-        private Vector2 skullScrollVec = Vector2.zero;
-        private List<Rect> skullScrollButtonsRects;
-
-        private Rect essenceLabelRect;
-
-        private Rect essenceScrollPosRect;
-        private Rect essenceScrollViewRect;
-        private Vector2 essenceScrollVec = Vector2.zero;
-        private List<Rect> essenceScrollButtonsRects;
-
         private Rect easyModeToggleRect;
         private Rect godModeToggleRect;
 
         private Rect turboAttackToggleRect;
         private Rect turboDashToggleRect;
 
+        private Rect gearMenuButtonRect;
         private Rect routeMenuButtonRect;
         private Rect saveConfigButtonRect;
 
@@ -304,10 +221,9 @@ namespace SkulPatcher.UI
         {
 
             menuWidth = Screen.width / 4;
-            menuHeight = unit * 46;
+            menuHeight = unit * 32;
 
             windowRect = new Rect(Screen.width - menuWidth - 20, 20, menuWidth, menuHeight);
-
             int row = 0;
 
             dragWindowRect = new Rect(0, 0, menuWidth, unit);
@@ -375,69 +291,34 @@ namespace SkulPatcher.UI
             hQuartzTextFieldRect = new Rect(unit * 17.5f, unit * (row + 1) * 1.5f, unit * 4, unit);
             row += 3;
 
-
-            // Gear spawn
-            float scrollWidth = menuWidth / 2 - unit;
-            float scrollHeight = unit * 8;
-
-            // Item spawn
-            spawnItemLabelRect = new Rect(unit, unit * row * 1.5f, scrollWidth, unit);
-            spawnSkullLabelRect = new Rect(scrollWidth + unit, unit * row * 1.5f, scrollWidth, unit);
-            row++;
-
-            itemScrollPosRect = new Rect(unit, unit * row * 1.5f, scrollWidth, scrollHeight);
-            itemScrollViewRect = new Rect(0, 0, scrollWidth, unit * 1.5f * Config.gear.items.Count);
-
-            itemScrollButtonsRects = new List<Rect>();
-            for (int i = 0; i < Config.gear.items.Count; i++)
-            {
-                itemScrollButtonsRects.Add(new Rect(0, unit * i * 1.5f, scrollWidth, unit));
-            }
-
-            // Skull spawn
-            skullScrollPosRect = new Rect(scrollWidth + unit, unit * row * 1.5f, scrollWidth, scrollHeight);
-            skullScrollViewRect = new Rect(0, 0, scrollWidth, unit * 1.5f * Config.gear.weapons.Count);
-
-            skullScrollButtonsRects = new List<Rect>();
-            for (int i = 0; i < Config.gear.weapons.Count; i++)
-            {
-                skullScrollButtonsRects.Add(new Rect(0, unit * i * 1.5f, scrollWidth, unit));
-            }
-            row += 6;
-
-            // Essence spawn
-            essenceLabelRect = essenceLabelRect = new Rect(scrollWidth + unit, unit * row * 1.5f, scrollWidth, unit);
-
-            essenceScrollPosRect = new Rect(scrollWidth + unit + 1, (unit + 1) * row * 1.5f, scrollWidth, scrollHeight);
-            essenceScrollViewRect = new Rect(0, 0, scrollWidth, (unit + 1) * 1.5f * Config.gear.essences.Count);
-
-            essenceScrollButtonsRects = new List<Rect>();
-            for (int i = 0; i < Config.gear.essences.Count; i++)
-            {
-                essenceScrollButtonsRects.Add(new Rect(0, unit * i * 1.5f, scrollWidth, unit));
-            }
+            float halfWidth = menuWidth / 2 - Menu.unit;
 
             // Easy mode
-            easyModeToggleRect = new Rect(unit, unit * row * 1.5f, scrollWidth, unit);
+            easyModeToggleRect = new Rect(unit, unit * row * 1.5f, halfWidth, unit);
             row++;
 
             // God mode
-            godModeToggleRect = new Rect(unit, unit * row * 1.5f, scrollWidth, unit);
+            godModeToggleRect = new Rect(unit, unit * row * 1.5f, halfWidth, unit);
             row++;
 
             // Turbo-attack
-            turboAttackToggleRect = new Rect(unit, unit * row * 1.5f, scrollWidth, unit);
+            turboAttackToggleRect = new Rect(unit, unit * row * 1.5f, halfWidth, unit);
             row++;
 
             // Turbo-attack
-            turboDashToggleRect = new Rect(unit, unit * row * 1.5f, scrollWidth, unit);
-            row++;
+            turboDashToggleRect = new Rect(unit, unit * row * 1.5f, halfWidth, unit);
+            row -= 4;
 
             // Route menu
-            routeMenuButtonRect = new Rect(unit, unit * row * 1.5f + unit, scrollWidth / 2, unit);
+            routeMenuButtonRect = new Rect(halfWidth + unit, (unit + 0.5f) * row * 1.5f + unit, halfWidth, unit);
             row++;
 
-            saveConfigButtonRect = new Rect(unit, unit * row * 1.5f + unit, scrollWidth / 2, unit);
+            // Gear menu
+            gearMenuButtonRect = new Rect(halfWidth + unit, (unit + 0.5f) * row * 1.5f + unit, halfWidth, unit);
+            row += 2;
+
+            // Save config
+            saveConfigButtonRect = new Rect(halfWidth + unit, (unit + 0.5f) * row * 1.5f + unit, halfWidth, unit);
         }
     }
 }

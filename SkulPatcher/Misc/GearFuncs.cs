@@ -1,0 +1,90 @@
+﻿using Characters.Gear;
+using Characters.Gear.Items;
+using Characters.Gear.Quintessences;
+using Characters.Gear.Weapons;
+using Characters.Player;
+using GameResources;
+using HarmonyLib;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace SkulPatcher
+{
+    public static class GearFuncs
+    {
+        public static void SpawnGear<T>(GearReference gearRef) where T : Gear
+        {
+            if (!Config.IsInGame)
+                return;
+
+            GearRequest request = gearRef.LoadAsync();
+            request.WaitForCompletion();
+
+            T gear = (T)request.asset;
+            gear.name = gearRef.name;
+
+            gear = (T)Config.Level.DropGear(gear, Config.Level.player.transform.position);
+
+            if (Config.autoEquipSpawnedGear)
+                TryEquipGear(gear);
+        }
+
+        private static void TryEquipGear<T>(T gear) where T : Gear
+        {
+            Type gearType = typeof(T);
+
+            if (gearType == typeof(Item))
+            {
+                Inventory.item.TryEquip(gear as Item);
+            }
+            else if (gearType == typeof(Weapon))
+            {
+                Inventory.weapon.Polymorph(gear as Weapon);
+                Inventory.weapon.Equip(gear as Weapon);
+            }
+            else if (gearType == typeof(Quintessence))
+            {
+                Inventory.quintessence.EquipAt(gear as Quintessence, 0);
+            }
+        }
+
+        public static void RerollAbilities()
+        {
+            if (!Config.IsInGame)
+                return;
+
+            Inventory.weapon.current.RerollSkills();
+        }
+
+        public static void SetItemLimit()
+        {
+            if (!Config.IsInGame)
+                return;
+
+            List<Item> items = Inventory.item.items;
+            if (items.Count < Config.itemLimit)
+            {
+                items.AddRange(Enumerable.Repeat<Item>(null, Config.itemLimit - items.Count));
+            }
+            else
+            {
+                while (items.Count != Config.itemLimit)
+                    items.RemoveAt(items.Count - 1);
+            }
+        }
+
+        public static void SetSkullLimit()
+        {
+            if (!Config.IsInGame)
+                return;
+
+            Weapon[] newArray = Inventory.weapon.weapons;
+            Array.Resize(ref newArray, Config.skullLimit);
+
+            new Traverse(Inventory.weapon).Field("weapons").SetValue(newArray);
+        }
+
+        public static Inventory Inventory => Config.Level.player.playerComponents.inventory;
+    }
+}

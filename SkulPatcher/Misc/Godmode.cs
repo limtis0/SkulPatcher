@@ -26,11 +26,11 @@ namespace SkulPatcher
             if (Config.godmodeOn)
             {
                 invulnerableStatus.duration = float.MaxValue;
-                Config.level.player.invulnerable.Attach(invulnerableStatus);
+                Config.Level.player.invulnerable.Attach(invulnerableStatus);
             }
             else
             {
-                Config.level.player.invulnerable.Detach(invulnerableStatus);
+                Config.Level.player.invulnerable.Detach(invulnerableStatus);
             }
         }
     }

@@ -49,10 +49,10 @@ namespace SkulPatcher.UI
                 BossRushPatch.LoadChapter(Chapter.Type.Chapter5);
 
             if (GUI.Button(nextMapButtonRect, "Next map ▶"))
-                Config.level.LoadNextMap();
+                Config.Level.LoadNextMap();
 
             if (GUI.Button(nextStageButtonRect, "Next stage ▶▶"))
-                Config.level.LoadNextStage();
+                Config.Level.LoadNextStage();
         }
 
         public static Rect windowRect;
@@ -82,7 +82,6 @@ namespace SkulPatcher.UI
             menuHeight = Menu.unit * 11;
 
             windowRect = new Rect(20, 20, menuWidth, menuHeight);
-
             int row = 0;
 
             dragWindowRect = new Rect(0, 0, menuWidth, Menu.unit);

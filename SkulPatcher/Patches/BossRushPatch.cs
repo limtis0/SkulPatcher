@@ -40,9 +40,9 @@ namespace SkulPatcher.Patches
 
         private static readonly Gate.Type[] bossGates = new Gate.Type[] { Gate.Type.Adventurer, Gate.Type.Boss };
 
-        private static bool IsInStartChapter => Config.level.currentChapter.type == Chapter.Type.Chapter1 || Config.level.currentChapter.type == Chapter.Type.HardmodeChapter1;
+        private static bool IsInStartChapter => Config.Level.currentChapter.type == Chapter.Type.Chapter1 || Config.Level.currentChapter.type == Chapter.Type.HardmodeChapter1;
 
-        private static bool IsInEndChapter => Config.level.currentChapter.type == Chapter.Type.Chapter5 || Config.level.currentChapter.type == Chapter.Type.HardmodeChapter5;
+        private static bool IsInEndChapter => Config.Level.currentChapter.type == Chapter.Type.Chapter5 || Config.Level.currentChapter.type == Chapter.Type.HardmodeChapter5;
 
         private const int HealAmountAfterBossFight = 100;
 
@@ -95,7 +95,7 @@ namespace SkulPatcher.Patches
         {
             pathQueue.Clear();
             newStage = true;
-            
+
             for (int pathIndex = 0; pathIndex < originalPath.Length; pathIndex++)
             {
                 // We don't need to check both of the gates, as either they are equal or the second one is null
@@ -123,7 +123,7 @@ namespace SkulPatcher.Patches
             // The last chapter has no Gate.Type.Boss room, so the boss must be called manually
             if (IsInEndChapter)
             {
-                Config.level.LoadNextStage();
+                Config.Level.LoadNextStage();
                 return;
             }
 
@@ -148,11 +148,11 @@ namespace SkulPatcher.Patches
                 return;
             }
 
-            Chapter chapter = Config.level.currentChapter;
+            Chapter chapter = Config.Level.currentChapter;
 
-            int pathIndex; 
+            int pathIndex;
             Gate.Type type;
-            
+
             // While ahead of the generated path
             do (pathIndex, type) = pathQueue.Dequeue();
             while (chapter.currentStage.pathIndex > pathIndex && pathQueue.Count != 0);
@@ -163,7 +163,7 @@ namespace SkulPatcher.Patches
 
             if (type == Gate.Type.Boss)
             {
-                Config.level.LoadNextStage();
+                Config.Level.LoadNextStage();
                 return;
             }
 
@@ -176,20 +176,20 @@ namespace SkulPatcher.Patches
                 return;
 
             // On boss-reward skip
-            Gate.Type gate = Config.level.currentChapter.currentStage.currentMapPath.node1.gate;
+            Gate.Type gate = Config.Level.currentChapter.currentStage.currentMapPath.node1.gate;
             if (gate == Gate.Type.None)
             {
-                Config.level.player.health.Heal(HealAmountAfterBossFight);
+                Config.Level.player.health.Heal(HealAmountAfterBossFight);
             }
 
-            Config.level.LoadNextMap();
+            Config.Level.LoadNextMap();
         }
 
         private static void LoadMap(int pathIndex)
         {
             newMap = true;
 
-            Chapter chapter = Config.level.currentChapter;
+            Chapter chapter = Config.Level.currentChapter;
 
             chapter.currentStage.pathIndex = pathIndex;
             chapter.ChangeMap(chapter.currentStage.currentMapPath.node1);
@@ -202,7 +202,7 @@ namespace SkulPatcher.Patches
                 chapterType += 6;
 
             pathQueue.Clear();
-            Config.level.Load(chapterType);
+            Config.Level.Load(chapterType);
         }
     }
 }

@@ -250,9 +250,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="UI\GearMenu.cs" />
     <Compile Include="UI\RouteMenu.cs" />
     <Compile Include="Misc\Config.cs" />
-    <Compile Include="Misc\GearSpawn.cs" />
+    <Compile Include="Misc\GearFuncs.cs" />
     <Compile Include="Misc\Godmode.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="UI\Menu.cs" />

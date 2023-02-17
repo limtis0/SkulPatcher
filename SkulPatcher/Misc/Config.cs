@@ -1,8 +1,10 @@
 ﻿using GameResources;
 using HarmonyLib;
 using Level;
+using Scenes;
 using Services;
 using Singletons;
+using UI;
 using UnityEngine;
 
 namespace SkulPatcher
@@ -29,6 +31,8 @@ namespace SkulPatcher
         public static int bonesMultValue = PlayerPrefs.GetInt("bonesMultValue", 1);
         public static int hQuartzMultValue = PlayerPrefs.GetInt("hQuartzMultValue", 1);
 
+        public static bool autoEquipSpawnedGear = PlayerPrefs.GetInt("autoEquipSpawnedGear", 0) != 0;
+
         // EasyPatch
         public static bool forceEasyModeOn = PlayerPrefs.GetInt("forceEasyModeOn", 0) != 0;
 
@@ -51,14 +55,19 @@ namespace SkulPatcher
         public static bool bossRushIncludeArachne = PlayerPrefs.GetInt("bossRushAllowArachne", 1) != 0;
         public static bool bossRushArachnePreviousState = bossRushIncludeArachne;
 
+        // Item/Skull limits
+        public static int itemLimit = 9;
+        public static int skullLimit = 2;
+
         // Misc
         public static Harmony harmony;
         public static GameObject menu;
 
-        public static readonly LevelManager level = Singleton<Service>.Instance.levelManager;
-        public static readonly GearResource gear = GearResource.instance;
+        public static readonly LevelManager Level = Singleton<Service>.Instance.levelManager;
+        public static readonly GearResource Gear = GearResource.instance;
+        public static UIManager UI => Scene<GameBase>.instance.uiManager;
 
-        public static bool IsInGame => !(level.player is null);
+        public static bool IsInGame => !(Level.player is null);
 
         public static void Save()
         {
@@ -73,6 +82,8 @@ namespace SkulPatcher
             PlayerPrefs.SetInt("dQuartzMultOn", dQuartzMultOn ? 1 : 0);
             PlayerPrefs.SetInt("bonesMultOn", bonesMultOn ? 1 : 0);
             PlayerPrefs.SetInt("hQuartzMultOn", hQuartzMultOn ? 1 : 0);
+
+            PlayerPrefs.SetInt("autoEquipSpawnedGear", autoEquipSpawnedGear ? 1 : 0);
 
             PlayerPrefs.SetInt("goldMultValue", goldMultValue);
             PlayerPrefs.SetInt("dQuartzMultValue", dQuartzMultValue);
