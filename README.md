@@ -13,12 +13,7 @@ An all-in-one mod for Skul: The Hero Slayer
     - [BepInEx v5.4.21](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.21)
 3. In `$(SkulFolder)/doorstop.ini`
     - Set `dllSearchPathOverride=` to `dllSearchPathOverride=2020.3.34`
-4. Run the game once, so all of the BepInEx files will appear
-5. In `$(SkulFolder)/BepInEx/config/BepInEx.cfg`
-    - Set `Assembly =` to `Assembly = Assembly-CSharp.dll`
-    - Set `Type =` to `Type = Main`
-    - Set `Method =` to `Method = StartGame`
-6. Download the mod from ["Releases" page](https://github.com/limtis0/SkulPatcher/releases) and place it to `$(SkulFolder)/BepInEx/plugins`
+4. Download the mod from ["Releases" page](https://github.com/limtis0/SkulPatcher/releases) and place it to `$(SkulFolder)/BepInEx/plugins`
 
 # Build it yourself (v2.0f+)
 WIP
