@@ -16,13 +16,13 @@ An all-in-one mod for Skul: The Hero Slayer
 The information for injection is provided below:
 | Namespace | Class | Method |
 | --------- | ----- | ------ |
-| SkulPatcher | Main | Init |
+| SkulPatcher | Main | Init  |
 
 
 # Build it yourself (<v2.0f)
 Assuming you have .NET Framework 4.7.2 and Visual Studio installed
 1. Complete the first step of a [setup instruction](#setup)
-2. Clone the project into Visual Studio
+2. Clone the project (Branch: `Old`) into Visual Studio
 3. Install `Lib.Harmony`, `ILMerge`, `ILMerge.MSBuild.Task` packages via NuGet
 4. Add `Assembly-CSharp` and all `Plugins...` `Unity...` `UnityEngine...` .dll files from `$(SkulFolder)/SkulData/Managed/` to the references
 5. For each reference, except "0Harmony" set the `Copy Local` property to `False`
