@@ -6,7 +6,7 @@ An all-in-one mod for Skul: The Hero Slayer
 `$(SkulFolder)` is a location of the game
 
 # Setup (v2.0f+)
-1. Extract into `$(SkulFolder)2020.3.34` (You will need to create a folder)
+1. Extract into `$(SkulFolder)/2020.3.34` (You will need to create a folder)
     - [unstripped Unity 2020.3.34 files](https://unity.bepinex.dev/libraries/2020.3.34.zip)
     - [unstripped CoreLibs 2020.3.34 files](https://unity.bepinex.dev/corlibs/2020.3.34.zip)
 2. Extract into `$(SkulFolder)`
