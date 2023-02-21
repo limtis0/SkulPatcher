@@ -10,6 +10,40 @@ namespace SkulPatcher.UI
 {
     public class GearMenu
     {
+        private static readonly List<ItemReference> items;
+        private static readonly List<WeaponReference> skulls;
+        private static readonly List<EssenceReference> essences;
+
+        private static readonly Dictionary<ItemReference, string> itemLocalization;
+        private static readonly Dictionary<WeaponReference, string> skullLocalization;
+        private static readonly Dictionary<EssenceReference, string> essenceLocalization;
+
+        static GearMenu()
+        {
+            items = Config.Gear.items.OrderBy(itemRef => GetLocalizedGearName(itemRef.displayNameKey)).ToList();  // Sort alphabetically
+            skulls = Config.Gear.weapons.ToList();
+            essences = Config.Gear.essences.OrderBy(essenceRef => GetLocalizedGearName(essenceRef.displayNameKey)).ToList();  // Sort alphabetically
+
+            itemLocalization = new Dictionary<ItemReference, string>();
+            skullLocalization = new Dictionary<WeaponReference, string>();
+            essenceLocalization = new Dictionary<EssenceReference, string>();
+
+            foreach (ItemReference item in items)
+                itemLocalization.Add(item, GetLocalizedGearName(item.displayNameKey));
+
+            foreach (WeaponReference skull in skulls)
+                skullLocalization.Add(skull, GetLocalizedGearName(skull.displayNameKey));
+
+            foreach (EssenceReference essence in essences)
+                essenceLocalization.Add(essence, GetLocalizedGearName(essence.displayNameKey));
+        }
+
+        private static string GetLocalizedGearName(string displayNameKey)
+        {
+            string localized = Localization.GetLocalizedString(displayNameKey);
+            return string.IsNullOrEmpty(localized) ? displayNameKey : localized;
+        }
+
         public static void Fill(int _)
         {
             GUI.DragWindow(dragWindowRect);
@@ -25,13 +59,10 @@ namespace SkulPatcher.UI
                                                 GUIStyle.none,
                                                 GUIStyle.none);
 
-            // Sort alphabetically
-            var items = Config.Gear.items.OrderBy(itemRef => GetLocalizedGearName(itemRef.displayNameKey));
-
             int itemInd = 0;
             foreach (ItemReference itemRef in items)
             {
-                if (GUI.Button(itemScrollButtonsRects[itemInd++], GetLocalizedGearName(itemRef.displayNameKey)))
+                if (GUI.Button(itemScrollButtonsRects[itemInd++], itemLocalization[itemRef]))
                 {
                     GearFuncs.SpawnGear<Item>(itemRef);
                 }
@@ -47,10 +78,10 @@ namespace SkulPatcher.UI
                                                  GUIStyle.none,
                                                  GUIStyle.none);
 
-            for (int i = 0; i < Config.Gear.weapons.Count; i++)
+            int skullInd = 0;
+            foreach (WeaponReference skullRef in skulls)
             {
-                WeaponReference skullRef = Config.Gear.weapons[i];
-                if (GUI.Button(skullScrollButtonsRects[i], GetLocalizedGearName(skullRef.displayNameKey)))
+                if (GUI.Button(skullScrollButtonsRects[skullInd++], skullLocalization[skullRef]))
                 {
                     GearFuncs.SpawnGear<Weapon>(skullRef);
                 }
@@ -67,13 +98,10 @@ namespace SkulPatcher.UI
                                                    GUIStyle.none,
                                                    GUIStyle.none);
 
-            // Sort alphabetically
-            var essences = Config.Gear.essences.OrderBy(essenceRef => GetLocalizedGearName(essenceRef.displayNameKey));
-
             int essenceInd = 0;
             foreach (EssenceReference essenceRef in essences)
             {
-                if (GUI.Button(essenceScrollButtonsRects[essenceInd++], GetLocalizedGearName(essenceRef.displayNameKey)))
+                if (GUI.Button(essenceScrollButtonsRects[essenceInd++], essenceLocalization[essenceRef]))
                 {
                     GearFuncs.SpawnGear<Quintessence>(essenceRef);
                 }
@@ -105,13 +133,6 @@ namespace SkulPatcher.UI
                 GearFuncs.RerollAbilities();
 
         }
-
-        private static string GetLocalizedGearName(string displayNameKey)
-        {
-            string localized = Localization.GetLocalizedString(displayNameKey);
-            return string.IsNullOrEmpty(localized) ? displayNameKey : localized;
-        }
-
 
         // Menu elements
         public static Rect windowRect;
