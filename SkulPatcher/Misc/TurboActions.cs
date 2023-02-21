@@ -24,7 +24,7 @@ namespace SkulPatcher
         private const int TryStartIsPressed = 0;
         private const int TryStartWasPressed = 1;
 
-        private static readonly List<Action.Type> attackActions = new List<Action.Type>() { Action.Type.BasicAttack, Action.Type.JumpAttack };
+        private static readonly List<Action.Type> attackActions = new() { Action.Type.BasicAttack, Action.Type.JumpAttack };
 
         private static void SetTurboAttack() => SetActionsValue(attackActions, ModConfig.turboAttackOn ? TryStartIsPressed : TryStartWasPressed);
 

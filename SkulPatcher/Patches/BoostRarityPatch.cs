@@ -52,7 +52,7 @@ namespace SkulPatcher.Patches
 
         public static IEnumerable<MethodBase> TargetMethods()
         {
-            var overloadSignature = new Type[] { typeof(Random), typeof(Rarity) };
+            Type[] overloadSignature = new Type[] { typeof(Random), typeof(Rarity) };
             yield return AccessTools.Method(typeof(GearManager), nameof(GearManager.GetItemToTake), overloadSignature);
             yield return AccessTools.Method(typeof(GearManager), nameof(GearManager.GetWeaponToTake), overloadSignature);
             yield return AccessTools.Method(typeof(GearManager), nameof(GearManager.GetQuintessenceToTake), overloadSignature);

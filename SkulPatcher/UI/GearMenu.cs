@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace SkulPatcher.UI
 {
-    public class GearMenu
+    public static class GearMenu
     {
         private static readonly List<ItemReference> items;
         private static readonly List<WeaponReference> skulls;
@@ -20,13 +20,15 @@ namespace SkulPatcher.UI
 
         static GearMenu()
         {
+            GearFuncs.AwaitGear();
+
             items = ModConfig.Gear.items.OrderBy(itemRef => GetLocalizedGearName(itemRef.displayNameKey)).ToList();  // Sort alphabetically
             skulls = ModConfig.Gear.weapons.ToList();
             essences = ModConfig.Gear.essences.OrderBy(essenceRef => GetLocalizedGearName(essenceRef.displayNameKey)).ToList();  // Sort alphabetically
 
-            itemLocalization = new Dictionary<ItemReference, string>();
-            skullLocalization = new Dictionary<WeaponReference, string>();
-            essenceLocalization = new Dictionary<EssenceReference, string>();
+            itemLocalization = new();
+            skullLocalization = new();
+            essenceLocalization = new();
 
             foreach (ItemReference item in items)
                 itemLocalization.Add(item, GetLocalizedGearName(item.displayNameKey));
@@ -198,7 +200,7 @@ namespace SkulPatcher.UI
             itemScrollPosRect = new Rect(Menu.unit, Menu.unit * row * 1.5f, scrollWidth, scrollHeight);
             itemScrollViewRect = new Rect(0, 0, scrollWidth, Menu.unit * 1.5f * ModConfig.Gear.items.Count);
 
-            itemScrollButtonsRects = new List<Rect>();
+            itemScrollButtonsRects = new();
             for (int i = 0; i < ModConfig.Gear.items.Count; i++)
             {
                 itemScrollButtonsRects.Add(new Rect(0, Menu.unit * i * 1.5f, scrollWidth, Menu.unit));
@@ -209,7 +211,7 @@ namespace SkulPatcher.UI
             skullScrollPosRect = new Rect(scrollWidth + Menu.unit, Menu.unit * row * 1.5f, scrollWidth, scrollHeight);
             skullScrollViewRect = new Rect(0, 0, scrollWidth, Menu.unit * 1.5f * ModConfig.Gear.weapons.Count);
 
-            skullScrollButtonsRects = new List<Rect>();
+            skullScrollButtonsRects = new();
             for (int i = 0; i < ModConfig.Gear.weapons.Count; i++)
             {
                 skullScrollButtonsRects.Add(new Rect(0, Menu.unit * i * 1.5f, scrollWidth, Menu.unit));
@@ -224,7 +226,7 @@ namespace SkulPatcher.UI
             essenceScrollPosRect = new Rect(scrollWidth + Menu.unit, Menu.unit * row * 1.5f, scrollWidth, scrollHeight);
             essenceScrollViewRect = new Rect(0, 0, scrollWidth, Menu.unit * 1.5f * ModConfig.Gear.essences.Count);
 
-            essenceScrollButtonsRects = new List<Rect>();
+            essenceScrollButtonsRects = new();
             for (int i = 0; i < ModConfig.Gear.essences.Count; i++)
             {
                 essenceScrollButtonsRects.Add(new Rect(0, Menu.unit * i * 1.5f, scrollWidth, Menu.unit));

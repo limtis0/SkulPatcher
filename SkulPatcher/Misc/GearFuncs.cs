@@ -8,11 +8,24 @@ using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace SkulPatcher
 {
     public static class GearFuncs
     {
+        public static void AwaitGear()
+        {
+            if (ModConfig.Gear is not null)
+                return;
+
+            MethodInfo preloadGearMethod = typeof(GameResourceLoader).GetMethod("PreloadGear", BindingFlags.NonPublic | BindingFlags.Instance);
+            preloadGearMethod.Invoke(GameResourceLoader.instance, new object[] { });
+
+            new Traverse(GameResourceLoader.instance).Field<AsyncOperationHandle<GearResource>>("_gearHandle").Value.WaitForCompletion();
+        }
+
         public static void SpawnGear<T>(GearReference gearRef) where T : Gear
         {
             if (!ModConfig.IsInGame)

@@ -11,7 +11,7 @@ namespace SkulPatcher.Patches
     {
         private static Traverse itemInstances;
         private static List<Gear> savedInstances;
-        private static readonly List<Gear> emptyList = new List<Gear>();
+        private static readonly List<Gear> emptyList = new();
 
         public static void Prefix(GearManager __instance)
         {
@@ -37,7 +37,7 @@ namespace SkulPatcher.Patches
     {
         private static Traverse skullInstances;
         private static List<Gear> savedInstances;
-        private static readonly List<Gear> emptyList = new List<Gear>();
+        private static readonly List<Gear> emptyList = new();
 
         public static void Prefix(GearManager __instance)
         {

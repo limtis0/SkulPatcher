@@ -36,7 +36,7 @@ namespace SkulPatcher.Patches
         private static bool newMap;
 
         private static (PathNode, PathNode)[] originalPath = new (PathNode, PathNode)[] { };
-        private static readonly Queue<(int pathIndex, Gate.Type type)> pathQueue = new Queue<(int, Gate.Type)>();
+        private static readonly Queue<(int pathIndex, Gate.Type type)> pathQueue = new();
 
         private static readonly Gate.Type[] bossGates = new Gate.Type[] { Gate.Type.Adventurer, Gate.Type.Boss };
 

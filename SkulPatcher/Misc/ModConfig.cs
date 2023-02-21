@@ -61,13 +61,12 @@ namespace SkulPatcher
 
         // Utils
         public static Harmony harmony;
-        public static GameObject menu;
 
-        public static readonly LevelManager Level = Singleton<Service>.Instance.levelManager;
-        public static readonly GearResource Gear = GearResource.instance;
+        public static LevelManager Level => Singleton<Service>.Instance.levelManager;
+        public static GearResource Gear => GearResource.instance;
         public static UIManager UI => Scene<GameBase>.instance.uiManager;
 
-        public static bool IsInGame => !(Level.player is null);
+        public static bool IsInGame => Level.player is not null;
 
         public static void Save()
         {
