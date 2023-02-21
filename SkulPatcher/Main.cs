@@ -1,14 +1,25 @@
 ﻿using BepInEx;
+using HarmonyLib;
+using SkulPatcher.Patches;
+using SkulPatcher.UI;
+using System.Reflection;
+using UnityEngine;
 
 namespace SkulPatcher
 {
     [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
     public class Main : BaseUnityPlugin
     {
-        private void Awake()
+        public void Awake()
         {
-            // Plugin startup logic
-            Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
+            ModConfig.harmony = new Harmony("com.limtis.SkulPatcher");
+            ModConfig.harmony.PatchAll(Assembly.GetExecutingAssembly());
+
+            BossRushPatch.PatchAll();
+
+            ModConfig.menu = new GameObject();
+            ModConfig.menu.AddComponent<Menu>();
+            DontDestroyOnLoad(ModConfig.menu);
         }
     }
 }
