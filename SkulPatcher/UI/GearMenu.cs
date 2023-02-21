@@ -10,17 +10,22 @@ namespace SkulPatcher.UI
 {
     public static class GearMenu
     {
-        private static readonly List<ItemReference> items;
-        private static readonly List<WeaponReference> skulls;
-        private static readonly List<EssenceReference> essences;
+        private static bool gearInitialized = false;
 
-        private static readonly Dictionary<ItemReference, string> itemLocalization;
-        private static readonly Dictionary<WeaponReference, string> skullLocalization;
-        private static readonly Dictionary<EssenceReference, string> essenceLocalization;
+        private static List<ItemReference> items;
+        private static List<WeaponReference> skulls;
+        private static List<EssenceReference> essences;
 
-        static GearMenu()
+        private static Dictionary<ItemReference, string> itemLocalization;
+        private static Dictionary<WeaponReference, string> skullLocalization;
+        private static Dictionary<EssenceReference, string> essenceLocalization;
+
+        private static void InitGear()
         {
-            GearFuncs.AwaitGear();
+            if (gearInitialized)
+                return;
+
+            gearInitialized = true;
 
             items = ModConfig.Gear.items.OrderBy(itemRef => GetLocalizedGearName(itemRef.displayNameKey)).ToList();  // Sort alphabetically
             skulls = ModConfig.Gear.weapons.ToList();
@@ -188,6 +193,8 @@ namespace SkulPatcher.UI
             row++;
 
             // Gear spawn
+            InitGear();
+
             float scrollWidth = menuWidth / 2 - Menu.unit;
             float scrollHeight = Menu.unit * 9;
 

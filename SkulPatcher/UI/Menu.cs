@@ -34,7 +34,7 @@ namespace SkulPatcher.UI
 
         public void OnGUI()
         {
-            if (!showMenu)
+            if (!showMenu || ModConfig.Gear is null)
                 return;
 
             if (!init || Screen.height != screenHeightPrevious || Screen.width != screenWidthPrevious)
