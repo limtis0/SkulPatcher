@@ -24,7 +24,7 @@ An all-in-one mod for Skul: The Hero Slayer
 WIP
 
 # Setup (<v2.0f)
-1. Extract **with replacement** into `$(SkulFolder)/SkulData/Managed`
+1. Extract **with replacement** into `$(SkulFolder)/Skul_Data/Managed`
     - [unstripped Unity 2020.3.34 files](https://unity.bepinex.dev/libraries/2020.3.34.zip)
     - [unstripped CoreLibs files 2020.3.34](https://unity.bepinex.dev/corlibs/2020.3.34.zip)
 2. Download the mod from ["Releases" page](https://github.com/limtis0/SkulPatcher/releases) or [build it yourself](#build-it-yourself)
