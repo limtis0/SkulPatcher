@@ -6,14 +6,14 @@ An all-in-one mod for Skul: The Hero Slayer
 `$(SkulFolder)` is a location of the game
 
 # Setup (v2.0f+)
-1. Extract into `$(SkulFolder)/SkulData/Managed/2020.3.34`
+1. Extract into `$(SkulFolder)/SkulData/Managed/2020.3.34` (You will need to create a folder)
     - [unstripped Unity 2020.3.34 files](https://unity.bepinex.dev/libraries/2020.3.34.zip)
     - [unstripped CoreLibs 2020.3.34 files](https://unity.bepinex.dev/corlibs/2020.3.34.zip)
 2. Extract into `$(SkulFolder)`
     - [BepInEx v5.4.21](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.21)
-3. Run the game once, so all of the BepInEx files will appear
-4. In `$(SkulFolder)/doorstop.ini`
+3. In `$(SkulFolder)/doorstop.ini`
     - Set `dllSearchPathOverride=` to `dllSearchPathOverride=2020.3.34`
+4. Run the game once, so all of the BepInEx files will appear
 5. In `$(SkulFolder)/BepInEx/config/BepInEx.cfg`
     - Set `Assembly =` to `Assembly = Assembly-CSharp.dll`
     - Set `Type =` to `Type = Main`
