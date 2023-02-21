@@ -26,10 +26,10 @@ namespace SkulPatcher
         public static bool bonesMultOn = PlayerPrefs.GetInt("bonesMultOn", 0) != 0;
         public static bool hQuartzMultOn = PlayerPrefs.GetInt("hQuartzMultOn", 0) != 0;
 
-        public static int goldMultValue = PlayerPrefs.GetInt("goldMultValue", 1);
-        public static int dQuartzMultValue = PlayerPrefs.GetInt("dQuartzMultValue", 1);
-        public static int bonesMultValue = PlayerPrefs.GetInt("bonesMultValue", 1);
-        public static int hQuartzMultValue = PlayerPrefs.GetInt("hQuartzMultValue", 1);
+        public static float goldMultValue = PlayerPrefs.GetFloat("goldMultValue", 1);
+        public static float dQuartzMultValue = PlayerPrefs.GetFloat("dQuartzMultValue", 1);
+        public static float bonesMultValue = PlayerPrefs.GetFloat("bonesMultValue", 1);
+        public static float hQuartzMultValue = PlayerPrefs.GetFloat("hQuartzMultValue", 1);
 
         public static bool autoEquipSpawnedGear = PlayerPrefs.GetInt("autoEquipSpawnedGear", 0) != 0;
 
@@ -84,10 +84,10 @@ namespace SkulPatcher
 
             PlayerPrefs.SetInt("autoEquipSpawnedGear", autoEquipSpawnedGear ? 1 : 0);
 
-            PlayerPrefs.SetInt("goldMultValue", goldMultValue);
-            PlayerPrefs.SetInt("dQuartzMultValue", dQuartzMultValue);
-            PlayerPrefs.SetInt("bonesMultValue", bonesMultValue);
-            PlayerPrefs.SetInt("hQuartzMultValue", hQuartzMultValue);
+            PlayerPrefs.SetFloat("goldMultValue", goldMultValue);
+            PlayerPrefs.SetFloat("dQuartzMultValue", dQuartzMultValue);
+            PlayerPrefs.SetFloat("bonesMultValue", bonesMultValue);
+            PlayerPrefs.SetFloat("hQuartzMultValue", hQuartzMultValue);
 
             PlayerPrefs.SetInt("forceEasyModeOn", forceEasyModeOn ? 1 : 0);
 

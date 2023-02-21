@@ -82,33 +82,33 @@ namespace SkulPatcher.UI
             // Gold multiplier
             ModConfig.goldMultOn = GUI.Toggle(goldMultToggleRect,
                                            ModConfig.goldMultOn,
-                                           $"Multiply incoming Gold by x{ModConfig.goldMultValue}");
+                                           $"Multiply incoming Gold by x{ModConfig.goldMultValue:f1}");
 
-            ModConfig.goldMultValue = (int)GUI.HorizontalSlider(goldMultSliderRect, ModConfig.goldMultValue, 1, 50);
+            ModConfig.goldMultValue = RoundToZeroFive(GUI.HorizontalSlider(goldMultSliderRect, ModConfig.goldMultValue, 0, 20));
 
 
             // Dark quartz multiplier
             ModConfig.dQuartzMultOn = GUI.Toggle(dQuartzMultToggleRect,
                                               ModConfig.dQuartzMultOn,
-                                              $"Multiply incoming Dark Quartz by x{ModConfig.dQuartzMultValue}");
+                                              $"Multiply incoming Dark Quartz by x{ModConfig.dQuartzMultValue:f1}");
 
-            ModConfig.dQuartzMultValue = (int)GUI.HorizontalSlider(dQuartzMultSliderRect, ModConfig.dQuartzMultValue, 1, 50);
+            ModConfig.dQuartzMultValue = RoundToZeroFive(GUI.HorizontalSlider(dQuartzMultSliderRect, ModConfig.dQuartzMultValue, 0, 20));
 
 
             // Bones multiplier
             ModConfig.bonesMultOn = GUI.Toggle(bonesMultToggleRect,
                                             ModConfig.bonesMultOn,
-                                            $"Multiply incoming Bones by x{ModConfig.bonesMultValue}");
+                                            $"Multiply incoming Bones by x{ModConfig.bonesMultValue:f1}");
 
-            ModConfig.bonesMultValue = (int)GUI.HorizontalSlider(bonesMultSliderRect, ModConfig.bonesMultValue, 1, 50);
+            ModConfig.bonesMultValue = RoundToZeroFive(GUI.HorizontalSlider(bonesMultSliderRect, ModConfig.bonesMultValue, 0, 20));
 
 
             // Heart quartz multiplier
             ModConfig.hQuartzMultOn = GUI.Toggle(hQuartzMultToggleRect,
                                               ModConfig.hQuartzMultOn,
-                                              $"Multiply incoming Heart Quartz by x{ModConfig.hQuartzMultValue}");
+                                              $"Multiply incoming Heart Quartz by x{ModConfig.hQuartzMultValue:f1}");
 
-            ModConfig.hQuartzMultValue = (int)GUI.HorizontalSlider(hQuartzMultSliderRect, ModConfig.hQuartzMultValue, 1, 50);
+            ModConfig.hQuartzMultValue = RoundToZeroFive(GUI.HorizontalSlider(hQuartzMultSliderRect, ModConfig.hQuartzMultValue, 0, 20));
 
 
             // Gold value
@@ -156,6 +156,8 @@ namespace SkulPatcher.UI
             if (GUI.Button(saveConfigButtonRect, "Save config"))
                 ModConfig.Save();
         }
+
+        private static float RoundToZeroFive(float num) => Mathf.Round(num * 2) / 2;
 
 
         // Menu elements
