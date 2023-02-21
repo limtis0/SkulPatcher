@@ -16,7 +16,7 @@ The information for injection is provided below:
 
 
 # Build it yourself
-Assuming you have .NET Framework 4.8.1 and Visual Studio installed
+Assuming you have .NET Framework 4.7.2 and Visual Studio installed
 - Complete the first step of a [setup instruction](#setup)
 - Clone the project into Visual Studio
 - Install "Lib.Harmony", "ILMerge", "ILMerge.MSBuild.Task" packages via NuGet
