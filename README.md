@@ -41,13 +41,14 @@ The information for injection is provided below:
 Assuming you have .NET Framework 4.7.2 and Visual Studio installed
 1. Complete the first step of a [setup instruction](#setup)
 2. Clone the project into Visual Studio
-3. Install "Lib.Harmony", "ILMerge", "ILMerge.MSBuild.Task" packages via NuGet
-4. Add "Assembly-CSharp" and all "Plugins..." "Unity..." "UnityEngine..." .dll files from `$(SkulFolder)/SkulData/Managed/` to the references
-5. For each reference, except "0Harmony" set the "Copy Local" property to "False"
-6. For "0Harmony" reference set the "Copy Local" property to "True"
+3. Install `Lib.Harmony`, `ILMerge`, `ILMerge.MSBuild.Task` packages via NuGet
+4. Add `Assembly-CSharp` and all `Plugins...` `Unity...` `UnityEngine...` .dll files from `$(SkulFolder)/SkulData/Managed/` to the references
+5. For each reference, except "0Harmony" set the `Copy Local` property to `False`
+6. For `0Harmony` reference set the `Copy Local` property to `True`
 7. Build the solution
 
 
 # Compatibility
 - [Skul: The Hero Slayer v1.7.0+](https://store.steampowered.com/news/app/1147560/view/5283318909430116714) (Built on [Unity 2020.3.34f1](https://unity.com/releases/editor/whats-new/2020.3.34); Should work for future releases if nothing drastically changes)
-- [Harmony v2.2.2](https://github.com/pardeike/Harmony/releases/tag/v2.2.2.0)
+- [Harmony v2.2.2 (<v2.0f)](https://github.com/pardeike/Harmony/releases/tag/v2.2.2.0)
+- [BepInEx v5.4.21 (v2.0f+)](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.21)
