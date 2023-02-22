@@ -95,7 +95,7 @@ namespace SkulPatcher.UI
 
             row += 7;
             applyChangesButtonRect = new Rect(Menu.unit, Menu.unit * row * 1.5f, Menu.unit * 8, Menu.unit);
-            resetButtonRect = new Rect(Menu.unit * 11, Menu.unit * row * 1.5f, Menu.unit * 5, Menu.unit);
+            resetButtonRect = new Rect(Menu.unit * 10, Menu.unit * row * 1.5f, Menu.unit * 5, Menu.unit);
         }
     }
 }
