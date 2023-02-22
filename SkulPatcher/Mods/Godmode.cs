@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace SkulPatcher
 {
-    static class Godmode
+    public static class Godmode
     {
         public static IEnumerator Coroutine()
         {

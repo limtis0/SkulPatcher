@@ -13,6 +13,7 @@ namespace SkulPatcher.UI
         private bool showMenu = true;
         private bool showRouteMenu = false;
         private bool showGearMenu = false;
+        private bool showStatMenu = false;
 
         private int screenWidthPrevious;
         private int screenHeightPrevious;
@@ -44,6 +45,7 @@ namespace SkulPatcher.UI
                 Resize();
                 RouteMenu.Resize();
                 GearMenu.Resize();
+                StatMenu.Resize();
 
                 init = true;
                 screenHeightPrevious = Screen.height;
@@ -57,6 +59,9 @@ namespace SkulPatcher.UI
 
             if (showRouteMenu)
                 RouteMenu.windowRect = GUI.Window(2, RouteMenu.windowRect, RouteMenu.Fill, "Route menu");
+
+            if (showStatMenu)
+                StatMenu.windowRect = GUI.Window(3, StatMenu.windowRect, StatMenu.Fill, "Stat menu");
         }
 
         private void Fill(int _)
@@ -147,11 +152,14 @@ namespace SkulPatcher.UI
                                             ModConfig.turboDashOn,
                                             $"Turbo-dash");
 
+            if (GUI.Button(routeMenuButtonRect, "Route menu"))
+                showRouteMenu = !showRouteMenu;
+
             if (GUI.Button(gearMenuButtonRect, "Gear menu"))
                 showGearMenu = !showGearMenu;
 
-            if (GUI.Button(routeMenuButtonRect, "Route menu"))
-                showRouteMenu = !showRouteMenu;
+            if (GUI.Button(statMenuButtonRect, "Stat menu"))
+                showStatMenu = !showStatMenu;
 
             if (GUI.Button(saveConfigButtonRect, "Save config"))
                 ModConfig.Save();
@@ -204,8 +212,9 @@ namespace SkulPatcher.UI
         private Rect turboAttackToggleRect;
         private Rect turboDashToggleRect;
 
-        private Rect gearMenuButtonRect;
         private Rect routeMenuButtonRect;
+        private Rect gearMenuButtonRect;
+        private Rect statMenuButtonRect;
         private Rect saveConfigButtonRect;
 
         private void CalculateSizing()
@@ -317,7 +326,11 @@ namespace SkulPatcher.UI
 
             // Gear menu
             gearMenuButtonRect = new Rect(halfWidth + unit, (unit + 0.5f) * row * 1.5f + unit, halfWidth, unit);
-            row += 2;
+            row++;
+
+            // Stat menu
+            statMenuButtonRect = new Rect(halfWidth + unit, (unit + 0.5f) * row * 1.5f + unit, halfWidth, unit);
+            row++;
 
             // Save config
             saveConfigButtonRect = new Rect(halfWidth + unit, (unit + 0.5f) * row * 1.5f + unit, halfWidth, unit);
