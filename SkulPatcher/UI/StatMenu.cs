@@ -1,14 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using UnityEngine;
 
 namespace SkulPatcher.UI
 {
     public static class StatMenu
     {
-        private static bool[] statToggles = Enumerable.Repeat(true, StatFuncs.stats.Length).ToArray();
-        private static int[] statValues = Enumerable.Repeat(0, StatFuncs.stats.Length).ToArray();
+        private static (bool toApply, int statValue)[] statValues = Enumerable.Repeat((false, 0), StatFuncs.stats.Length).ToArray();  // Init array of "fixed" size
+
+        static StatMenu() => SetDefaults();
+
+        private static void SetDefaults()
+        {
+            for (int i = 0; i < StatFuncs.stats.Length; i++)
+            {
+                statValues[i].toApply = false;
+                statValues[i].statValue = StatFuncs.statConsts[StatFuncs.stats[i].category].defaultValue;
+            }
+        }
 
         public static void Fill(int _)
         {
@@ -18,14 +27,29 @@ namespace SkulPatcher.UI
             
             for (int i = 0; i < StatFuncs.stats.Length; i++)
             {
-                statToggles[i] = GUI.Toggle(statScrollToggleRects[i], statToggles[i], $"{StatFuncs.stats[i].name} ({statValues[i]}pp)");
-                statValues[i] = (int) GUI.HorizontalSlider(statScrollSliderRects[i], statValues[i], -1000, 1000);
+                var (category, _, name) = StatFuncs.stats[i];
+                var (minValue, maxValue, _, abbreviation) = StatFuncs.statConsts[category];
+
+                statValues[i].toApply = GUI.Toggle(statScrollToggleRects[i],
+                                                   statValues[i].toApply,
+                                                   $"{name} ({statValues[i].statValue}{abbreviation})");
+
+                statValues[i].statValue = (int)GUI.HorizontalSlider(statScrollSliderRects[i],
+                                                                    statValues[i].statValue,
+                                                                    minValue,
+                                                                    maxValue);
             }
 
             GUI.EndScrollView();
 
             if (GUI.Button(applyChangesButtonRect, "Apply changes"))
-                StatFuncs.SetBuff(statToggles, statValues);
+                StatFuncs.SetBuff(statValues);
+
+            if (GUI.Button(resetButtonRect, "Reset"))
+            {
+                SetDefaults();
+                StatFuncs.SetBuff(statValues);
+            }
         }
 
         public static Rect windowRect;
@@ -42,6 +66,7 @@ namespace SkulPatcher.UI
         private static List<Rect> statScrollSliderRects;
 
         private static Rect applyChangesButtonRect;
+        private static Rect resetButtonRect;
 
         public static void Resize()
         {
@@ -69,7 +94,8 @@ namespace SkulPatcher.UI
             }
 
             row += 7;
-            applyChangesButtonRect = new Rect(Menu.unit * 1.5f, Menu.unit * row * 1.5f, Menu.unit * 8, Menu.unit);
+            applyChangesButtonRect = new Rect(Menu.unit, Menu.unit * row * 1.5f, Menu.unit * 8, Menu.unit);
+            resetButtonRect = new Rect(Menu.unit * 11, Menu.unit * row * 1.5f, Menu.unit * 5, Menu.unit);
         }
     }
 }
