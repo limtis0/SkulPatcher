@@ -32,7 +32,7 @@ namespace SkulPatcher.UI
 
                 statValues[i].toApply = GUI.Toggle(statScrollToggleRects[i],
                                                    statValues[i].toApply,
-                                                   $"{name} ({statValues[i].statValue}{abbreviation})");
+                                                   $"{name} ({statValues[i].statValue:+0;-#}{abbreviation})");
 
                 statValues[i].statValue = (int)GUI.HorizontalSlider(statScrollSliderRects[i],
                                                                     statValues[i].statValue,
