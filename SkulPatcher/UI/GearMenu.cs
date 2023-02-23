@@ -12,9 +12,9 @@ namespace SkulPatcher.UI
     {
         private static bool gearInitialized = false;
 
-        private static List<ItemReference> items;
-        private static List<WeaponReference> skulls;
-        private static List<EssenceReference> essences;
+        private static ItemReference[] items;
+        private static WeaponReference[] skulls;
+        private static EssenceReference[] essences;
 
         private static Dictionary<ItemReference, string> itemLocalization;
         private static Dictionary<WeaponReference, string> skullLocalization;
@@ -27,22 +27,34 @@ namespace SkulPatcher.UI
 
             gearInitialized = true;
 
-            items = ModConfig.Gear.items.OrderBy(itemRef => GetLocalizedGearName(itemRef.displayNameKey)).ToList();  // Sort alphabetically
-            skulls = ModConfig.Gear.weapons.ToList();
-            essences = ModConfig.Gear.essences.OrderBy(essenceRef => GetLocalizedGearName(essenceRef.displayNameKey)).ToList();  // Sort alphabetically
-
             itemLocalization = new();
             skullLocalization = new();
             essenceLocalization = new();
 
-            foreach (ItemReference item in items)
-                itemLocalization.Add(item, GetLocalizedGearName(item.displayNameKey));
+            // Fill localization
+            foreach (ItemReference itemRef in ModConfig.Gear.items)
+                itemLocalization.Add(itemRef, GetLocalizedGearName(itemRef.displayNameKey));
 
-            foreach (WeaponReference skull in skulls)
+            foreach (WeaponReference skull in ModConfig.Gear.weapons)
                 skullLocalization.Add(skull, GetLocalizedGearName(skull.displayNameKey));
 
-            foreach (EssenceReference essence in essences)
+            foreach (EssenceReference essence in ModConfig.Gear.essences)
                 essenceLocalization.Add(essence, GetLocalizedGearName(essence.displayNameKey));
+
+            // Fill gear lists
+            items = ModConfig.Gear.items.OrderBy(itemRef => itemLocalization[itemRef]).ToArray();  // Sort alphabetically
+            skulls = ModConfig.Gear.weapons.ToArray();
+            essences = ModConfig.Gear.essences.OrderBy(essenceRef => essenceLocalization[essenceRef]).ToArray();  // Sort alphabetically
+
+            // Init gear-related rects
+            itemScrollButtonsRects = Enumerable.Repeat(new Rect(), ModConfig.Gear.items.Count).ToArray();
+            itemScrollButtonsVisible = Enumerable.Repeat(true, ModConfig.Gear.items.Count).ToArray();
+
+            skullScrollButtonsRects = Enumerable.Repeat(new Rect(), ModConfig.Gear.weapons.Count).ToArray();
+            skullScrollButtonsVisible = Enumerable.Repeat(true, ModConfig.Gear.weapons.Count).ToArray();
+
+            essenceScrollButtonsRects = Enumerable.Repeat(new Rect(), ModConfig.Gear.essences.Count).ToArray();
+            essenceScrollButtonsVisible = Enumerable.Repeat(true, ModConfig.Gear.essences.Count).ToArray();
         }
 
         private static string GetLocalizedGearName(string displayNameKey)
@@ -155,19 +167,22 @@ namespace SkulPatcher.UI
         private static Rect itemScrollPosRect;
         private static Rect itemScrollViewRect;
         private static Vector2 itemScrollVec = Vector2.zero;
-        private static List<Rect> itemScrollButtonsRects;
+        private static Rect[] itemScrollButtonsRects;
+        private static bool[] itemScrollButtonsVisible;
 
         private static Rect skullScrollPosRect;
         private static Rect skullScrollViewRect;
         private static Vector2 skullScrollVec = Vector2.zero;
-        private static List<Rect> skullScrollButtonsRects;
+        private static Rect[] skullScrollButtonsRects;
+        private static bool[] skullScrollButtonsVisible;
 
         private static Rect essenceLabelRect;
 
         private static Rect essenceScrollPosRect;
         private static Rect essenceScrollViewRect;
         private static Vector2 essenceScrollVec = Vector2.zero;
-        private static List<Rect> essenceScrollButtonsRects;
+        private static Rect[] essenceScrollButtonsRects;
+        private static bool[] essenceScrollButtonsVisible;
 
         private static Rect rerollAbilitiesButtonRect;
 
@@ -207,10 +222,9 @@ namespace SkulPatcher.UI
             itemScrollPosRect = new Rect(Menu.unit, Menu.unit * row * 1.5f, scrollWidth, scrollHeight);
             itemScrollViewRect = new Rect(0, 0, scrollWidth, Menu.unit * 1.5f * ModConfig.Gear.items.Count);
 
-            itemScrollButtonsRects = new();
             for (int i = 0; i < ModConfig.Gear.items.Count; i++)
             {
-                itemScrollButtonsRects.Add(new Rect(0, Menu.unit * i * 1.5f, scrollWidth, Menu.unit));
+                itemScrollButtonsRects[i] = new Rect(0, Menu.unit * i * 1.5f, scrollWidth, Menu.unit);
             }
 
 
@@ -218,10 +232,9 @@ namespace SkulPatcher.UI
             skullScrollPosRect = new Rect(scrollWidth + Menu.unit, Menu.unit * row * 1.5f, scrollWidth, scrollHeight);
             skullScrollViewRect = new Rect(0, 0, scrollWidth, Menu.unit * 1.5f * ModConfig.Gear.weapons.Count);
 
-            skullScrollButtonsRects = new();
             for (int i = 0; i < ModConfig.Gear.weapons.Count; i++)
             {
-                skullScrollButtonsRects.Add(new Rect(0, Menu.unit * i * 1.5f, scrollWidth, Menu.unit));
+                skullScrollButtonsRects[i] = new Rect(0, Menu.unit * i * 1.5f, scrollWidth, Menu.unit);
             }
             row += 7;
 
@@ -233,10 +246,9 @@ namespace SkulPatcher.UI
             essenceScrollPosRect = new Rect(scrollWidth + Menu.unit, Menu.unit * row * 1.5f, scrollWidth, scrollHeight);
             essenceScrollViewRect = new Rect(0, 0, scrollWidth, Menu.unit * 1.5f * ModConfig.Gear.essences.Count);
 
-            essenceScrollButtonsRects = new();
             for (int i = 0; i < ModConfig.Gear.essences.Count; i++)
             {
-                essenceScrollButtonsRects.Add(new Rect(0, Menu.unit * i * 1.5f, scrollWidth, Menu.unit));
+                essenceScrollButtonsRects[i] = new Rect(0, Menu.unit * i * 1.5f, scrollWidth, Menu.unit);
             }
             row--;
 

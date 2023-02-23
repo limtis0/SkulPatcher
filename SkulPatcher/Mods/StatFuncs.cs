@@ -121,7 +121,7 @@ namespace SkulPatcher
             {Stat.Category.PercentPoint, (-1000, 5000, 0, "pp") },
         };
 
-        public static void SetBuff((bool toApply, int statValue)[] values)
+        public static void SetBuff((bool toApply, int statValue)[] values)  // Function specifically for StatMenu.cs
         {
             if (values.Length != stats.Length)
                 throw new Exception("StatValues are not the same length as StatFuncs.stats");
@@ -137,15 +137,7 @@ namespace SkulPatcher
             SetBuff(new Stat.Values(statValues.ToArray()));
         }
 
-        private static double ScaleValueForCategory(Stat.Category category, int value)
-        {
-            if (category == Stat.Category.PercentPoint || category == Stat.Category.Percent)
-                return (double)value / 100;
-
-            return value;
-        }
-
-        private static void SetBuff(Stat.Values values)
+        public static void SetBuff(Stat.Values values)
         {
             if (!ModConfig.IsInGame)
                 return;
@@ -155,6 +147,14 @@ namespace SkulPatcher
 
             Attach(values);
             prevAttached = values;
+        }
+
+        private static double ScaleValueForCategory(Stat.Category category, int value)
+        {
+            if (category == Stat.Category.PercentPoint || category == Stat.Category.Percent)
+                return (double)value / 100;
+
+            return value;
         }
 
         private static void Attach(Stat.Values values) => ModConfig.Level.player.stat.AttachValues(values);
