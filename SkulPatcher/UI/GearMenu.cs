@@ -195,7 +195,7 @@ namespace SkulPatcher.UI
                 SetViewRects();
             }
 
-            filterUnique = GUI.Toggle(filterUniqueRect, filterUnique, "Antique");
+            filterUnique = GUI.Toggle(filterUniqueRect, filterUnique, "Unique");
             if (filterUnique != filterUniquePreviousState)
             {
                 filterUniquePreviousState = filterUnique;
