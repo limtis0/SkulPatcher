@@ -1,4 +1,4 @@
-﻿using Characters;
+﻿using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
@@ -65,7 +65,7 @@ namespace SkulPatcher.UI
             if (searchText != searchTextPreviousState)
             {
                 searchTextPreviousState = searchText;
-                statScrollViewRect = FilterStatsAndGetViewRect(searchText);
+                statScrollViewRect = FilterStatsAndGetViewRect();
             }
         }
 
@@ -94,7 +94,7 @@ namespace SkulPatcher.UI
             menuWidth = (int)(Screen.width / 2.5);
             menuHeight = Menu.unit * 14;
 
-            windowRect = new Rect(20, Screen.height - menuHeight - 20, menuWidth, menuHeight);
+            windowRect = new Rect(Screen.width - menuWidth - Menu.unit, Menu.unit * 33, menuWidth, menuHeight);
             int row = 0;
 
             dragWindowRect = new Rect(0, 0, menuWidth, Menu.unit);
@@ -104,7 +104,7 @@ namespace SkulPatcher.UI
             float listHeight = Menu.unit * 10f;
 
             statScrollPosRect = new Rect(Menu.unit, Menu.unit * row * 1.5f, listWidth, listHeight);
-            statScrollViewRect = FilterStatsAndGetViewRect(searchText);
+            statScrollViewRect = FilterStatsAndGetViewRect();
 
             row += 7;
             applyChangesButtonRect = new Rect(Menu.unit, Menu.unit * row * 1.5f, Menu.unit * 8, Menu.unit);
@@ -114,12 +114,22 @@ namespace SkulPatcher.UI
             searchFieldRect = new Rect(menuWidth - Menu.unit * 9, Menu.unit * row * 1.5f, Menu.unit * 8, Menu.unit);
         }
 
-        private static Rect FilterStatsAndGetViewRect(string pattern)
+        private static Rect FilterStatsAndGetViewRect()
         {
+            string pattern = searchText;
+
             if (string.IsNullOrEmpty(pattern))
                 pattern = ".+";
 
-            Regex regex = new(pattern, RegexOptions.IgnoreCase);
+            Regex regex;
+            try
+            {
+                regex = new(pattern, RegexOptions.IgnoreCase);
+            }
+            catch (ArgumentException)
+            {
+                regex = new(".+", RegexOptions.IgnoreCase);
+            }
 
             int elementRow = 0;
             for (int i = 0; i < statValues.Length; i++)

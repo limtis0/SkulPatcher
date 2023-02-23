@@ -79,10 +79,6 @@ namespace SkulPatcher.UI
                                                     ModConfig.luckBoostContinuous,
                                                     $"Continue boosting rarity if the roll was successful");
 
-            // Duplicate gear
-            ModConfig.allowDuplicateItems = GUI.Toggle(duplicateItemsToggleRect, ModConfig.allowDuplicateItems, "Allow duplicate items");
-            ModConfig.allowDuplicateSkulls = GUI.Toggle(duplicateSkullsToggleRect, ModConfig.allowDuplicateSkulls, "Allow duplicate skulls");
-
 
             // Gold multiplier
             ModConfig.goldMultOn = GUI.Toggle(goldMultToggleRect,
@@ -132,6 +128,7 @@ namespace SkulPatcher.UI
             GUI.Label(hQuartzLabelRect, "Heart Quartz");
             GameData.Currency.heartQuartz.balance = Convert.ToInt32(GUI.TextField(hQuartzTextFieldRect, GameData.Currency.heartQuartz.balance.ToString()));
 
+
             // Easy mode
             ModConfig.forceEasyModeOn = GUI.Toggle(easyModeToggleRect,
                                                 ModConfig.forceEasyModeOn,
@@ -141,6 +138,7 @@ namespace SkulPatcher.UI
             ModConfig.godmodeOn = GUI.Toggle(godModeToggleRect,
                                           ModConfig.godmodeOn,
                                           $"God mode");
+
 
             // Turbo-attack
             ModConfig.turboAttackOn = GUI.Toggle(turboAttackToggleRect,
@@ -152,6 +150,8 @@ namespace SkulPatcher.UI
                                             ModConfig.turboDashOn,
                                             $"Turbo-dash");
 
+
+            // Buttons
             if (GUI.Button(routeMenuButtonRect, "Route menu"))
                 showRouteMenu = !showRouteMenu;
 
@@ -178,9 +178,6 @@ namespace SkulPatcher.UI
         private Rect luckBoostToggleRect;
         private Rect luckBoostSliderRect;
         private Rect luckBoostContinuousToggleRect;
-
-        private Rect duplicateItemsToggleRect;
-        private Rect duplicateSkullsToggleRect;
 
         private Rect goldMultToggleRect;
         private Rect goldMultSliderRect;
@@ -232,9 +229,9 @@ namespace SkulPatcher.UI
         {
 
             menuWidth = Screen.width / 4;
-            menuHeight = unit * 32;
+            menuHeight = unit * 31;
 
-            windowRect = new Rect(Screen.width - menuWidth - 20, 20, menuWidth, menuHeight);
+            windowRect = new Rect(Screen.width - menuWidth - unit, unit, menuWidth, menuHeight);
             int row = 0;
 
             dragWindowRect = new Rect(0, 0, menuWidth, unit);
@@ -249,10 +246,6 @@ namespace SkulPatcher.UI
             row++;
 
             luckBoostContinuousToggleRect = new Rect(unit, unit * row * 1.5f, menuWidth - unit, unit);
-            row++;
-
-            duplicateItemsToggleRect = new Rect(unit, unit * row * 1.5f, menuWidth / 2 - unit, unit);
-            duplicateSkullsToggleRect = new Rect(menuWidth / 2, unit * row * 1.5f, menuWidth / 2 - unit, unit);
             row += 2;
 
 

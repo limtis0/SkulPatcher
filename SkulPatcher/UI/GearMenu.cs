@@ -2,8 +2,10 @@
 using Characters.Gear.Quintessences;
 using Characters.Gear.Weapons;
 using GameResources;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace SkulPatcher.UI
@@ -19,6 +21,21 @@ namespace SkulPatcher.UI
         private static Dictionary<ItemReference, string> itemLocalization;
         private static Dictionary<WeaponReference, string> skullLocalization;
         private static Dictionary<EssenceReference, string> essenceLocalization;
+
+        private static string searchText = string.Empty;
+        private static string searchTextPreviousState = searchText;
+
+        private static bool filterLegendary = true;
+        private static bool filterLegendaryPreviousState = filterLegendary;
+
+        private static bool filterUnique = true;
+        private static bool filterUniquePreviousState = filterUnique;
+
+        private static bool filterRare = true;
+        private static bool filterRarePreviousState = filterRare;
+
+        private static bool filterCommon = true;
+        private static bool filterCommonPreviousState = filterCommon;
 
         private static void InitGear()
         {
@@ -71,6 +88,7 @@ namespace SkulPatcher.UI
             GUI.Label(spawnItemLabelRect, "Spawn item");
             GUI.Label(spawnSkullLabelRect, "Spawn skull");
 
+
             // Items
             itemScrollVec = GUI.BeginScrollView(itemScrollPosRect,
                                                 itemScrollVec,
@@ -78,10 +96,14 @@ namespace SkulPatcher.UI
                                                 GUIStyle.none,
                                                 GUIStyle.none);
 
-            int itemInd = 0;
-            foreach (ItemReference itemRef in items)
+            for (int i = 0; i < items.Length; i++)
             {
-                if (GUI.Button(itemScrollButtonsRects[itemInd++], itemLocalization[itemRef]))
+                if (!itemScrollButtonsVisible[i])
+                    continue;
+
+                ItemReference itemRef = items[i];
+
+                if (GUI.Button(itemScrollButtonsRects[i], itemLocalization[itemRef]))
                 {
                     GearFuncs.SpawnGear<Item>(itemRef);
                 }
@@ -97,10 +119,14 @@ namespace SkulPatcher.UI
                                                  GUIStyle.none,
                                                  GUIStyle.none);
 
-            int skullInd = 0;
-            foreach (WeaponReference skullRef in skulls)
+            for (int i = 0; i < skulls.Length; i++)
             {
-                if (GUI.Button(skullScrollButtonsRects[skullInd++], skullLocalization[skullRef]))
+                if (!skullScrollButtonsVisible[i])
+                    continue;
+
+                WeaponReference skullRef = skulls[i];
+
+                if (GUI.Button(skullScrollButtonsRects[i], skullLocalization[skullRef]))
                 {
                     GearFuncs.SpawnGear<Weapon>(skullRef);
                 }
@@ -117,10 +143,14 @@ namespace SkulPatcher.UI
                                                    GUIStyle.none,
                                                    GUIStyle.none);
 
-            int essenceInd = 0;
-            foreach (EssenceReference essenceRef in essences)
+            for (int i = 0; i < essences.Length; i++)
             {
-                if (GUI.Button(essenceScrollButtonsRects[essenceInd++], essenceLocalization[essenceRef]))
+                if (!essenceScrollButtonsVisible[i])
+                    continue;
+
+                EssenceReference essenceRef = essences[i];
+
+                if (GUI.Button(essenceScrollButtonsRects[i], essenceLocalization[essenceRef]))
                 {
                     GearFuncs.SpawnGear<Quintessence>(essenceRef);
                 }
@@ -132,6 +162,7 @@ namespace SkulPatcher.UI
             // Auto-equip spawned gear
             ModConfig.autoEquipSpawnedGear = GUI.Toggle(autoEquipGearToggleRect, ModConfig.autoEquipSpawnedGear, "Auto-equip spawned gear");
 
+
             // Item limit
             GUI.Label(itemLimitLabelRect, $"Item limit ({ModConfig.itemLimit})");
             ModConfig.itemLimit = (int)GUI.HorizontalSlider(itemLimitSliderRect, ModConfig.itemLimit, 9f, 32f);
@@ -139,6 +170,7 @@ namespace SkulPatcher.UI
             // Skull limit
             GUI.Label(skullLimitLabelRect, $"Skull limit ({ModConfig.skullLimit})");
             ModConfig.skullLimit = (int)GUI.HorizontalSlider(skullLimitSliderRect, ModConfig.skullLimit, 2f, 32f);
+
 
             // Apply changes
             if (GUI.Button(applyChangesButton, "Apply changes"))
@@ -151,6 +183,54 @@ namespace SkulPatcher.UI
             if (GUI.Button(rerollAbilitiesButtonRect, "Reroll abilities"))
                 GearFuncs.RerollAbilities();
 
+
+            // Filter label
+            GUI.Label(filterLabelRect, "Filter:");
+
+            // Filter toggles
+            filterLegendary = GUI.Toggle(filterLegendaryRect, filterLegendary, "Legendary");
+            if (filterLegendary != filterLegendaryPreviousState)
+            {
+                filterLegendaryPreviousState = filterLegendary;
+                SetViewRects();
+            }
+
+            filterUnique = GUI.Toggle(filterUniqueRect, filterUnique, "Antique");
+            if (filterUnique != filterUniquePreviousState)
+            {
+                filterUniquePreviousState = filterUnique;
+                SetViewRects();
+            }
+
+            filterRare = GUI.Toggle(filterRareRect, filterRare, "Rare");
+            if (filterRare != filterRarePreviousState)
+            {
+                filterRarePreviousState = filterRare;
+                SetViewRects();
+            }
+
+            filterCommon = GUI.Toggle(filterCommonRect, filterCommon, "Common");
+            if (filterCommon != filterCommonPreviousState)
+            {
+                filterCommonPreviousState = filterCommon;
+                SetViewRects();
+            }
+
+
+            // Search field
+            GUI.Label(searchLabelRect, "Search:");
+            searchText = GUI.TextField(searchFieldRect, searchText);
+            
+            if (searchText != searchTextPreviousState)
+            {
+                searchTextPreviousState = searchText;
+                SetViewRects();
+            }
+
+
+            // Duplicate gear
+            ModConfig.allowDuplicateItems = GUI.Toggle(duplicateItemsToggleRect, ModConfig.allowDuplicateItems, "Allow duplicate items");
+            ModConfig.allowDuplicateSkulls = GUI.Toggle(duplicateSkullsToggleRect, ModConfig.allowDuplicateSkulls, "Allow duplicate skulls");
         }
 
         // Menu elements
@@ -158,6 +238,8 @@ namespace SkulPatcher.UI
 
         private static int menuWidth;
         private static int menuHeight;
+
+        private static int listWidth;
 
         private static Rect dragWindowRect;
 
@@ -196,12 +278,25 @@ namespace SkulPatcher.UI
 
         private static Rect applyChangesButton;
 
+        private static Rect filterLabelRect;
+
+        private static Rect filterLegendaryRect;
+        private static Rect filterUniqueRect;
+        private static Rect filterRareRect;
+        private static Rect filterCommonRect;
+
+        private static Rect searchLabelRect;
+        private static Rect searchFieldRect;
+
+        private static Rect duplicateItemsToggleRect;
+        private static Rect duplicateSkullsToggleRect;
+
         public static void Resize()
         {
             menuWidth = Screen.width / 4;
-            menuHeight = Menu.unit * 24;
+            menuHeight = Menu.unit * 35;
 
-            windowRect = new Rect(20, 11 * Menu.unit + 20, menuWidth, menuHeight);
+            windowRect = new Rect(Menu.unit, 13 * Menu.unit, menuWidth, menuHeight);
             int row = 0;
 
             dragWindowRect = new Rect(0, 0, menuWidth, Menu.unit);
@@ -210,72 +305,136 @@ namespace SkulPatcher.UI
             // Gear spawn
             InitGear();
 
-            float scrollWidth = menuWidth / 2 - Menu.unit;
-            float scrollHeight = Menu.unit * 9;
+            listWidth = menuWidth / 2 - Menu.unit;
+            float listHeight = Menu.unit * 9;
 
+            SetViewRects();
 
             // Item spawn
-            spawnItemLabelRect = new Rect(Menu.unit, Menu.unit * row * 1.5f, scrollWidth, Menu.unit);
-            spawnSkullLabelRect = new Rect(scrollWidth + Menu.unit, Menu.unit * row * 1.5f, scrollWidth, Menu.unit);
+            spawnItemLabelRect = new Rect(Menu.unit, Menu.unit * row * 1.5f, listWidth, Menu.unit);
+            spawnSkullLabelRect = new Rect(listWidth + Menu.unit, Menu.unit * row * 1.5f, listWidth, Menu.unit);
             row++;
 
-            itemScrollPosRect = new Rect(Menu.unit, Menu.unit * row * 1.5f, scrollWidth, scrollHeight);
-            itemScrollViewRect = new Rect(0, 0, scrollWidth, Menu.unit * 1.5f * ModConfig.Gear.items.Count);
-
-            for (int i = 0; i < ModConfig.Gear.items.Count; i++)
-            {
-                itemScrollButtonsRects[i] = new Rect(0, Menu.unit * i * 1.5f, scrollWidth, Menu.unit);
-            }
-
+            itemScrollPosRect = new Rect(Menu.unit, Menu.unit * row * 1.5f, listWidth, listHeight);
 
             // Skull spawn
-            skullScrollPosRect = new Rect(scrollWidth + Menu.unit, Menu.unit * row * 1.5f, scrollWidth, scrollHeight);
-            skullScrollViewRect = new Rect(0, 0, scrollWidth, Menu.unit * 1.5f * ModConfig.Gear.weapons.Count);
-
-            for (int i = 0; i < ModConfig.Gear.weapons.Count; i++)
-            {
-                skullScrollButtonsRects[i] = new Rect(0, Menu.unit * i * 1.5f, scrollWidth, Menu.unit);
-            }
+            skullScrollPosRect = new Rect(listWidth + Menu.unit, Menu.unit * row * 1.5f, listWidth, listHeight);
             row += 7;
 
-
             // Essence spawn
-            essenceLabelRect = essenceLabelRect = new Rect(scrollWidth + Menu.unit, Menu.unit * row * 1.5f, scrollWidth, Menu.unit);
+            essenceLabelRect = essenceLabelRect = new Rect(listWidth + Menu.unit, Menu.unit * row * 1.5f, listWidth, Menu.unit);
             row++;
 
-            essenceScrollPosRect = new Rect(scrollWidth + Menu.unit, Menu.unit * row * 1.5f, scrollWidth, scrollHeight);
-            essenceScrollViewRect = new Rect(0, 0, scrollWidth, Menu.unit * 1.5f * ModConfig.Gear.essences.Count);
-
-            for (int i = 0; i < ModConfig.Gear.essences.Count; i++)
-            {
-                essenceScrollButtonsRects[i] = new Rect(0, Menu.unit * i * 1.5f, scrollWidth, Menu.unit);
-            }
+            essenceScrollPosRect = new Rect(listWidth + Menu.unit, Menu.unit * row * 1.5f, listWidth, listHeight);
             row--;
 
             // Auto-equip
-            autoEquipGearToggleRect = new Rect(Menu.unit, Menu.unit * row * 1.5f, scrollWidth, Menu.unit);
+            autoEquipGearToggleRect = new Rect(Menu.unit, Menu.unit * row * 1.5f, listWidth, Menu.unit);
             row++;
 
             // Item limit
-            itemLimitLabelRect = new Rect(Menu.unit, Menu.unit * row * 1.5f, scrollWidth, Menu.unit);
+            itemLimitLabelRect = new Rect(Menu.unit, Menu.unit * row * 1.5f, listWidth, Menu.unit);
             row++;
 
-            itemLimitSliderRect = new Rect(Menu.unit, Menu.unit * row * 1.5f, scrollWidth - Menu.unit, Menu.unit);
+            itemLimitSliderRect = new Rect(Menu.unit, Menu.unit * row * 1.5f, listWidth - Menu.unit, Menu.unit);
             row++;
 
             // Skull limit
-            skullLimitLabelRect = new Rect(Menu.unit, Menu.unit * row * 1.5f, scrollWidth, Menu.unit);
+            skullLimitLabelRect = new Rect(Menu.unit, Menu.unit * row * 1.5f, listWidth, Menu.unit);
             row++;
 
-            skullLimitSliderRect = new Rect(Menu.unit, Menu.unit * row * 1.5f, scrollWidth - Menu.unit, Menu.unit);
+            skullLimitSliderRect = new Rect(Menu.unit, Menu.unit * row * 1.5f, listWidth - Menu.unit, Menu.unit);
             row++;
 
             // Apply changes
-            applyChangesButton = new Rect(Menu.unit * 1.5f, Menu.unit * row * 1.5f, scrollWidth - (Menu.unit * 2), Menu.unit);
+            applyChangesButton = new Rect(Menu.unit * 1.5f, Menu.unit * row * 1.5f, listWidth - (Menu.unit * 2), Menu.unit);
             row++;
 
             // Reroll abilities
-            rerollAbilitiesButtonRect = new Rect(Menu.unit * 1.5f, Menu.unit * row * 1.5f, scrollWidth - (Menu.unit * 2), Menu.unit);
+            rerollAbilitiesButtonRect = new Rect(Menu.unit * 1.5f, Menu.unit * row * 1.5f, listWidth - (Menu.unit * 2), Menu.unit);
+            row += 2;
+
+            // Filter label
+            filterLabelRect = new Rect(Menu.unit, Menu.unit * row * 1.5f, listWidth, Menu.unit);
+            row++;
+
+            // Filter toggles
+            filterLegendaryRect = new Rect(Menu.unit, Menu.unit * row * 1.5f, listWidth, Menu.unit);
+            row++;
+
+            filterUniqueRect = new Rect(Menu.unit, Menu.unit * row * 1.5f, listWidth, Menu.unit);
+            row++;
+
+            filterRareRect = new Rect(Menu.unit, Menu.unit * row * 1.5f, listWidth, Menu.unit);
+            row++;
+
+            filterCommonRect = new Rect(Menu.unit, Menu.unit * row * 1.5f, listWidth, Menu.unit);
+            row++;
+
+            // Search field
+            searchLabelRect = new Rect(Menu.unit, Menu.unit * row * 1.5f, Menu.unit * 3, Menu.unit);
+            searchFieldRect = new Rect(Menu.unit * 4, Menu.unit * row * 1.5f, listWidth - Menu.unit * 4, Menu.unit);
+            row -= 5;
+
+            // Duplicate gear
+            duplicateItemsToggleRect = new Rect(listWidth + Menu.unit, Menu.unit * row * 1.5f, listWidth, Menu.unit);
+            row++;
+
+            duplicateSkullsToggleRect = new Rect(listWidth + Menu.unit, Menu.unit * row * 1.5f, listWidth, Menu.unit);
+        }
+
+        private static void SetViewRects()
+        {
+            itemScrollViewRect = FilterGearAndGetViewRect(items, itemLocalization, itemScrollButtonsVisible, itemScrollButtonsRects);
+            skullScrollViewRect = FilterGearAndGetViewRect(skulls, skullLocalization, skullScrollButtonsVisible, skullScrollButtonsRects);
+            essenceScrollViewRect = FilterGearAndGetViewRect(essences, essenceLocalization, essenceScrollButtonsVisible, essenceScrollButtonsRects);
+        }
+
+        private static Rect FilterGearAndGetViewRect<T>(T[] gear, Dictionary<T, string> localization, bool[] toShow, Rect[] elements) where T : GearReference
+        {
+            string pattern = searchText;
+
+            if (string.IsNullOrEmpty(pattern))
+                pattern = ".+";
+
+            Regex regex;
+            try
+            {
+                regex = new(pattern, RegexOptions.IgnoreCase);
+            }
+            catch (ArgumentException)
+            {
+                regex = new(".+", RegexOptions.IgnoreCase);
+            }
+
+            int elementRow = 0;
+            for (int i = 0; i < gear.Length; i++)
+            {
+                if (!IsGearFilteredByRarity(gear[i]) || !regex.Match(localization[gear[i]]).Success)
+                {
+                    toShow[i] = false;
+                    continue;
+                }
+
+                toShow[i] = true;
+
+                elements[i] = new Rect(0, elementRow * Menu.unit * 1.5f, listWidth, Menu.unit);
+                elementRow++;
+            }
+
+            return new Rect(0, 0, listWidth, Menu.unit * 1.5f * elementRow);
+        }
+
+        private static bool IsGearFilteredByRarity<T>(T gear) where T : GearReference
+        {
+            return gear.rarity switch
+            {
+                Rarity.Legendary => filterLegendary,
+                Rarity.Unique => filterUnique,
+                Rarity.Rare => filterRare,
+                Rarity.Common => filterCommon,
+                _ => true,
+            };
         }
     }
 }

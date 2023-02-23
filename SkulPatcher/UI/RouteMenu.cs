@@ -81,7 +81,7 @@ namespace SkulPatcher.UI
             menuWidth = Screen.width / 6;
             menuHeight = Menu.unit * 11;
 
-            windowRect = new Rect(20, 20, menuWidth, menuHeight);
+            windowRect = new Rect(Menu.unit, Menu.unit, menuWidth, menuHeight);
             int row = 0;
 
             dragWindowRect = new Rect(0, 0, menuWidth, Menu.unit);
