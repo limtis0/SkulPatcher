@@ -92,21 +92,21 @@ namespace SkulPatcher.UI
         public static void Resize()
         {
             menuWidth = (int)(Screen.width / 2.5);
-            menuHeight = Menu.unit * 14;
+            menuHeight = (int)(Menu.unit * 18.5f);
 
-            windowRect = new Rect(Screen.width - menuWidth - Menu.unit, Menu.unit * 33, menuWidth, menuHeight);
+            windowRect = new Rect(Screen.width - menuWidth - Menu.unit, Menu.unit * 26.5f, menuWidth, menuHeight);
             int row = 0;
 
             dragWindowRect = new Rect(0, 0, menuWidth, Menu.unit);
             row++;
 
             listWidth = menuWidth - Menu.unit * 2;
-            float listHeight = Menu.unit * 10f;
+            float listHeight = Menu.unit * 14;
 
             statScrollPosRect = new Rect(Menu.unit, Menu.unit * row * 1.5f, listWidth, listHeight);
             statScrollViewRect = FilterStatsAndGetViewRect();
 
-            row += 7;
+            row += 10;
             applyChangesButtonRect = new Rect(Menu.unit, Menu.unit * row * 1.5f, Menu.unit * 8, Menu.unit);
             resetButtonRect = new Rect(Menu.unit * 10, Menu.unit * row * 1.5f, Menu.unit * 5, Menu.unit);
 

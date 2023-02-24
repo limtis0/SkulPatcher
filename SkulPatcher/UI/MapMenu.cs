@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace SkulPatcher.UI
 {
-    public static class RouteMenu
+    public static class MapMenu
     {
         public static void Fill(int _)
         {

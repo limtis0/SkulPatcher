@@ -43,7 +43,7 @@ namespace SkulPatcher.UI
                 CalculateSizing();
 
                 Resize();
-                RouteMenu.Resize();
+                MapMenu.Resize();
                 GearMenu.Resize();
                 StatMenu.Resize();
 
@@ -58,7 +58,7 @@ namespace SkulPatcher.UI
                 GearMenu.windowRect = GUI.Window(1, GearMenu.windowRect, GearMenu.Fill, "Gear menu");
 
             if (showRouteMenu)
-                RouteMenu.windowRect = GUI.Window(2, RouteMenu.windowRect, RouteMenu.Fill, "Route menu");
+                MapMenu.windowRect = GUI.Window(2, MapMenu.windowRect, MapMenu.Fill, "Map menu");
 
             if (showStatMenu)
                 StatMenu.windowRect = GUI.Window(3, StatMenu.windowRect, StatMenu.Fill, "Stat menu");
@@ -67,18 +67,6 @@ namespace SkulPatcher.UI
         private void Fill(int _)
         {
             GUI.DragWindow(dragWindowRect);
-
-            // Luck boost
-            ModConfig.luckBoostOn = GUI.Toggle(luckBoostToggleRect,
-                                            ModConfig.luckBoostOn,
-                                            $"Boost gear rarity with {ModConfig.luckBoostPercent}% chance");
-
-            ModConfig.luckBoostPercent = (int)GUI.HorizontalSlider(luckBoostSliderRect, ModConfig.luckBoostPercent, 0, 100);
-
-            ModConfig.luckBoostContinuous = GUI.Toggle(luckBoostContinuousToggleRect,
-                                                    ModConfig.luckBoostContinuous,
-                                                    $"Continue boosting rarity if the roll was successful");
-
 
             // Gold multiplier
             ModConfig.goldMultOn = GUI.Toggle(goldMultToggleRect,
@@ -152,7 +140,7 @@ namespace SkulPatcher.UI
 
 
             // Buttons
-            if (GUI.Button(routeMenuButtonRect, "Route menu"))
+            if (GUI.Button(routeMenuButtonRect, "Map menu"))
                 showRouteMenu = !showRouteMenu;
 
             if (GUI.Button(gearMenuButtonRect, "Gear menu"))
@@ -174,10 +162,6 @@ namespace SkulPatcher.UI
 
         private Rect dragWindowRect;
         private Rect windowRect;
-
-        private Rect luckBoostToggleRect;
-        private Rect luckBoostSliderRect;
-        private Rect luckBoostContinuousToggleRect;
 
         private Rect goldMultToggleRect;
         private Rect goldMultSliderRect;
@@ -229,25 +213,13 @@ namespace SkulPatcher.UI
         {
 
             menuWidth = Screen.width / 4;
-            menuHeight = unit * 31;
+            menuHeight = (int) (unit * 24.5f);
 
             windowRect = new Rect(Screen.width - menuWidth - unit, unit, menuWidth, menuHeight);
             int row = 0;
 
             dragWindowRect = new Rect(0, 0, menuWidth, unit);
             row++;
-
-
-            // Luck boost
-            luckBoostToggleRect = new Rect(unit, unit * row * 1.5f, menuWidth - unit, unit);
-            row++;
-
-            luckBoostSliderRect = new Rect(unit, unit * row * 1.5f, menuWidth - 2 * unit, unit);
-            row++;
-
-            luckBoostContinuousToggleRect = new Rect(unit, unit * row * 1.5f, menuWidth - unit, unit);
-            row += 2;
-
 
             // Gold multiplier
             goldMultToggleRect = new Rect(unit, unit * row * 1.5f, menuWidth - unit, unit);

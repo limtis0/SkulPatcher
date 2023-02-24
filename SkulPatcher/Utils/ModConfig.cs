@@ -12,13 +12,20 @@ namespace SkulPatcher
     public static class ModConfig
     {
         // LuckyPatch
-        public static bool luckBoostOn = PlayerPrefs.GetInt("luckBoostOn", 1) != 0;
+        public static bool luckBoostOn = PlayerPrefs.GetInt("luckBoostOn", 0) != 0;
         public static int luckBoostPercent = PlayerPrefs.GetInt("luckBoostPercent", 33);
         public static bool luckBoostContinuous = PlayerPrefs.GetInt("luckBoostContinuous", 1) != 0;
+
+        // Auto-equip
+        public static bool autoEquipSpawnedGear = PlayerPrefs.GetInt("autoEquipSpawnedGear", 0) != 0;
 
         // DuplicateGear
         public static bool allowDuplicateItems = PlayerPrefs.GetInt("allowDuplicateItems", 0) != 0;
         public static bool allowDuplicateSkulls = PlayerPrefs.GetInt("allowDuplicateSkulls", 0) != 0;
+
+        // HiddenGear
+        public static bool allowHiddenGear = PlayerPrefs.GetInt("allowHiddenGear", 0) != 0;
+        public static bool allowHiddenGearPreviousState = false;
 
         // CurrencyPatch
         public static bool goldMultOn = PlayerPrefs.GetInt("goldMultOn", 0) != 0;
@@ -30,8 +37,6 @@ namespace SkulPatcher
         public static float dQuartzMultValue = PlayerPrefs.GetFloat("dQuartzMultValue", 1);
         public static float bonesMultValue = PlayerPrefs.GetFloat("bonesMultValue", 1);
         public static float hQuartzMultValue = PlayerPrefs.GetFloat("hQuartzMultValue", 1);
-
-        public static bool autoEquipSpawnedGear = PlayerPrefs.GetInt("autoEquipSpawnedGear", 0) != 0;
 
         // EasyPatch
         public static bool forceEasyModeOn = PlayerPrefs.GetInt("forceEasyModeOn", 0) != 0;
@@ -74,15 +79,17 @@ namespace SkulPatcher
             PlayerPrefs.SetInt("luckBoostPercent", luckBoostPercent);
             PlayerPrefs.SetInt("luckBoostContinuous", luckBoostContinuous ? 1 : 0);
 
+            PlayerPrefs.SetInt("autoEquipSpawnedGear", autoEquipSpawnedGear ? 1 : 0);
+
             PlayerPrefs.SetInt("allowDuplicateItems", allowDuplicateItems ? 1 : 0);
             PlayerPrefs.SetInt("allowDuplicateSkulls", allowDuplicateSkulls ? 1 : 0);
+
+            PlayerPrefs.SetInt("allowHiddenGear", allowHiddenGear ? 1 : 0);
 
             PlayerPrefs.SetInt("goldMultOn", goldMultOn ? 1 : 0);
             PlayerPrefs.SetInt("dQuartzMultOn", dQuartzMultOn ? 1 : 0);
             PlayerPrefs.SetInt("bonesMultOn", bonesMultOn ? 1 : 0);
             PlayerPrefs.SetInt("hQuartzMultOn", hQuartzMultOn ? 1 : 0);
-
-            PlayerPrefs.SetInt("autoEquipSpawnedGear", autoEquipSpawnedGear ? 1 : 0);
 
             PlayerPrefs.SetFloat("goldMultValue", goldMultValue);
             PlayerPrefs.SetFloat("dQuartzMultValue", dQuartzMultValue);

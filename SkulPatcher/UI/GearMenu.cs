@@ -228,9 +228,23 @@ namespace SkulPatcher.UI
             }
 
 
+            // Luck boost
+            ModConfig.luckBoostOn = GUI.Toggle(luckBoostToggleRect,
+                                            ModConfig.luckBoostOn,
+                                            $"Boost rarity ({ModConfig.luckBoostPercent}% chance)");
+
+            ModConfig.luckBoostPercent = (int)GUI.HorizontalSlider(luckBoostSliderRect, ModConfig.luckBoostPercent, 0, 100);
+
+            ModConfig.luckBoostContinuous = GUI.Toggle(luckBoostContinuousToggleRect,
+                                                    ModConfig.luckBoostContinuous,
+                                                    $"Try boosting again on success");
+
             // Duplicate gear
             ModConfig.allowDuplicateItems = GUI.Toggle(duplicateItemsToggleRect, ModConfig.allowDuplicateItems, "Allow duplicate items");
             ModConfig.allowDuplicateSkulls = GUI.Toggle(duplicateSkullsToggleRect, ModConfig.allowDuplicateSkulls, "Allow duplicate skulls");
+
+            // Hidden gear
+            ModConfig.allowHiddenGear = GUI.Toggle(allowHiddenGearToggleRect, ModConfig.allowHiddenGear, "Allow hidden gear");
         }
 
         // Menu elements
@@ -288,8 +302,14 @@ namespace SkulPatcher.UI
         private static Rect searchLabelRect;
         private static Rect searchFieldRect;
 
+        private static Rect luckBoostToggleRect;
+        private static Rect luckBoostSliderRect;
+        private static Rect luckBoostContinuousToggleRect;
+
         private static Rect duplicateItemsToggleRect;
         private static Rect duplicateSkullsToggleRect;
+
+        private static Rect allowHiddenGearToggleRect;
 
         public static void Resize()
         {
@@ -376,11 +396,24 @@ namespace SkulPatcher.UI
             searchFieldRect = new Rect(Menu.unit * 4, Menu.unit * row * 1.5f, listWidth - Menu.unit * 4, Menu.unit);
             row -= 5;
 
+            // Luck boost
+            luckBoostToggleRect = new Rect(listWidth + Menu.unit, Menu.unit * row * 1.5f, listWidth, Menu.unit); ;
+            row++;
+
+            luckBoostSliderRect = new Rect(listWidth + Menu.unit, Menu.unit * row * 1.5f, listWidth, Menu.unit); ;
+            row++;
+
+            luckBoostContinuousToggleRect = new Rect(listWidth + Menu.unit, Menu.unit * row * 1.5f, listWidth, Menu.unit);
+            row++;
+
             // Duplicate gear
             duplicateItemsToggleRect = new Rect(listWidth + Menu.unit, Menu.unit * row * 1.5f, listWidth, Menu.unit);
             row++;
 
             duplicateSkullsToggleRect = new Rect(listWidth + Menu.unit, Menu.unit * row * 1.5f, listWidth, Menu.unit);
+            row++;
+
+            allowHiddenGearToggleRect = new Rect(listWidth + Menu.unit, Menu.unit * row * 1.5f, listWidth, Menu.unit);
         }
 
         private static void SetViewRects()
