@@ -1,6 +1,6 @@
 # SkulPatcher
-An all-in-one mod for Skul: The Hero Slayer
-<img width="960" alt="Untitled" src="https://user-images.githubusercontent.com/45824078/220824408-a26972a1-1178-4ae4-8ac9-2a6acb96d8a4.png">
+A mod for "Skul: The Hero Slayer" that lets you to create your own playing experience
+<img width="960" alt="Previes" src="https://user-images.githubusercontent.com/45824078/221287018-e26d3a5f-8ff8-4766-9e70-1cec59600529.png">
 
 ### Setup premise
 `$(SkulFolder)` is a directory where the game is located on your PC
