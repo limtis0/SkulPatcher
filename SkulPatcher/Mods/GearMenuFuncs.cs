@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace SkulPatcher
 {
-    public static class GearFuncs
+    public static class GearMenuFuncs
     {
         public static void SpawnGear<T>(GearReference gearRef) where T : Gear
         {

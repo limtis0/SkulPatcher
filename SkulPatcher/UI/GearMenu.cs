@@ -105,7 +105,7 @@ namespace SkulPatcher.UI
 
                 if (GUI.Button(itemScrollButtonsRects[i], itemLocalization[itemRef]))
                 {
-                    GearFuncs.SpawnGear<Item>(itemRef);
+                    GearMenuFuncs.SpawnGear<Item>(itemRef);
                 }
             }
 
@@ -128,7 +128,7 @@ namespace SkulPatcher.UI
 
                 if (GUI.Button(skullScrollButtonsRects[i], skullLocalization[skullRef]))
                 {
-                    GearFuncs.SpawnGear<Weapon>(skullRef);
+                    GearMenuFuncs.SpawnGear<Weapon>(skullRef);
                 }
             }
 
@@ -152,7 +152,7 @@ namespace SkulPatcher.UI
 
                 if (GUI.Button(essenceScrollButtonsRects[i], essenceLocalization[essenceRef]))
                 {
-                    GearFuncs.SpawnGear<Quintessence>(essenceRef);
+                    GearMenuFuncs.SpawnGear<Quintessence>(essenceRef);
                 }
             }
 
@@ -175,13 +175,13 @@ namespace SkulPatcher.UI
             // Apply changes
             if (GUI.Button(applyChangesButton, "Apply changes"))
             {
-                GearFuncs.SetItemLimit();
-                GearFuncs.SetSkullLimit();
+                GearMenuFuncs.SetItemLimit();
+                GearMenuFuncs.SetSkullLimit();
             }
 
             // Reroll abilities
             if (GUI.Button(rerollAbilitiesButtonRect, "Reroll abilities"))
-                GearFuncs.RerollAbilities();
+                GearMenuFuncs.RerollAbilities();
 
 
             // Filter label

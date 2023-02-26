@@ -8,8 +8,8 @@ namespace SkulPatcher.UI
     public static class StatMenu
     {
         // Init array of "fixed" size
-        private static readonly (bool toApply, int statValue)[] statValues = Enumerable.Repeat((false, 0), StatFuncs.stats.Length).ToArray();
-        private static readonly bool[] showStatInList = Enumerable.Repeat(true, StatFuncs.stats.Length).ToArray();
+        private static readonly (bool toApply, double statValue)[] statValues = Enumerable.Repeat((false, 0d), StatMenuFuncs.stats.Length).ToArray();
+        private static readonly bool[] showStatInList = Enumerable.Repeat(true, StatMenuFuncs.stats.Length).ToArray();
 
         private static string searchText = string.Empty;
         private static string searchTextPreviousState = searchText;
@@ -18,10 +18,10 @@ namespace SkulPatcher.UI
 
         private static void SetDefaults()
         {
-            for (int i = 0; i < StatFuncs.stats.Length; i++)
+            for (int i = 0; i < StatMenuFuncs.stats.Length; i++)
             {
                 statValues[i].toApply = false;
-                statValues[i].statValue = StatFuncs.statConsts[StatFuncs.stats[i].category].defaultValue;
+                statValues[i].statValue = StatMenuFuncs.statLimitInfo[StatMenuFuncs.stats[i].category].defaultValue;
             }
         }
 
@@ -31,33 +31,33 @@ namespace SkulPatcher.UI
 
             statScrollVec = GUI.BeginScrollView(statScrollPosRect, statScrollVec, statScrollViewRect, GUIStyle.none, GUIStyle.none);
             
-            for (int i = 0; i < StatFuncs.stats.Length; i++)
+            for (int i = 0; i < StatMenuFuncs.stats.Length; i++)
             {
                 if (!showStatInList[i])
                     continue;
 
-                var (category, _, name) = StatFuncs.stats[i];
-                var (minValue, maxValue, _, abbreviation) = StatFuncs.statConsts[category];
+                var (category, _, name) = StatMenuFuncs.stats[i];
+                var (minValue, maxValue, _, abbreviation) = StatMenuFuncs.statLimitInfo[category];
 
                 statValues[i].toApply = GUI.Toggle(statScrollToggleRects[i],
                                                    statValues[i].toApply,
-                                                   $"{name} ({statValues[i].statValue:+0;-#}{abbreviation})");
+                                                   $"{name} ({statValues[i].statValue}{abbreviation})");
 
-                statValues[i].statValue = (int)GUI.HorizontalSlider(statScrollSliderRects[i],
-                                                                    statValues[i].statValue,
-                                                                    minValue,
-                                                                    maxValue);
+                statValues[i].statValue = Math.Round(GUI.HorizontalSlider(statScrollSliderRects[i],
+                                                                          (float)statValues[i].statValue,
+                                                                          (float)minValue,
+                                                                          (float)maxValue));
             }
 
             GUI.EndScrollView();
 
             if (GUI.Button(applyChangesButtonRect, "Apply changes"))
-                StatFuncs.SetBuff(statValues);
+                StatMenuFuncs.SetStats(statValues);
 
             if (GUI.Button(resetButtonRect, "Reset"))
             {
                 SetDefaults();
-                StatFuncs.SetBuff(statValues);
+                StatMenuFuncs.SetStats(statValues);
             }
 
             GUI.Label(searchLabelRect, "Search:");
@@ -80,8 +80,8 @@ namespace SkulPatcher.UI
         private static Vector2 statScrollVec = Vector2.zero;
         private static Rect statScrollPosRect;
         private static Rect statScrollViewRect;
-        private static readonly Rect[] statScrollToggleRects = Enumerable.Repeat(new Rect(), StatFuncs.stats.Length).ToArray();
-        private static readonly Rect[] statScrollSliderRects = Enumerable.Repeat(new Rect(), StatFuncs.stats.Length).ToArray();
+        private static readonly Rect[] statScrollToggleRects = Enumerable.Repeat(new Rect(), StatMenuFuncs.stats.Length).ToArray();
+        private static readonly Rect[] statScrollSliderRects = Enumerable.Repeat(new Rect(), StatMenuFuncs.stats.Length).ToArray();
 
         private static Rect applyChangesButtonRect;
         private static Rect resetButtonRect;
@@ -134,7 +134,7 @@ namespace SkulPatcher.UI
             int elementRow = 0;
             for (int i = 0; i < statValues.Length; i++)
             {
-                if (!regex.Match(StatFuncs.stats[i].name).Success)
+                if (!regex.Match(StatMenuFuncs.stats[i].name).Success)
                 {
                     showStatInList[i] = false;
                     continue;

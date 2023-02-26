@@ -1,22 +1,27 @@
 ﻿using Characters;
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Reflection;
+using UI.Inventory;
 
 namespace SkulPatcher
 {
-    public static class StatFuncs
+    public static class StatMenuFuncs
     {
-        private static Stat.Values prevAttached;
+        private static Stat.Values prevAttachedStats;
+        private static readonly List<SpecialStat> prevAttachedSpecialStats = new();
 
         /*
         / Stat.Category.Fixed - Add fixed amount (1/1);
-        / Stat.Category.Constant - Same as .Fixed;
-        / Stat.Category.Final - Not working;
         / Stat.Category.Percent - Multiply by percentage (1/100);
         / Stat.Category.PercentPoint - Add perecent point (1/100);
         */
         public static readonly (Stat.Category category, Stat.Kind kind, string name)[] stats = new[]
         {
+            // Game stats
             (Stat.Category.Fixed, Stat.Kind.Health, "Health"),
             (Stat.Category.Percent, Stat.Kind.Health, "Health"),
 
@@ -112,47 +117,124 @@ namespace SkulPatcher
 
             (Stat.Category.Percent, Stat.Kind.ChargingSpeed, "ChargingSpeed"),  // Can't tell if does anything
             (Stat.Category.PercentPoint, Stat.Kind.ChargingSpeed, "ChargingSpeed"),  // Can't tell if does anything
+
+            // Special stats
+            (GravityStat.category, GravityStat.kind, "CurrentSkullGravity"),
+            (IgnoreGravityStat.category, IgnoreGravityStat.kind, "CurrentSkullIgnoreGravity"),
+            (MaxFallSpeedStat.category, MaxFallSpeedStat.kind, "CurrentSkullMaxFallSpeed"),
+            (AccelerationStat.category, AccelerationStat.kind, "CurrentSkullAcceleration"),
+            (FrictionStat.category, FrictionStat.kind, "CurrentSkullFriction"),
+
+            (KeepMovingStat.category, KeepMovingStat.kind, "CurrentSkullKeepMoving"),
+            (IgnorePushStat.category, IgnorePushStat.kind, "CurrentSkullIgnorePush"),
         };
 
-        public static readonly Dictionary<Stat.Category, (int minValue, int maxValue, int defaultValue, string abbreviation)> statConsts = new()
+        private static readonly Dictionary<Stat.Kind, Type> specialStats = new()
         {
-            {Stat.Category.Fixed, (-1000, 5000, 0, "p") },
-            {Stat.Category.Percent, (-100, 1000, 100, "%") },
-            {Stat.Category.PercentPoint, (-1000, 5000, 0, "pp") },
+            { GravityStat.kind, typeof(GravityStat) },
+            { IgnoreGravityStat.kind, typeof(IgnoreGravityStat) },
+            { MaxFallSpeedStat.kind, typeof(MaxFallSpeedStat) },
+            { AccelerationStat.kind, typeof(AccelerationStat) },
+            { FrictionStat.kind, typeof(FrictionStat) },
+
+            { KeepMovingStat.kind, typeof(KeepMovingStat) },
+            { IgnorePushStat.kind, typeof(IgnorePushStat) },
         };
 
-        public static void SetBuff((bool toApply, int statValue)[] values)  // Function specifically for StatMenu.cs
+        public static readonly Dictionary<Stat.Category, (double minValue, double maxValue, double defaultValue, string abbreviation)> statLimitInfo = new()
         {
-            if (values.Length != stats.Length)
-                throw new Exception("StatValues are not the same length as StatFuncs.stats");
-            
-            List<Stat.Value> statValues = new();
-            
-            for (int i = 0; i < stats.Length; i++)
-            {
-                if (values[i].toApply)
-                    statValues.Add(new Stat.Value(stats[i].category, stats[i].kind, ScaleValueForCategory(stats[i].category, values[i].statValue)));
-            }
+            // Game stats
+            { Stat.Category.Fixed, (-1000, 5000, 0, "p") },
+            { Stat.Category.Percent, (-100, 1000, 100, "%") },
+            { Stat.Category.PercentPoint, (-1000, 5000, 0, "%p") },
 
-            SetBuff(new Stat.Values(statValues.ToArray()));
-        }
+            // Special stats
+            { GravityStat.category, (0, 500, 100, "%") },
+            { IgnoreGravityStat.category, (0, 1, 0, "≡") },
+            { FrictionStat.category, (0, 500, 100, "%") },
+            { AccelerationStat.category, (0, 500, 100, "%") },
+            { MaxFallSpeedStat.category, (0, 200, 25, "≡") },
 
-        public static void SetBuff(Stat.Values values)
+            { KeepMovingStat.category, (0, 1, 0, "≡") },
+            { IgnorePushStat.category, (0, 1, 0, "≡") },
+        };
+
+        public static void SetStats((bool toApply, double statValue)[] statValuesToApply)  // Function for StatMenu.cs
         {
             if (!ModConfig.IsInGame)
                 return;
 
-            if (prevAttached is not null)
-                Detach(prevAttached);
+            // Setup
+            List<Stat.Value> statValues = new();
+            ResetSpecialStats();
+            
+            for (int i = 0; i < stats.Length; i++)
+            {
+                if (statValuesToApply[i].toApply)
+                {
+                    Stat.Category category = stats[i].category;
+                    Stat.Kind kind = stats[i].kind;
+                    double statValue = ScaleValueForCategory(category, statValuesToApply[i].statValue);
 
-            Attach(values);
-            prevAttached = values;
+                    // Game stats
+                    if (Stat.Kind.values.Contains(kind))
+                    {
+                        statValues.Add(new Stat.Value(category, kind, statValue));
+                    }
+                    // Special stats
+                    else
+                    {
+                        SetSpecialStat(kind, statValue);
+                    }
+                }    
+            }
+
+            SetGameStats(new Stat.Values(statValues.ToArray()));
         }
 
-        private static double ScaleValueForCategory(Stat.Category category, int value)
+        private static void SetGameStats(Stat.Values values)
         {
-            if (category == Stat.Category.PercentPoint || category == Stat.Category.Percent)
-                return (double)value / 100;
+            if (prevAttachedStats is not null)
+                Detach(prevAttachedStats);
+
+            prevAttachedStats = values;
+            Attach(values);
+        }
+
+        private static void SetSpecialStat(Stat.Kind kind, double value)
+        {
+            SpecialStat specialStat = (SpecialStat)Activator.CreateInstance(specialStats[kind], new object[] { ModConfig.Level.player, value });
+
+            prevAttachedSpecialStats.Add(specialStat);
+            specialStat.Attach();
+        }
+
+        private static void ResetSpecialStats()
+        {
+            foreach (SpecialStat specialStat in prevAttachedSpecialStats)
+            {
+                specialStat.Detach();
+            }
+
+            prevAttachedSpecialStats.Clear();
+        }
+
+        private static readonly Stat.Category[] divideBy100 = new[] 
+        { 
+            // Game stats
+            Stat.Category.PercentPoint,
+            Stat.Category.Percent,
+
+            // Special stats
+            GravityStat.category,
+            AccelerationStat.category,
+            FrictionStat.category,
+        };
+
+        private static double ScaleValueForCategory(Stat.Category category, double value)
+        {
+            if (divideBy100.Contains(category))
+                return value / 100;
 
             return value;
         }
