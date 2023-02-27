@@ -11,7 +11,7 @@ namespace SkulPatcher
         public static readonly Stat.Kind kind = CreateKind("IgnoreGravity");
         public static readonly Stat.Category category = CreateCategory("IgnoreGravity");
 
-        public IgnoreGravityStat(Character owner, double value) : base(owner, value)
+        public IgnoreGravityStat(double value) : base(value)
         {
         }
 
@@ -21,15 +21,15 @@ namespace SkulPatcher
 
         public override void Attach()
         {
-            new Traverse(Owner.movement.config).Field("ignoreGravity").SetValue(Value != 0);
+            new Traverse(ModConfig.Level.player.movement.config).Field("ignoreGravity").SetValue(Value != 0);
         }
 
         public override void Detach()
         {
-            if (Owner is null)
+            if (ModConfig.Level.player is null)
                 return;
 
-            new Traverse(Owner.movement.config).Field("ignoreGravity").SetValue(defaultValue);
+            new Traverse(ModConfig.Level.player.movement.config).Field("ignoreGravity").SetValue(defaultValue);
         }
     }
 }

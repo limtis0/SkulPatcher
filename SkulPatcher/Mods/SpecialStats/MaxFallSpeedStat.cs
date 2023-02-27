@@ -10,7 +10,7 @@ namespace SkulPatcher
         public static readonly Stat.Kind kind = CreateKind("MaxFallSpeed");
         public static readonly Stat.Category category = CreateCategory("MaxFallSpeed");
 
-        public MaxFallSpeedStat(Character owner, double value) : base(owner, value)
+        public MaxFallSpeedStat(double value) : base(value)
         {
         }
 
@@ -20,15 +20,15 @@ namespace SkulPatcher
 
         public override void Attach()
         {
-            new Traverse(Owner.movement.config).Field("maxFallSpeed").SetValue((float)Value);
+            new Traverse(ModConfig.Level.player.movement.config).Field("maxFallSpeed").SetValue((float)Value);
         }
 
         public override void Detach()
         {
-            if (Owner is null)
+            if (ModConfig.Level.player is null)
                 return;
 
-            new Traverse(Owner.movement.config).Field("maxFallSpeed").SetValue(defaultValue);
+            new Traverse(ModConfig.Level.player.movement.config).Field("maxFallSpeed").SetValue(defaultValue);
         }
     }
 }

@@ -11,7 +11,7 @@ namespace SkulPatcher
         public static readonly Stat.Kind kind = CreateKind("KeepMoving");
         public static readonly Stat.Category category = CreateCategory("KeepMoving");
 
-        public KeepMovingStat(Character owner, double value) : base(owner, value)
+        public KeepMovingStat(double value) : base(value)
         {
         }
 
@@ -21,15 +21,15 @@ namespace SkulPatcher
 
         public override void Attach()
         {
-            new Traverse(Owner.movement.config).Field("keepMove").SetValue(Value != 0);
+            new Traverse(ModConfig.Level.player.movement.config).Field("keepMove").SetValue(Value != 0);
         }
 
         public override void Detach()
         {
-            if (Owner is null)
+            if (ModConfig.Level.player is null)
                 return;
 
-            new Traverse(Owner.movement.config).Field("keepMove").SetValue(defaultValue);
+            new Traverse(ModConfig.Level.player.movement.config).Field("keepMove").SetValue(defaultValue);
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Characters;
 using HarmonyLib;
-using System;
 
 namespace SkulPatcher
 {
@@ -11,7 +10,7 @@ namespace SkulPatcher
         public static readonly Stat.Kind kind = CreateKind("IgnorePush");
         public static readonly Stat.Category category = CreateCategory("IgnorePush");
 
-        public IgnorePushStat(Character owner, double value) : base(owner, value)
+        public IgnorePushStat(double value) : base(value)
         {
         }
 
@@ -21,15 +20,15 @@ namespace SkulPatcher
 
         public override void Attach()
         {
-            new Traverse(Owner.movement.config).Field("ignorePush").SetValue(Value != 0);
+            new Traverse(ModConfig.Level.player.movement.config).Field("ignorePush").SetValue(Value != 0);
         }
 
         public override void Detach()
         {
-            if (Owner is null)
+            if (ModConfig.Level.player is null)
                 return;
 
-            new Traverse(Owner.movement.config).Field("ignorePush").SetValue(defaultValue);
+            new Traverse(ModConfig.Level.player.movement.config).Field("ignorePush").SetValue(defaultValue);
         }
     }
 }

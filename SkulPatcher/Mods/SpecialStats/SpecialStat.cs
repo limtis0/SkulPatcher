@@ -6,12 +6,10 @@ namespace SkulPatcher
 {
     public abstract class SpecialStat
     {
-        protected Character Owner { get; }
         protected double Value { get; set; }
 
-        public SpecialStat(Character owner, double value)
+        public SpecialStat(double value)
         {
-            Owner = owner;
             Value = value;
         }
 

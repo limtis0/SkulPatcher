@@ -203,7 +203,7 @@ namespace SkulPatcher
 
         private static void SetSpecialStat(Stat.Kind kind, double value)
         {
-            SpecialStat specialStat = (SpecialStat)Activator.CreateInstance(specialStats[kind], new object[] { ModConfig.Level.player, value });
+            SpecialStat specialStat = (SpecialStat)Activator.CreateInstance(specialStats[kind], new object[] { value });
 
             prevAttachedSpecialStats.Add(specialStat);
             specialStat.Attach();

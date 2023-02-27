@@ -10,7 +10,7 @@ namespace SkulPatcher
         public static readonly Stat.Kind kind = CreateKind("Friction");
         public static readonly Stat.Category category = CreateCategory("Friction");
 
-        public FrictionStat(Character owner, double value) : base(owner, value)
+        public FrictionStat(double value) : base(value)
         {
         }
 
@@ -20,7 +20,7 @@ namespace SkulPatcher
 
         public override void Attach()
         {
-            Traverse friction = new Traverse(Owner.movement.config).Field("friction");
+            Traverse friction = new Traverse(ModConfig.Level.player.movement.config).Field("friction");
 
             float? frictionValue = friction.GetValue() as float?;
 
@@ -29,10 +29,10 @@ namespace SkulPatcher
 
         public override void Detach()
         {
-            if (Owner is null)
+            if (ModConfig.Level.player is null)
                 return;
 
-            new Traverse(Owner.movement.config).Field("friction").SetValue(defaultValue);
+            new Traverse(ModConfig.Level.player.movement.config).Field("friction").SetValue(defaultValue);
         }
     }
 }

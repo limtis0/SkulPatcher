@@ -10,7 +10,7 @@ namespace SkulPatcher
         public static readonly Stat.Kind kind = CreateKind("Gravity");
         public static readonly Stat.Category category = CreateCategory("Gravity");
 
-        public GravityStat(Character owner, double value) : base(owner, value)
+        public GravityStat(double value) : base(value)
         {
         }
 
@@ -20,7 +20,7 @@ namespace SkulPatcher
 
         public override void Attach()
         {
-            Traverse gravity = new Traverse(Owner.movement.config).Field("gravity");
+            Traverse gravity = new Traverse(ModConfig.Level.player.movement.config).Field("gravity");
 
             float? gravityValue = gravity.GetValue() as float?;
 
@@ -29,10 +29,10 @@ namespace SkulPatcher
 
         public override void Detach()
         {
-            if (Owner is null)
+            if (ModConfig.Level.player is null)
                 return;
 
-            new Traverse(Owner.movement.config).Field("gravity").SetValue(defaultValue);
+            new Traverse(ModConfig.Level.player.movement.config).Field("gravity").SetValue(defaultValue);
         }
     }
 }
