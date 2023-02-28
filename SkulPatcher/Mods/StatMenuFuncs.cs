@@ -119,27 +119,20 @@ namespace SkulPatcher
             (Stat.Category.PercentPoint, Stat.Kind.ChargingSpeed, "ChargingSpeed"),  // Can't tell if does anything
 
             // Special stats
-            (GravityStat.category, GravityStat.kind, "CurrentSkullGravity"),
-            (IgnoreGravityStat.category, IgnoreGravityStat.kind, "CurrentSkullIgnoreGravity"),
-            (MaxFallSpeedStat.category, MaxFallSpeedStat.kind, "CurrentSkullMaxFallSpeed"),
-            (AccelerationStat.category, AccelerationStat.kind, "CurrentSkullAcceleration"),
-            (FrictionStat.category, FrictionStat.kind, "CurrentSkullFriction"),
-
-            (KeepMovingStat.category, KeepMovingStat.kind, "CurrentSkullKeepMoving"),
-            (IgnorePushStat.category, IgnorePushStat.kind, "CurrentSkullIgnorePush"),
+            (GravityStat.category, GravityStat.kind, "Movement: Gravity"),
+            (IgnoreGravityStat.category, IgnoreGravityStat.kind, "Movement: IgnoreGravity"),
+            (MaxFallSpeedStat.category, MaxFallSpeedStat.kind, "Movement: MaxFallSpeed"),
+            (AccelerationStat.category, AccelerationStat.kind, "Movement: Acceleration"),
+            (FrictionStat.category, FrictionStat.kind, "Movement: Friction"),
+            (KeepMovingStat.category, KeepMovingStat.kind, "Movement: KeepMoving"),
+            (IgnorePushStat.category, IgnorePushStat.kind, "Movement: IgnorePush"),
         };
 
-        private static readonly Dictionary<Stat.Kind, Type> specialStats = new()
-        {
-            { GravityStat.kind, typeof(GravityStat) },
-            { IgnoreGravityStat.kind, typeof(IgnoreGravityStat) },
-            { MaxFallSpeedStat.kind, typeof(MaxFallSpeedStat) },
-            { AccelerationStat.kind, typeof(AccelerationStat) },
-            { FrictionStat.kind, typeof(FrictionStat) },
-
-            { KeepMovingStat.kind, typeof(KeepMovingStat) },
-            { IgnorePushStat.kind, typeof(IgnorePushStat) },
-        };
+        private static readonly Dictionary<Stat.Kind, Type> specialStats =
+            typeof(SpecialStat).Assembly.GetTypes()  // From all types in assembly
+            .Where(t => t.IsSubclassOf(typeof(SpecialStat)) && !t.IsAbstract)  // Get types that are subclass of SpecialStat
+            .Select(t => (SpecialStat)Activator.CreateInstance(t, new object[] { 0 }))  // Get instances from those types
+            .ToDictionary(stat => stat.Kind, stat => stat.GetType());  // Create a Dictionary<Stat.Kind, Type>
 
         public static readonly Dictionary<Stat.Category, (double minValue, double maxValue, double defaultValue, string abbreviation)> statLimitInfo = new()
         {
@@ -154,7 +147,6 @@ namespace SkulPatcher
             { FrictionStat.category, (0, 500, 100, "%") },
             { AccelerationStat.category, (0, 500, 100, "%") },
             { MaxFallSpeedStat.category, (0, 200, 25, "≡") },
-
             { KeepMovingStat.category, (0, 1, 0, "≡") },
             { IgnorePushStat.category, (0, 1, 0, "≡") },
         };
@@ -164,7 +156,6 @@ namespace SkulPatcher
             if (!ModConfig.IsInGame)
                 return;
 
-            // Setup
             List<Stat.Value> statValues = new();
             ResetSpecialStats();
             
@@ -176,12 +167,10 @@ namespace SkulPatcher
                     Stat.Kind kind = stats[i].kind;
                     double statValue = ScaleValueForCategory(category, statValuesToApply[i].statValue);
 
-                    // Game stats
                     if (Stat.Kind.values.Contains(kind))
                     {
                         statValues.Add(new Stat.Value(category, kind, statValue));
                     }
-                    // Special stats
                     else
                     {
                         SetSpecialStat(kind, statValue);
@@ -220,15 +209,9 @@ namespace SkulPatcher
         }
 
         private static readonly Stat.Category[] divideBy100 = new[] 
-        { 
-            // Game stats
+        {
             Stat.Category.PercentPoint,
             Stat.Category.Percent,
-
-            // Special stats
-            GravityStat.category,
-            AccelerationStat.category,
-            FrictionStat.category,
         };
 
         private static double ScaleValueForCategory(Stat.Category category, double value)

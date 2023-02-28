@@ -16,7 +16,7 @@ namespace SkulPatcher
             BossRushPatch.PatchAll();
 
             GameObject menu = new();
-            menu.AddComponent<Menu>();
+            ModConfig.menu = menu.AddComponent<Menu>();
             DontDestroyOnLoad(menu);
         }
     }

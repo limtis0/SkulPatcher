@@ -1,17 +1,25 @@
 ﻿using Characters;
+using Characters.Movements;
 using HarmonyLib;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace SkulPatcher
 {
     public class GravityStat : SpecialStat
     {
-        private const float defaultValue = -40f;
-
         public static readonly Stat.Kind kind = CreateKind("Gravity");
         public static readonly Stat.Category category = CreateCategory("Gravity");
 
+        private const string fieldName = "gravity";
+        private readonly IEnumerator coroutine;
+        private readonly Dictionary<Movement.Config, float> defaultValues = new();
+
         public GravityStat(double value) : base(value)
         {
+            Value /= 100;
+            coroutine = Coroutine();
         }
 
         public override Stat.Kind Kind => kind;
@@ -20,19 +28,45 @@ namespace SkulPatcher
 
         public override void Attach()
         {
-            Traverse gravity = new Traverse(ModConfig.Level.player.movement.config).Field("gravity");
-
-            float? gravityValue = gravity.GetValue() as float?;
-
-            gravity.SetValue((float)(gravityValue! * Value));
+            ModConfig.menu.StartCoroutine(coroutine);
         }
 
         public override void Detach()
         {
-            if (ModConfig.Level.player is null)
-                return;
+            foreach (KeyValuePair<Movement.Config, float> config in defaultValues)
+            {
+                new Traverse(config.Key).Field(fieldName).SetValue(config.Value);
+            }
+            defaultValues.Clear();
 
-            new Traverse(ModConfig.Level.player.movement.config).Field("gravity").SetValue(defaultValue);
+            ModConfig.menu.StopCoroutine(coroutine);
+        }
+
+        private IEnumerator Coroutine()
+        {
+            while (true)
+            {
+                if (ModConfig.IsInGame)
+                {
+                    Movement.Config config = ModConfig.Level.player.movement.config;
+
+                    if (!defaultValues.ContainsKey(config))
+                    {
+                        Traverse field = new Traverse(config).Field(fieldName);
+                        float fieldValue = (float)field.GetValue();
+
+                        defaultValues.Add(config, fieldValue);
+
+                        field.SetValue(fieldValue * (float)Value);
+                    }
+                }
+                else
+                {
+                    Detach();
+                }
+
+                yield return new WaitForSeconds(1);
+            }
         }
     }
 }

@@ -1,18 +1,24 @@
 ﻿using Characters;
+using Characters.Movements;
 using HarmonyLib;
-using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace SkulPatcher
 {
     public class IgnoreGravityStat : SpecialStat
     {
-        private const bool defaultValue = false;
-
         public static readonly Stat.Kind kind = CreateKind("IgnoreGravity");
         public static readonly Stat.Category category = CreateCategory("IgnoreGravity");
 
+        private const string fieldName = "ignoreGravity";
+        private readonly IEnumerator coroutine;
+        private readonly Dictionary<Movement.Config, bool> defaultValues = new();
+
         public IgnoreGravityStat(double value) : base(value)
         {
+            coroutine = Coroutine();
         }
 
         public override Stat.Kind Kind => kind;
@@ -21,15 +27,44 @@ namespace SkulPatcher
 
         public override void Attach()
         {
-            new Traverse(ModConfig.Level.player.movement.config).Field("ignoreGravity").SetValue(Value != 0);
+            ModConfig.menu.StartCoroutine(coroutine);
         }
 
         public override void Detach()
         {
-            if (ModConfig.Level.player is null)
-                return;
+            foreach (KeyValuePair<Movement.Config, bool> config in defaultValues)
+            {
+                new Traverse(config.Key).Field(fieldName).SetValue(config.Value);
+            }
+            defaultValues.Clear();
 
-            new Traverse(ModConfig.Level.player.movement.config).Field("ignoreGravity").SetValue(defaultValue);
+            ModConfig.menu.StopCoroutine(coroutine);
+        }
+
+        private IEnumerator Coroutine()
+        {
+            while (true)
+            {
+                if (ModConfig.IsInGame)
+                {
+                    Movement.Config config = ModConfig.Level.player.movement.config;
+
+                    if (!defaultValues.ContainsKey(config))
+                    {
+                        Traverse field = new Traverse(config).Field(fieldName);
+
+                        defaultValues.Add(config, (bool)field.GetValue());
+
+                        field.SetValue(Value != 0);
+                    }
+                }
+                else
+                {
+                    Detach();
+                }
+
+                yield return new WaitForSeconds(1);
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ using Level;
 using Scenes;
 using Services;
 using Singletons;
+using SkulPatcher.UI;
 using UI;
 using UnityEngine;
 
@@ -66,6 +67,7 @@ namespace SkulPatcher
 
         // Utils
         public static Harmony harmony;
+        public static Menu menu;
 
         public static LevelManager Level => Singleton<Service>.Instance.levelManager;
         public static GearResource Gear => GearResource.instance;
