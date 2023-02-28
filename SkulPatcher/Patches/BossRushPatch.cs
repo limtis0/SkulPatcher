@@ -50,14 +50,14 @@ namespace SkulPatcher.Patches
         {
             // On new stage achieved
             MethodInfo GeneratePath = AccessTools.Method(typeof(StageInfo), "GeneratePath");
-            MethodInfo OnNewStagePatch = AccessTools.Method(typeof(BossRushPatch), "OnNewStagePatch");
+            MethodInfo OnNewStagePatch = AccessTools.Method(typeof(BossRushPatch), nameof(BossRushPatch.OnNewStagePatch));
 
             ModConfig.harmony.Patch(GeneratePath, postfix: new HarmonyMethod(OnNewStagePatch));
 
 
             // On map changed
             MethodInfo OnMapChanged = AccessTools.Method(typeof(LevelManager), nameof(LevelManager.InvokeOnMapChangedAndFadeIn));
-            MethodInfo OnMapChangedPostfix = AccessTools.Method(typeof(BossRushPatch), "OnMapChangedPatch");
+            MethodInfo OnMapChangedPostfix = AccessTools.Method(typeof(BossRushPatch), nameof(BossRushPatch.OnMapChangedPatch));
 
             ModConfig.harmony.Patch(OnMapChanged, postfix: new HarmonyMethod(OnMapChangedPostfix));
 
@@ -65,7 +65,7 @@ namespace SkulPatcher.Patches
             // On rewards
             MethodInfo OnMapRewards = AccessTools.Method(typeof(LevelManager), nameof(LevelManager.InvokeOnActivateMapReward));
             MethodInfo OnBossChest = AccessTools.Method(typeof(BossChest), nameof(BossChest.InteractWith));
-            MethodInfo OnMapRewardsPatch = AccessTools.Method(typeof(BossRushPatch), "OnMapRewardsPatch");
+            MethodInfo OnMapRewardsPatch = AccessTools.Method(typeof(BossRushPatch), nameof(BossRushPatch.OnMapRewardsPatch));
 
             ModConfig.harmony.Patch(OnMapRewards, postfix: new HarmonyMethod(OnMapRewardsPatch));
             ModConfig.harmony.Patch(OnBossChest, postfix: new HarmonyMethod(OnMapRewardsPatch));

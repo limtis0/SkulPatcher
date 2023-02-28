@@ -1,5 +1,6 @@
 ﻿using Characters;
 using HarmonyLib;
+using MonoMod.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -124,32 +125,32 @@ namespace SkulPatcher
             (MaxFallSpeedStat.category, MaxFallSpeedStat.kind, "Movement: MaxFallSpeed"),
             (AccelerationStat.category, AccelerationStat.kind, "Movement: Acceleration"),
             (FrictionStat.category, FrictionStat.kind, "Movement: Friction"),
+
             (KeepMovingStat.category, KeepMovingStat.kind, "Movement: KeepMoving"),
             (IgnorePushStat.category, IgnorePushStat.kind, "Movement: IgnorePush"),
+
+            (AirJumpCountStat.category, AirJumpCountStat.kind, "Movement: AirJumpCount"),
+            (JumpHeightStat.category, JumpHeightStat.kind, "Movement: JumpHeight"),
         };
 
-        private static readonly Dictionary<Stat.Kind, Type> specialStats =
-            typeof(SpecialStat).Assembly.GetTypes()  // From all types in assembly
-            .Where(t => t.IsSubclassOf(typeof(SpecialStat)) && !t.IsAbstract)  // Get types that are subclass of SpecialStat
-            .Select(t => (SpecialStat)Activator.CreateInstance(t, new object[] { 0 }))  // Get instances from those types
-            .ToDictionary(stat => stat.Kind, stat => stat.GetType());  // Create a Dictionary<Stat.Kind, Type>
+        private static readonly Dictionary<Stat.Kind, Type> specialStats;
 
-        public static readonly Dictionary<Stat.Category, (double minValue, double maxValue, double defaultValue, string abbreviation)> statLimitInfo = new()
+        public static readonly Dictionary<Stat.Category, (double minValue, double maxValue, double defaultValue, string abbreviation)> statLimitInfo;
+
+        static StatMenuFuncs()
         {
-            // Game stats
-            { Stat.Category.Fixed, (-1000, 5000, 0, "p") },
-            { Stat.Category.Percent, (-100, 1000, 100, "%") },
-            { Stat.Category.PercentPoint, (-1000, 5000, 0, "%p") },
+            IEnumerable<SpecialStat> specialStatsEnumerable = 
+                typeof(SpecialStat).Assembly.GetTypes()  // From all types in assembly
+                .Where(t => t.IsSubclassOf(typeof(SpecialStat)) && !t.IsAbstract)  // Get types that are subclass of SpecialStat
+                .Select(t => (SpecialStat)Activator.CreateInstance(t, new object[] { 0 }));  // Get instances of those types
 
-            // Special stats
-            { GravityStat.category, (0, 500, 100, "%") },
-            { IgnoreGravityStat.category, (0, 1, 0, "≡") },
-            { FrictionStat.category, (0, 500, 100, "%") },
-            { AccelerationStat.category, (0, 500, 100, "%") },
-            { MaxFallSpeedStat.category, (0, 200, 25, "≡") },
-            { KeepMovingStat.category, (0, 1, 0, "≡") },
-            { IgnorePushStat.category, (0, 1, 0, "≡") },
-        };
+            specialStats = specialStatsEnumerable.ToDictionary(stat => stat.Kind, stat => stat.GetType());
+
+            statLimitInfo = specialStatsEnumerable.ToDictionary(stat => stat.Category, s => (s.MinValue, s.MaxValue, s.DefaultValue, s.Abbreviation));
+            statLimitInfo.Add(Stat.Category.Fixed, (-1000, 5000, 0, "p"));
+            statLimitInfo.Add(Stat.Category.Percent, (-100, 1000, 100, "%"));
+            statLimitInfo.Add(Stat.Category.PercentPoint, (-1000, 5000, 0, "%p"));
+        }
 
         public static void SetStats((bool toApply, double statValue)[] statValuesToApply)  // Function for StatMenu.cs
         {

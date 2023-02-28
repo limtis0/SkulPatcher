@@ -10,7 +10,7 @@ namespace SkulPatcher
     {
         public void Awake()
         {
-            ModConfig.harmony = new("com.limtis.SkulPatcher");
+            ModConfig.harmony = new(PluginInfo.PLUGIN_GUID);
             ModConfig.harmony.PatchAll(Assembly.GetExecutingAssembly());
 
             BossRushPatch.PatchAll();

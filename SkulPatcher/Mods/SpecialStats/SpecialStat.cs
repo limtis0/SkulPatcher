@@ -6,6 +6,7 @@ namespace SkulPatcher
 {
     public abstract class SpecialStat
     {
+        // Slider value
         protected double Value { get; set; }
 
         public SpecialStat(double value)
@@ -13,14 +14,23 @@ namespace SkulPatcher
             Value = value;
         }
 
+        // Used as primary keys for StatMenuFuncs.stats, should just return a static value
         public abstract Stat.Kind Kind { get; }
-
         public abstract Stat.Category Category { get; }
 
+        // Slider limits/information for StatMenu
+        public abstract double MinValue { get; }
+        public abstract double MaxValue { get; }
+        public abstract double DefaultValue { get; }
+        public abstract string Abbreviation { get; }
+
+        // Called on applying
         public abstract void Attach();
 
+        // Called on unapplying, reapplying and resetting
         public abstract void Detach();
 
+        // Creating static values for Kind and Category properties
         public static Stat.Kind CreateKind(string name)
         {
             return (Stat.Kind)Activator.CreateInstance(typeof(Stat.Kind), BindingFlags.Instance | BindingFlags.NonPublic, null, new object[] { name, Stat.Kind.ValueForm.Constant }, null, null);

@@ -25,6 +25,14 @@ namespace SkulPatcher
 
         public override Stat.Category Category => category;
 
+        public override double MinValue => 0;
+
+        public override double MaxValue => 250;
+
+        public override double DefaultValue => 25;
+
+        public override string Abbreviation => "≡";
+
         public override void Attach()
         {
             ModConfig.menu.StartCoroutine(coroutine);
