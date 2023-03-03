@@ -26,6 +26,8 @@ namespace SkulPatcher
 
         public override Stat.Category Category => category;
 
+        public override string Title => "[Movement] Friction";
+
         public override double MinValue => 0;
 
         public override double MaxValue => 1000;

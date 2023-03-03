@@ -19,6 +19,7 @@ namespace SkulPatcher
         public abstract Stat.Category Category { get; }
 
         // Slider limits/information for StatMenu
+        public abstract string Title { get; }
         public abstract double MinValue { get; }
         public abstract double MaxValue { get; }
         public abstract double DefaultValue { get; }

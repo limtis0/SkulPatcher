@@ -8,17 +8,26 @@ namespace SkulPatcher.UI
     public static class StatMenu
     {
         // Init array of "fixed" size
-        private static readonly (bool toApply, double statValue)[] statValues = Enumerable.Repeat((false, 0d), StatMenuFuncs.stats.Length).ToArray();
-        private static readonly bool[] showStatInList = Enumerable.Repeat(true, StatMenuFuncs.stats.Length).ToArray();
+        private static readonly (bool toApply, double statValue)[] statValues;
+        private static readonly bool[] showStatInList;
 
         private static string searchText = string.Empty;
         private static string searchTextPreviousState = searchText;
 
-        static StatMenu() => SetDefaults();
+        static StatMenu() 
+        {
+            statValues = Enumerable.Repeat((false, 0d), StatMenuFuncs.stats.Length).ToArray();
+            showStatInList = Enumerable.Repeat(true, StatMenuFuncs.stats.Length).ToArray();
+
+            statScrollToggleRects = Enumerable.Repeat(new Rect(), StatMenuFuncs.stats.Length).ToArray();
+            statScrollSliderRects = Enumerable.Repeat(new Rect(), StatMenuFuncs.stats.Length).ToArray();
+
+            SetDefaults();
+        } 
 
         private static void SetDefaults()
         {
-            for (int i = 0; i < StatMenuFuncs.stats.Length; i++)
+            for (int i = 0; i < statValues.Length; i++)
             {
                 statValues[i].toApply = false;
                 statValues[i].statValue = StatMenuFuncs.statLimitInfo[StatMenuFuncs.stats[i].category].defaultValue;
@@ -31,7 +40,7 @@ namespace SkulPatcher.UI
 
             statScrollVec = GUI.BeginScrollView(statScrollPosRect, statScrollVec, statScrollViewRect, GUIStyle.none, GUIStyle.none);
             
-            for (int i = 0; i < StatMenuFuncs.stats.Length; i++)
+            for (int i = 0; i < statValues.Length; i++)
             {
                 if (!showStatInList[i])
                     continue;
@@ -80,8 +89,8 @@ namespace SkulPatcher.UI
         private static Vector2 statScrollVec = Vector2.zero;
         private static Rect statScrollPosRect;
         private static Rect statScrollViewRect;
-        private static readonly Rect[] statScrollToggleRects = Enumerable.Repeat(new Rect(), StatMenuFuncs.stats.Length).ToArray();
-        private static readonly Rect[] statScrollSliderRects = Enumerable.Repeat(new Rect(), StatMenuFuncs.stats.Length).ToArray();
+        private static readonly Rect[] statScrollToggleRects;
+        private static readonly Rect[] statScrollSliderRects;
 
         private static Rect applyChangesButtonRect;
         private static Rect resetButtonRect;
