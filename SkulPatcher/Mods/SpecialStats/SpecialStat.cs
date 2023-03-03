@@ -2,7 +2,7 @@
 using System;
 using System.Reflection;
 
-namespace SkulPatcher
+namespace SkulPatcher.Mods.SpecialStats
 {
     public abstract class SpecialStat
     {

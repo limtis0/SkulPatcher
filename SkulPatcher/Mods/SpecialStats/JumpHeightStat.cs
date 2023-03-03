@@ -1,7 +1,7 @@
 ﻿using Characters;
 using Characters.Movements;
 using HarmonyLib;
-namespace SkulPatcher
+namespace SkulPatcher.Mods.SpecialStats
 {
     public class JumpHeightStat : SpecialStat
     {

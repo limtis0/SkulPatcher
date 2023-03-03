@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SkulPatcher
+namespace SkulPatcher.Mods.SpecialStats
 {
     public class IgnoreGravityStat : SpecialStat
     {
@@ -42,13 +42,13 @@ namespace SkulPatcher
 
         public override void Detach()
         {
+            ModConfig.menu.StopCoroutine(coroutine);
+
             foreach (KeyValuePair<Movement.Config, bool> config in defaultValues)
             {
                 new Traverse(config.Key).Field(fieldName).SetValue(config.Value);
             }
             defaultValues.Clear();
-
-            ModConfig.menu.StopCoroutine(coroutine);
         }
 
         private IEnumerator Coroutine()

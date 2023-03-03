@@ -1,5 +1,6 @@
 ﻿using Characters;
-namespace SkulPatcher
+
+namespace SkulPatcher.Mods.SpecialStats
 {
     public class AirJumpCountStat : SpecialStat
     {

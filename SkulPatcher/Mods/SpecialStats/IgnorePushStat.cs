@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SkulPatcher
+namespace SkulPatcher.Mods.SpecialStats
 {
     public class IgnorePushStat : SpecialStat
     {
