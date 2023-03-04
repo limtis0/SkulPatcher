@@ -213,7 +213,7 @@ namespace SkulPatcher.UI
         {
 
             menuWidth = Screen.width / 4;
-            menuHeight = (int) (unit * 24.5f);
+            menuHeight = (int)(unit * 24.5f);
 
             windowRect = new Rect(Screen.width - menuWidth - unit, unit, menuWidth, menuHeight);
             int row = 0;

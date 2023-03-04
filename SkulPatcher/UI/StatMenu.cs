@@ -14,7 +14,7 @@ namespace SkulPatcher.UI
         private static string searchText = string.Empty;
         private static string searchTextPreviousState = searchText;
 
-        static StatMenu() 
+        static StatMenu()
         {
             statValues = Enumerable.Repeat((false, 0d), StatMenuFuncs.statList.Length).ToArray();
             showStatInList = Enumerable.Repeat(true, StatMenuFuncs.statList.Length).ToArray();
@@ -23,7 +23,7 @@ namespace SkulPatcher.UI
             statScrollSliderRects = Enumerable.Repeat(new Rect(), StatMenuFuncs.statList.Length).ToArray();
 
             SetDefaults();
-        } 
+        }
 
         private static void SetDefaults()
         {
@@ -41,7 +41,7 @@ namespace SkulPatcher.UI
             GUI.DragWindow(dragWindowRect);
 
             statScrollVec = GUI.BeginScrollView(statScrollPosRect, statScrollVec, statScrollViewRect, GUIStyle.none, GUIStyle.none);
-            
+
             for (int i = 0; i < statValues.Length; i++)
             {
                 if (!showStatInList[i])

@@ -50,7 +50,7 @@ namespace SkulPatcher.Mods.SpecialStats
             {
                 new Traverse(config.Key).Field(fieldName).SetValue(config.Value);
             }
-            defaultValues.Clear();   
+            defaultValues.Clear();
         }
 
         private IEnumerator Coroutine()

@@ -220,7 +220,7 @@ namespace SkulPatcher.UI
             // Search field
             GUI.Label(searchLabelRect, "Search:");
             searchText = GUI.TextField(searchFieldRect, searchText);
-            
+
             if (searchText != searchTextPreviousState)
             {
                 searchTextPreviousState = searchText;

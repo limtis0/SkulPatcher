@@ -4,7 +4,6 @@ using SkulPatcher.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 namespace SkulPatcher
 {
@@ -27,7 +26,7 @@ namespace SkulPatcher
         static StatMenuFuncs()
         {
             // Instances of all Special Stats classes
-            IEnumerable<SpecialStat> specialStatsEnumerable = 
+            IEnumerable<SpecialStat> specialStatsEnumerable =
                 typeof(SpecialStat).Assembly.GetTypes()  // From all types in assembly
                 .Where(t => t.IsSubclassOf(typeof(SpecialStat)) && !t.IsAbstract)  // Get types that are subclass of SpecialStat
                 .Select(t => (SpecialStat)Activator.CreateInstance(t, new object[] { 0 }));  // Get instances of those types
@@ -152,7 +151,7 @@ namespace SkulPatcher
 
             List<Stat.Value> statValues = new();
             ResetSpecialStats();
-            
+
             for (int i = 0; i < statList.Length; i++)
             {
                 if (values[i].toApply)
@@ -180,7 +179,7 @@ namespace SkulPatcher
         public static void SetSpecialStat(Stat.Kind kind, bool toApplyUI, double value)
         {
             int statIndex = statList.Select((stat, index) => (stat, index)).First(v => v.stat.kind == kind).index;
-            
+
             StatMenu.SetStatValue(statIndex, toApplyUI, value);
             SetSpecialStatValue(kind, value);
         }
@@ -226,7 +225,7 @@ namespace SkulPatcher
             prevAttachedSpecialStats.Clear();
         }
 
-        private static readonly Stat.Category[] divideBy100 = new[] 
+        private static readonly Stat.Category[] divideBy100 = new[]
         {
             Stat.Category.PercentPoint,
             Stat.Category.Percent,
