@@ -1,27 +1,30 @@
 ﻿using Characters;
+using HarmonyLib;
+using Level;
 using SkulPatcher.Mods.SpecialStats;
 using SkulPatcher.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static Characters.Stat;
 
 namespace SkulPatcher
 {
     public static class StatMenuFuncs
     {
-        private static Stat.Values prevAttachedStats;
-        private static readonly Dictionary<Stat.Kind, SpecialStat> prevAttachedSpecialStats = new();
+        private static Values prevAttachedStats;
+        private static readonly Dictionary<Kind, SpecialStat> prevAttachedSpecialStats = new();
 
         /*
         / Stat.Category.Fixed - Add fixed amount (1/1);
         / Stat.Category.Percent - Multiply by percentage (1/100);
         / Stat.Category.PercentPoint - Add perecent point (1/100);
         */
-        public static readonly (Stat.Category category, Stat.Kind kind, string name)[] statList;
+        public static readonly (Category category, Kind kind, string name)[] statList;
 
-        private static readonly Dictionary<Stat.Kind, Type> specialStats;
+        private static readonly Dictionary<Kind, Type> specialStats;
 
-        public static readonly Dictionary<Stat.Category, (double minValue, double maxValue, double defaultValue, string abbreviation)> statLimitInfo;
+        public static readonly Dictionary<Category, (double minValue, double maxValue, double defaultValue, string abbreviation)> statLimitInfo;
 
         static StatMenuFuncs()
         {
@@ -36,108 +39,108 @@ namespace SkulPatcher
 
             // Slider limits and text (UI)
             statLimitInfo = specialStatsEnumerable.ToDictionary(stat => stat.Category, s => (s.MinValue, s.MaxValue, s.DefaultValue, s.Abbreviation));
-            statLimitInfo.Add(Stat.Category.Fixed, (-1000, 5000, 0, "p"));
-            statLimitInfo.Add(Stat.Category.Percent, (-100, 1000, 100, "%"));
-            statLimitInfo.Add(Stat.Category.PercentPoint, (-1000, 5000, 0, "%p"));
+            statLimitInfo.Add(Category.Fixed, (-1000, 5000, 0, "p"));
+            statLimitInfo.Add(Category.Percent, (-100, 1000, 100, "%"));
+            statLimitInfo.Add(Category.PercentPoint, (-1000, 5000, 0, "%p"));
 
             // Stat list
             statList = new[]
             {
-                (Stat.Category.Fixed, Stat.Kind.Health, "[General] Health"),
-                (Stat.Category.Percent, Stat.Kind.Health, "[General] Health"),
+                (Category.Fixed, Kind.Health, "[General] Health"),
+                (Category.Percent, Kind.Health, "[General] Health"),
 
-                (Stat.Category.Percent, Stat.Kind.AttackDamage, "[General] AttackDamage"),
-                (Stat.Category.PercentPoint, Stat.Kind.AttackDamage, "[General] AttackDamage"),
+                (Category.Percent, Kind.AttackDamage, "[General] AttackDamage"),
+                (Category.PercentPoint, Kind.AttackDamage, "[General] AttackDamage"),
 
-                (Stat.Category.Percent, Stat.Kind.PhysicalAttackDamage, "[General] PhysicalAttackDamage"),
-                (Stat.Category.PercentPoint, Stat.Kind.PhysicalAttackDamage, "[General] PhysicalAttackDamage"),
+                (Category.Percent, Kind.PhysicalAttackDamage, "[General] PhysicalAttackDamage"),
+                (Category.PercentPoint, Kind.PhysicalAttackDamage, "[General] PhysicalAttackDamage"),
 
-                (Stat.Category.Percent, Stat.Kind.MagicAttackDamage, "[General] MagicAttackDamage"),
-                (Stat.Category.PercentPoint, Stat.Kind.MagicAttackDamage, "[General] MagicAttackDamage"),
+                (Category.Percent, Kind.MagicAttackDamage, "[General] MagicAttackDamage"),
+                (Category.PercentPoint, Kind.MagicAttackDamage, "[General] MagicAttackDamage"),
 
-                (Stat.Category.Percent, Stat.Kind.TakingDamage, "[General] TakingDamage"),
-                (Stat.Category.PercentPoint, Stat.Kind.TakingDamage, "[General] TakingDamage"),
+                (Category.Percent, Kind.TakingDamage, "[General] TakingDamage"),
+                (Category.PercentPoint, Kind.TakingDamage, "[General] TakingDamage"),
 
-                (Stat.Category.Percent, Stat.Kind.TakingPhysicalDamage, "[General] TakingPhysicalDamage"),
-                (Stat.Category.PercentPoint, Stat.Kind.TakingPhysicalDamage, "[General] TakingPhysicalDamage"),
+                (Category.Percent, Kind.TakingPhysicalDamage, "[General] TakingPhysicalDamage"),
+                (Category.PercentPoint, Kind.TakingPhysicalDamage, "[General] TakingPhysicalDamage"),
 
-                (Stat.Category.Percent, Stat.Kind.TakingMagicDamage, "[General] TakingMagicDamage"),
-                (Stat.Category.PercentPoint, Stat.Kind.TakingMagicDamage, "[General] TakingMagicDamage"),
+                (Category.Percent, Kind.TakingMagicDamage, "[General] TakingMagicDamage"),
+                (Category.PercentPoint, Kind.TakingMagicDamage, "[General] TakingMagicDamage"),
 
-                (Stat.Category.Percent, Stat.Kind.AttackSpeed, "[General] AttackSpeed"),
-                (Stat.Category.PercentPoint, Stat.Kind.AttackSpeed, "[General] AttackSpeed"),
+                (Category.Percent, Kind.AttackSpeed, "[General] AttackSpeed"),
+                (Category.PercentPoint, Kind.AttackSpeed, "[General] AttackSpeed"),
 
-                (Stat.Category.Percent, Stat.Kind.MovementSpeed, "[General] MovementSpeed"),
-                (Stat.Category.PercentPoint, Stat.Kind.MovementSpeed, "[General] MovementSpeed"),
+                (Category.Percent, Kind.MovementSpeed, "[General] MovementSpeed"),
+                (Category.PercentPoint, Kind.MovementSpeed, "[General] MovementSpeed"),
 
-                (Stat.Category.Percent, Stat.Kind.CriticalChance, "[General] CriticalChance"),
-                (Stat.Category.PercentPoint, Stat.Kind.CriticalChance, "[General] CriticalChance"),
+                (Category.Percent, Kind.CriticalChance, "[General] CriticalChance"),
+                (Category.PercentPoint, Kind.CriticalChance, "[General] CriticalChance"),
 
-                (Stat.Category.Percent, Stat.Kind.CriticalDamage, "[General] CriticalDamage"),
-                (Stat.Category.PercentPoint, Stat.Kind.CriticalDamage, "[General] CriticalDamage"),
+                (Category.Percent, Kind.CriticalDamage, "[General] CriticalDamage"),
+                (Category.PercentPoint, Kind.CriticalDamage, "[General] CriticalDamage"),
 
-                (Stat.Category.Fixed, Stat.Kind.BasicAttackDamage, "[General] BasicAttackDamage"),
-                (Stat.Category.Percent, Stat.Kind.BasicAttackDamage, "[General] BasicAttackDamage"),
+                (Category.Fixed, Kind.BasicAttackDamage, "[General] BasicAttackDamage"),
+                (Category.Percent, Kind.BasicAttackDamage, "[General] BasicAttackDamage"),
 
-                (Stat.Category.Fixed, Stat.Kind.SkillAttackDamage, "[General] SkillAttackDamage"),
-                (Stat.Category.Percent, Stat.Kind.SkillAttackDamage, "[General] SkillAttackDamage"),
+                (Category.Fixed, Kind.SkillAttackDamage, "[General] SkillAttackDamage"),
+                (Category.Percent, Kind.SkillAttackDamage, "[General] SkillAttackDamage"),
 
-                (Stat.Category.Percent, Stat.Kind.CooldownSpeed, "[General] CooldownSpeed"),
-                (Stat.Category.PercentPoint, Stat.Kind.CooldownSpeed, "[General] CooldownSpeed"),
+                (Category.Percent, Kind.CooldownSpeed, "[General] CooldownSpeed"),
+                (Category.PercentPoint, Kind.CooldownSpeed, "[General] CooldownSpeed"),
 
-                (Stat.Category.Percent, Stat.Kind.SkillCooldownSpeed, "[General] SkillCooldownSpeed"),
-                (Stat.Category.PercentPoint, Stat.Kind.SkillCooldownSpeed, "[General] SkillCooldownSpeed"),
+                (Category.Percent, Kind.SkillCooldownSpeed, "[General] SkillCooldownSpeed"),
+                (Category.PercentPoint, Kind.SkillCooldownSpeed, "[General] SkillCooldownSpeed"),
 
-                (Stat.Category.Percent, Stat.Kind.DashCooldownSpeed, "[General] DashCooldownSpeed"),
-                (Stat.Category.PercentPoint, Stat.Kind.DashCooldownSpeed, "[General] DashCooldownSpeed"),
+                (Category.Percent, Kind.DashCooldownSpeed, "[General] DashCooldownSpeed"),
+                (Category.PercentPoint, Kind.DashCooldownSpeed, "[General] DashCooldownSpeed"),
 
-                (Stat.Category.Percent, Stat.Kind.SwapCooldownSpeed, "[General] SwapCooldownSpeed"),
-                (Stat.Category.PercentPoint, Stat.Kind.SwapCooldownSpeed, "[General] SwapCooldownSpeed"),
+                (Category.Percent, Kind.SwapCooldownSpeed, "[General] SwapCooldownSpeed"),
+                (Category.PercentPoint, Kind.SwapCooldownSpeed, "[General] SwapCooldownSpeed"),
 
-                (Stat.Category.Percent, Stat.Kind.EssenceCooldownSpeed, "[General] EssenceCooldownSpeed"),
-                (Stat.Category.PercentPoint, Stat.Kind.EssenceCooldownSpeed, "[General] EssenceCooldownSpeed"),
+                (Category.Percent, Kind.EssenceCooldownSpeed, "[General] EssenceCooldownSpeed"),
+                (Category.PercentPoint, Kind.EssenceCooldownSpeed, "[General] EssenceCooldownSpeed"),
 
-                (Stat.Category.Percent, Stat.Kind.BuffDuration, "[General] BuffDuration"),
-                (Stat.Category.PercentPoint, Stat.Kind.BuffDuration, "[General] BuffDuration"),
+                (Category.Percent, Kind.BuffDuration, "[General] BuffDuration"),
+                (Category.PercentPoint, Kind.BuffDuration, "[General] BuffDuration"),
 
-                (Stat.Category.Percent, Stat.Kind.BasicAttackSpeed, "[General] BasicAttackSpeed"),
-                (Stat.Category.PercentPoint, Stat.Kind.BasicAttackSpeed, "[General] BasicAttackSpeed"),
+                (Category.Percent, Kind.BasicAttackSpeed, "[General] BasicAttackSpeed"),
+                (Category.PercentPoint, Kind.BasicAttackSpeed, "[General] BasicAttackSpeed"),
 
-                (Stat.Category.Percent, Stat.Kind.SkillAttackSpeed, "[General] SkillAttackSpeed"),
-                (Stat.Category.PercentPoint, Stat.Kind.SkillAttackSpeed, "[General] SkillAttackSpeed"),
+                (Category.Percent, Kind.SkillAttackSpeed, "[General] SkillAttackSpeed"),
+                (Category.PercentPoint, Kind.SkillAttackSpeed, "[General] SkillAttackSpeed"),
 
-                (Stat.Category.Percent, Stat.Kind.CharacterSize, "[General] CharacterSize"),
-                (Stat.Category.PercentPoint, Stat.Kind.CharacterSize, "[General] CharacterSize"),
+                (Category.Percent, Kind.CharacterSize, "[General] CharacterSize"),
+                (Category.PercentPoint, Kind.CharacterSize, "[General] CharacterSize"),
 
-                (Stat.Category.Percent, Stat.Kind.DashDistance, "[General] DashDistance"),
-                (Stat.Category.PercentPoint, Stat.Kind.DashDistance, "[General] DashDistance"),
+                (Category.Percent, Kind.DashDistance, "[General] DashDistance"),
+                (Category.PercentPoint, Kind.DashDistance, "[General] DashDistance"),
 
-                (Stat.Category.Percent, Stat.Kind.PoisonTickFrequency, "[General] PoisonTickFrequency"),  // Can't tell if does anything
-                (Stat.Category.PercentPoint, Stat.Kind.PoisonTickFrequency, "[General] PoisonTickFrequency"),  // Can't tell if does anything
+                (Category.Percent, Kind.PoisonTickFrequency, "[General] PoisonTickFrequency"),  // Can't tell if does anything
+                (Category.PercentPoint, Kind.PoisonTickFrequency, "[General] PoisonTickFrequency"),  // Can't tell if does anything
 
-                (Stat.Category.Percent, Stat.Kind.BleedDamage, "[General] BleedDamage"),
-                (Stat.Category.PercentPoint, Stat.Kind.BleedDamage, "[General] BleedDamage"),
+                (Category.Percent, Kind.BleedDamage, "[General] BleedDamage"),
+                (Category.PercentPoint, Kind.BleedDamage, "[General] BleedDamage"),
 
-                (Stat.Category.Percent, Stat.Kind.EmberDamage, "[General] EmberDamage"),
-                (Stat.Category.PercentPoint, Stat.Kind.EmberDamage, "[General] EmberDamage"),
+                (Category.Percent, Kind.EmberDamage, "[General] EmberDamage"),
+                (Category.PercentPoint, Kind.EmberDamage, "[General] EmberDamage"),
 
-                (Stat.Category.Percent, Stat.Kind.FreezeDuration, "[General] FreezeDuration"),
-                (Stat.Category.PercentPoint, Stat.Kind.FreezeDuration, "[General] FreezeDuration"),
+                (Category.Percent, Kind.FreezeDuration, "[General] FreezeDuration"),
+                (Category.PercentPoint, Kind.FreezeDuration, "[General] FreezeDuration"),
 
-                (Stat.Category.Percent, Stat.Kind.StunDuration, "[General] StunDuration"),
-                (Stat.Category.PercentPoint, Stat.Kind.StunDuration, "[General] StunDuration"),
+                (Category.Percent, Kind.StunDuration, "[General] StunDuration"),
+                (Category.PercentPoint, Kind.StunDuration, "[General] StunDuration"),
 
-                (Stat.Category.Percent, Stat.Kind.SpiritAttackCooldownSpeed, "[General] SpiritAttackCooldownSpeed"),
-                (Stat.Category.PercentPoint, Stat.Kind.SpiritAttackCooldownSpeed, "[General] SpiritAttackCooldownSpeed"),
+                (Category.Percent, Kind.SpiritAttackCooldownSpeed, "[General] SpiritAttackCooldownSpeed"),
+                (Category.PercentPoint, Kind.SpiritAttackCooldownSpeed, "[General] SpiritAttackCooldownSpeed"),
 
-                (Stat.Category.Percent, Stat.Kind.ProjectileAttackDamage, "[General] ProjectileAttackDamage"),
-                (Stat.Category.PercentPoint, Stat.Kind.ProjectileAttackDamage, "[General] ProjectileAttackDamage"),
+                (Category.Percent, Kind.ProjectileAttackDamage, "[General] ProjectileAttackDamage"),
+                (Category.PercentPoint, Kind.ProjectileAttackDamage, "[General] ProjectileAttackDamage"),
 
-                (Stat.Category.Percent, Stat.Kind.TakingHealAmount, "[General] TakingHealAmount"),
-                (Stat.Category.PercentPoint, Stat.Kind.TakingHealAmount, "[General] TakingHealAmount"),
+                (Category.Percent, Kind.TakingHealAmount, "[General] TakingHealAmount"),
+                (Category.PercentPoint, Kind.TakingHealAmount, "[General] TakingHealAmount"),
 
-                (Stat.Category.Percent, Stat.Kind.ChargingSpeed, "[General] ChargingSpeed"),  // Can't tell if does anything
-                (Stat.Category.PercentPoint, Stat.Kind.ChargingSpeed, "[General] ChargingSpeed"),  // Can't tell if does anything
+                (Category.Percent, Kind.ChargingSpeed, "[General] ChargingSpeed"),  // Can't tell if does anything
+                (Category.PercentPoint, Kind.ChargingSpeed, "[General] ChargingSpeed"),  // Can't tell if does anything
             };
 
             // Special Stats in alphabetic order
@@ -149,21 +152,22 @@ namespace SkulPatcher
             if (!ModConfig.IsInGame)
                 return;
 
-            List<Stat.Value> statValues = new();
-            ResetSpecialStats();
+            List<Value> statValues = new();
+
+            ResetStats();
 
             for (int i = 0; i < statList.Length; i++)
             {
                 if (values[i].toApply)
                 {
-                    Stat.Category category = statList[i].category;
-                    Stat.Kind kind = statList[i].kind;
+                    Category category = statList[i].category;
+                    Kind kind = statList[i].kind;
                     double statValue = ScaleValueForCategory(category, values[i].value);
 
                     // If one of in-game stats
-                    if (Stat.Kind.values.Contains(kind))
+                    if (Kind.values.Contains(kind))
                     {
-                        statValues.Add(new Stat.Value(category, kind, statValue));
+                        statValues.Add(new Value(category, kind, statValue));
                     }
                     // Special stats
                     else
@@ -173,10 +177,19 @@ namespace SkulPatcher
                 }
             }
 
-            SetInGameStats(new Stat.Values(statValues.ToArray()));
+            SetInGameStats(new Values(statValues.ToArray()));
         }
 
-        public static void SetSpecialStat(Stat.Kind kind, bool toApplyUI, double value)
+        private static double ScaleValueForCategory(Category category, double value)
+        {
+            if (category == Category.PercentPoint || category == Category.Percent)
+                return value / 100;
+
+            return value;
+        }
+
+
+        public static void SetSpecialStat(Kind kind, bool toApplyUI, double value)
         {
             int statIndex = statList.Select((stat, index) => (stat, index)).First(v => v.stat.kind == kind).index;
 
@@ -184,16 +197,13 @@ namespace SkulPatcher
             SetSpecialStatValue(kind, value);
         }
 
-        private static void SetInGameStats(Stat.Values values)
+        private static void SetInGameStats(Values values)
         {
-            if (prevAttachedStats is not null)
-                Detach(prevAttachedStats);
-
             prevAttachedStats = values;
-            Attach(values);
+            ModConfig.Level.player.stat.AttachValues(values);
         }
 
-        private static void SetSpecialStatValue(Stat.Kind kind, double value)
+        private static void SetSpecialStatValue(Kind kind, double value)
         {
             prevAttachedSpecialStats.TryGetValue(kind, out SpecialStat stat);
 
@@ -207,7 +217,7 @@ namespace SkulPatcher
             }
         }
 
-        private static void CreateSpecialStat(Stat.Kind kind, double value)
+        private static void CreateSpecialStat(Kind kind, double value)
         {
             SpecialStat specialStat = (SpecialStat)Activator.CreateInstance(specialStats[kind], new object[] { value });
 
@@ -215,9 +225,12 @@ namespace SkulPatcher
             specialStat.Attach();
         }
 
-        private static void ResetSpecialStats()
+        private static void ResetStats()
         {
-            foreach (KeyValuePair<Stat.Kind, SpecialStat> specialStat in prevAttachedSpecialStats)
+            if (prevAttachedStats is not null)
+                ModConfig.Level.player.stat.DetachValues(prevAttachedStats);
+
+            foreach (KeyValuePair<Kind, SpecialStat> specialStat in prevAttachedSpecialStats)
             {
                 specialStat.Value.Detach();
             }
@@ -225,22 +238,19 @@ namespace SkulPatcher
             prevAttachedSpecialStats.Clear();
         }
 
-        private static readonly Stat.Category[] divideBy100 = new[]
+        [HarmonyPatch(typeof(LevelManager), nameof(LevelManager.InvokeOnMapChangedAndFadeIn))]
+        private static class ResetStatsOnCastle
         {
-            Stat.Category.PercentPoint,
-            Stat.Category.Percent,
-        };
-
-        private static double ScaleValueForCategory(Stat.Category category, double value)
-        {
-            if (divideBy100.Contains(category))
-                return value / 100;
-
-            return value;
+            public static void Postfix(LevelManager __instance)
+            {
+                switch ((Chapter.Type)new Traverse(__instance).Field("_currentChapterIndex").GetValue())
+                {
+                    case Chapter.Type.Castle:
+                    case Chapter.Type.HardmodeCastle:
+                        ResetStats();
+                        break;
+                }
+            }
         }
-
-        private static void Attach(Stat.Values values) => ModConfig.Level.player.stat.AttachValues(values);
-
-        private static void Detach(Stat.Values values) => ModConfig.Level.player.stat.DetachValues(values);
     }
 }

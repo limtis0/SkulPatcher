@@ -38,19 +38,19 @@ namespace SkulPatcher.Mods.SpecialStats
         {
             JumpHeightPatch.enabled = false;
         }
-    }
 
-    [HarmonyPatch(typeof(Movement), nameof(Movement.Jump))]
-    static class JumpHeightPatch
-    {
-        public static bool enabled = false;
-        public static float multiplier;
-
-        private static void Prefix(ref float jumpHeight, Movement __instance)
+        [HarmonyPatch(typeof(Movement), nameof(Movement.Jump))]
+        private static class JumpHeightPatch
         {
-            if (enabled && __instance == ModConfig.Level.player.movement)
+            public static bool enabled = false;
+            public static float multiplier;
+
+            private static void Prefix(ref float jumpHeight, Movement __instance)
             {
-                jumpHeight *= multiplier;
+                if (enabled && __instance == ModConfig.Level.player.movement)
+                {
+                    jumpHeight *= multiplier;
+                }
             }
         }
     }

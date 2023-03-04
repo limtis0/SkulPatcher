@@ -37,7 +37,7 @@ namespace SkulPatcher.Mods.SpecialStats
 
         public override void Attach()
         {
-            StatMenuFuncs.SetSpecialStat(IgnoreGravityStat.kind, true, 1);
+            StatMenuFuncs.SetSpecialStat(IgnoreGravityStat.kind, Value != 0, Value);
 
             ModConfig.menu.StartCoroutine(coroutine);
         }
