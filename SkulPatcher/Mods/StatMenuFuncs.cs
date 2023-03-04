@@ -48,98 +48,98 @@ namespace SkulPatcher
                 (Category.Fixed, Kind.Health, "[General] Health"),
                 (Category.Percent, Kind.Health, "[General] Health"),
 
-                (Category.Percent, Kind.AttackDamage, "[General] AttackDamage"),
-                (Category.PercentPoint, Kind.AttackDamage, "[General] AttackDamage"),
+                (Category.Percent, Kind.AttackDamage, "[Combat] AttackDamage"),
+                (Category.PercentPoint, Kind.AttackDamage, "[Combat] AttackDamage"),
 
-                (Category.Percent, Kind.PhysicalAttackDamage, "[General] PhysicalAttackDamage"),
-                (Category.PercentPoint, Kind.PhysicalAttackDamage, "[General] PhysicalAttackDamage"),
+                (Category.Percent, Kind.PhysicalAttackDamage, "[Combat] PhysicalAttackDamage"),
+                (Category.PercentPoint, Kind.PhysicalAttackDamage, "[Combat] PhysicalAttackDamage"),
 
-                (Category.Percent, Kind.MagicAttackDamage, "[General] MagicAttackDamage"),
-                (Category.PercentPoint, Kind.MagicAttackDamage, "[General] MagicAttackDamage"),
+                (Category.Percent, Kind.MagicAttackDamage, "[Combat] MagicAttackDamage"),
+                (Category.PercentPoint, Kind.MagicAttackDamage, "[Combat] MagicAttackDamage"),
 
-                (Category.Percent, Kind.TakingDamage, "[General] TakingDamage"),
-                (Category.PercentPoint, Kind.TakingDamage, "[General] TakingDamage"),
+                (Category.Percent, Kind.TakingDamage, "[Combat] TakingDamage"),
+                (Category.PercentPoint, Kind.TakingDamage, "[Combat] TakingDamage"),
 
-                (Category.Percent, Kind.TakingPhysicalDamage, "[General] TakingPhysicalDamage"),
-                (Category.PercentPoint, Kind.TakingPhysicalDamage, "[General] TakingPhysicalDamage"),
+                (Category.Percent, Kind.TakingPhysicalDamage, "[Combat] TakingPhysicalDamage"),
+                (Category.PercentPoint, Kind.TakingPhysicalDamage, "[Combat] TakingPhysicalDamage"),
 
-                (Category.Percent, Kind.TakingMagicDamage, "[General] TakingMagicDamage"),
-                (Category.PercentPoint, Kind.TakingMagicDamage, "[General] TakingMagicDamage"),
+                (Category.Percent, Kind.TakingMagicDamage, "[Combat] TakingMagicDamage"),
+                (Category.PercentPoint, Kind.TakingMagicDamage, "[Combat] TakingMagicDamage"),
 
-                (Category.Percent, Kind.AttackSpeed, "[General] AttackSpeed"),
-                (Category.PercentPoint, Kind.AttackSpeed, "[General] AttackSpeed"),
+                (Category.Percent, Kind.AttackSpeed, "[Combat] AttackSpeed"),
+                (Category.PercentPoint, Kind.AttackSpeed, "[Combat] AttackSpeed"),
 
-                (Category.Percent, Kind.MovementSpeed, "[General] MovementSpeed"),
-                (Category.PercentPoint, Kind.MovementSpeed, "[General] MovementSpeed"),
+                (Category.Percent, Kind.MovementSpeed, "[Movement] MovementSpeed"),
+                (Category.PercentPoint, Kind.MovementSpeed, "[Movement] MovementSpeed"),
 
-                (Category.Percent, Kind.CriticalChance, "[General] CriticalChance"),
-                (Category.PercentPoint, Kind.CriticalChance, "[General] CriticalChance"),
+                (Category.Percent, Kind.CriticalChance, "[Combat] CriticalChance"),
+                (Category.PercentPoint, Kind.CriticalChance, "[Combat] CriticalChance"),
 
-                (Category.Percent, Kind.CriticalDamage, "[General] CriticalDamage"),
-                (Category.PercentPoint, Kind.CriticalDamage, "[General] CriticalDamage"),
+                (Category.Percent, Kind.CriticalDamage, "[Combat] CriticalDamage"),
+                (Category.PercentPoint, Kind.CriticalDamage, "[Combat] CriticalDamage"),
 
-                (Category.Fixed, Kind.BasicAttackDamage, "[General] BasicAttackDamage"),
-                (Category.Percent, Kind.BasicAttackDamage, "[General] BasicAttackDamage"),
+                (Category.Fixed, Kind.BasicAttackDamage, "[Combat] BasicAttackDamage"),
+                (Category.Percent, Kind.BasicAttackDamage, "[Combat] BasicAttackDamage"),
 
-                (Category.Fixed, Kind.SkillAttackDamage, "[General] SkillAttackDamage"),
-                (Category.Percent, Kind.SkillAttackDamage, "[General] SkillAttackDamage"),
+                (Category.Fixed, Kind.SkillAttackDamage, "[Combat] SkillAttackDamage"),
+                (Category.Percent, Kind.SkillAttackDamage, "[Combat] SkillAttackDamage"),
 
                 (Category.Percent, Kind.CooldownSpeed, "[General] CooldownSpeed"),
                 (Category.PercentPoint, Kind.CooldownSpeed, "[General] CooldownSpeed"),
 
-                (Category.Percent, Kind.SkillCooldownSpeed, "[General] SkillCooldownSpeed"),
-                (Category.PercentPoint, Kind.SkillCooldownSpeed, "[General] SkillCooldownSpeed"),
+                (Category.Percent, Kind.SkillCooldownSpeed, "[Combat] SkillCooldownSpeed"),
+                (Category.PercentPoint, Kind.SkillCooldownSpeed, "[Combat] SkillCooldownSpeed"),
 
-                (Category.Percent, Kind.DashCooldownSpeed, "[General] DashCooldownSpeed"),
-                (Category.PercentPoint, Kind.DashCooldownSpeed, "[General] DashCooldownSpeed"),
+                (Category.Percent, Kind.DashCooldownSpeed, "[Movement] DashCooldownSpeed"),
+                (Category.PercentPoint, Kind.DashCooldownSpeed, "[Movement] DashCooldownSpeed"),
 
-                (Category.Percent, Kind.SwapCooldownSpeed, "[General] SwapCooldownSpeed"),
-                (Category.PercentPoint, Kind.SwapCooldownSpeed, "[General] SwapCooldownSpeed"),
+                (Category.Percent, Kind.SwapCooldownSpeed, "[Combat] SwapCooldownSpeed"),
+                (Category.PercentPoint, Kind.SwapCooldownSpeed, "[Combat] SwapCooldownSpeed"),
 
-                (Category.Percent, Kind.EssenceCooldownSpeed, "[General] EssenceCooldownSpeed"),
-                (Category.PercentPoint, Kind.EssenceCooldownSpeed, "[General] EssenceCooldownSpeed"),
+                (Category.Percent, Kind.EssenceCooldownSpeed, "[Combat] EssenceCooldownSpeed"),
+                (Category.PercentPoint, Kind.EssenceCooldownSpeed, "[Combat] EssenceCooldownSpeed"),
 
                 (Category.Percent, Kind.BuffDuration, "[General] BuffDuration"),
                 (Category.PercentPoint, Kind.BuffDuration, "[General] BuffDuration"),
 
-                (Category.Percent, Kind.BasicAttackSpeed, "[General] BasicAttackSpeed"),
-                (Category.PercentPoint, Kind.BasicAttackSpeed, "[General] BasicAttackSpeed"),
+                (Category.Percent, Kind.BasicAttackSpeed, "[Combat] BasicAttackSpeed"),
+                (Category.PercentPoint, Kind.BasicAttackSpeed, "[Combat] BasicAttackSpeed"),
 
-                (Category.Percent, Kind.SkillAttackSpeed, "[General] SkillAttackSpeed"),
-                (Category.PercentPoint, Kind.SkillAttackSpeed, "[General] SkillAttackSpeed"),
+                (Category.Percent, Kind.SkillAttackSpeed, "[Combat] SkillAttackSpeed"),
+                (Category.PercentPoint, Kind.SkillAttackSpeed, "[Combat] SkillAttackSpeed"),
 
                 (Category.Percent, Kind.CharacterSize, "[General] CharacterSize"),
                 (Category.PercentPoint, Kind.CharacterSize, "[General] CharacterSize"),
 
-                (Category.Percent, Kind.DashDistance, "[General] DashDistance"),
-                (Category.PercentPoint, Kind.DashDistance, "[General] DashDistance"),
+                (Category.Percent, Kind.DashDistance, "[Movement] DashDistance"),
+                (Category.PercentPoint, Kind.DashDistance, "[Movement] DashDistance"),
 
-                (Category.Percent, Kind.PoisonTickFrequency, "[General] PoisonTickFrequency"),  // Can't tell if does anything
-                (Category.PercentPoint, Kind.PoisonTickFrequency, "[General] PoisonTickFrequency"),  // Can't tell if does anything
+                (Category.Percent, Kind.PoisonTickFrequency, "[Combat] PoisonTickFrequency"),
+                (Category.PercentPoint, Kind.PoisonTickFrequency, "[Combat] PoisonTickFrequency"),
 
-                (Category.Percent, Kind.BleedDamage, "[General] BleedDamage"),
-                (Category.PercentPoint, Kind.BleedDamage, "[General] BleedDamage"),
+                (Category.Percent, Kind.BleedDamage, "[Combat] BleedDamage"),
+                (Category.PercentPoint, Kind.BleedDamage, "[Combat] BleedDamage"),
 
-                (Category.Percent, Kind.EmberDamage, "[General] EmberDamage"),
-                (Category.PercentPoint, Kind.EmberDamage, "[General] EmberDamage"),
+                (Category.Percent, Kind.EmberDamage, "[Combat] EmberDamage"),
+                (Category.PercentPoint, Kind.EmberDamage, "[Combat] EmberDamage"),
 
-                (Category.Percent, Kind.FreezeDuration, "[General] FreezeDuration"),
-                (Category.PercentPoint, Kind.FreezeDuration, "[General] FreezeDuration"),
+                (Category.Percent, Kind.FreezeDuration, "[Combat] FreezeDuration"),
+                (Category.PercentPoint, Kind.FreezeDuration, "[Combat] FreezeDuration"),
 
-                (Category.Percent, Kind.StunDuration, "[General] StunDuration"),
-                (Category.PercentPoint, Kind.StunDuration, "[General] StunDuration"),
+                (Category.Percent, Kind.StunDuration, "[Combat] StunDuration"),
+                (Category.PercentPoint, Kind.StunDuration, "[Combat] StunDuration"),
 
-                (Category.Percent, Kind.SpiritAttackCooldownSpeed, "[General] SpiritAttackCooldownSpeed"),
-                (Category.PercentPoint, Kind.SpiritAttackCooldownSpeed, "[General] SpiritAttackCooldownSpeed"),
+                (Category.Percent, Kind.SpiritAttackCooldownSpeed, "[Combat] SpiritAttackCooldownSpeed"),
+                (Category.PercentPoint, Kind.SpiritAttackCooldownSpeed, "[Combat] SpiritAttackCooldownSpeed"),
 
-                (Category.Percent, Kind.ProjectileAttackDamage, "[General] ProjectileAttackDamage"),
-                (Category.PercentPoint, Kind.ProjectileAttackDamage, "[General] ProjectileAttackDamage"),
+                (Category.Percent, Kind.ProjectileAttackDamage, "[Combat] ProjectileAttackDamage"),
+                (Category.PercentPoint, Kind.ProjectileAttackDamage, "[Combat] ProjectileAttackDamage"),
 
                 (Category.Percent, Kind.TakingHealAmount, "[General] TakingHealAmount"),
                 (Category.PercentPoint, Kind.TakingHealAmount, "[General] TakingHealAmount"),
 
-                (Category.Percent, Kind.ChargingSpeed, "[General] ChargingSpeed"),  // Can't tell if does anything
-                (Category.PercentPoint, Kind.ChargingSpeed, "[General] ChargingSpeed"),  // Can't tell if does anything
+                (Category.Percent, Kind.ChargingSpeed, "[Combat] ChargingSpeed"),
+                (Category.PercentPoint, Kind.ChargingSpeed, "[Combat] ChargingSpeed"),
             };
 
             // Special Stats in alphabetic order
