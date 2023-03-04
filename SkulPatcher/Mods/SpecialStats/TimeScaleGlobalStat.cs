@@ -7,9 +7,10 @@ namespace SkulPatcher.Mods.SpecialStats
         public static readonly Stat.Kind kind = CreateKind("TimeScaleGlobal");
         public static readonly Stat.Category category = CreateCategory("TimeScaleGlobal");
 
+        public override double Value { get => base.Value; set => base.Value = value / 100; }
+
         public TimeScaleGlobalStat(double value) : base(value)
         {
-            Value /= 100;
         }
 
         public override Stat.Kind Kind => kind;

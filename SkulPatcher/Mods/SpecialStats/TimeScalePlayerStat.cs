@@ -7,9 +7,10 @@ namespace SkulPatcher.Mods.SpecialStats
         public static readonly Stat.Kind kind = CreateKind("TimeScalePlayer");
         public static readonly Stat.Category category = CreateCategory("TimeScalePlayer");
 
+        public override double Value { get => base.Value; set => base.Value = value / 100; }
+
         public TimeScalePlayerStat(double value) : base(value)
         {
-            Value /= 100;
         }
 
         public override Stat.Kind Kind => kind;

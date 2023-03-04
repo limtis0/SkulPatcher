@@ -8,9 +8,10 @@ namespace SkulPatcher.Mods.SpecialStats
         public static readonly Stat.Kind kind = CreateKind("JumpHeight");
         public static readonly Stat.Category category = CreateCategory("JumpHeight");
 
+        public override double Value { get => base.Value; set => base.Value = value / 100; }
+
         public JumpHeightStat(double value) : base(value)
         {
-            Value /= 100;
         }
 
         public override Stat.Kind Kind => kind;

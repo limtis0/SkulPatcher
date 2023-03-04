@@ -8,7 +8,7 @@ namespace SkulPatcher.UI
     public static class StatMenu
     {
         // Init array of "fixed" size
-        private static readonly (bool toApply, double statValue)[] statValues;
+        private static readonly (bool toApply, double value)[] statValues;
         private static readonly bool[] showStatInList;
 
         private static string searchText = string.Empty;
@@ -16,11 +16,11 @@ namespace SkulPatcher.UI
 
         static StatMenu() 
         {
-            statValues = Enumerable.Repeat((false, 0d), StatMenuFuncs.stats.Length).ToArray();
-            showStatInList = Enumerable.Repeat(true, StatMenuFuncs.stats.Length).ToArray();
+            statValues = Enumerable.Repeat((false, 0d), StatMenuFuncs.statList.Length).ToArray();
+            showStatInList = Enumerable.Repeat(true, StatMenuFuncs.statList.Length).ToArray();
 
-            statScrollToggleRects = Enumerable.Repeat(new Rect(), StatMenuFuncs.stats.Length).ToArray();
-            statScrollSliderRects = Enumerable.Repeat(new Rect(), StatMenuFuncs.stats.Length).ToArray();
+            statScrollToggleRects = Enumerable.Repeat(new Rect(), StatMenuFuncs.statList.Length).ToArray();
+            statScrollSliderRects = Enumerable.Repeat(new Rect(), StatMenuFuncs.statList.Length).ToArray();
 
             SetDefaults();
         } 
@@ -30,9 +30,11 @@ namespace SkulPatcher.UI
             for (int i = 0; i < statValues.Length; i++)
             {
                 statValues[i].toApply = false;
-                statValues[i].statValue = StatMenuFuncs.statLimitInfo[StatMenuFuncs.stats[i].category].defaultValue;
+                statValues[i].value = StatMenuFuncs.statLimitInfo[StatMenuFuncs.statList[i].category].defaultValue;
             }
         }
+
+        public static void SetStatValue(int index, bool toApply, double value) => statValues[index] = (toApply, value);
 
         public static void Fill(int _)
         {
@@ -45,17 +47,17 @@ namespace SkulPatcher.UI
                 if (!showStatInList[i])
                     continue;
 
-                var (category, _, name) = StatMenuFuncs.stats[i];
+                var (category, _, name) = StatMenuFuncs.statList[i];
                 var (minValue, maxValue, _, abbreviation) = StatMenuFuncs.statLimitInfo[category];
 
                 statValues[i].toApply = GUI.Toggle(statScrollToggleRects[i],
                                                    statValues[i].toApply,
-                                                   $"{name} ({statValues[i].statValue}{abbreviation})");
+                                                   $"{name} ({statValues[i].value}{abbreviation})");
 
-                statValues[i].statValue = Math.Round(GUI.HorizontalSlider(statScrollSliderRects[i],
-                                                                          (float)statValues[i].statValue,
-                                                                          (float)minValue,
-                                                                          (float)maxValue));
+                statValues[i].value = Math.Round(GUI.HorizontalSlider(statScrollSliderRects[i],
+                                                                      (float)statValues[i].value,
+                                                                      (float)minValue,
+                                                                      (float)maxValue));
             }
 
             GUI.EndScrollView();
@@ -143,7 +145,7 @@ namespace SkulPatcher.UI
             int elementRow = 0;
             for (int i = 0; i < statValues.Length; i++)
             {
-                if (!regex.Match(StatMenuFuncs.stats[i].name).Success)
+                if (!regex.Match(StatMenuFuncs.statList[i].name).Success)
                 {
                     showStatInList[i] = false;
                     continue;

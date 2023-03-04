@@ -1,10 +1,8 @@
 ﻿using Characters;
 using Characters.Movements;
 using HarmonyLib;
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
 
 namespace SkulPatcher.Mods.SpecialStats
@@ -14,10 +12,9 @@ namespace SkulPatcher.Mods.SpecialStats
         public static readonly Stat.Kind kind = CreateKind("Flight");
         public static readonly Stat.Category category = CreateCategory("Flight");
 
-        private const string typeFieldName = "type";
-        private const string gravityFieldName = "ignoreGravity";
+        private const string fieldName = "type";
         private readonly IEnumerator coroutine;
-        private readonly Dictionary<Movement.Config, (Movement.Config.Type type, bool ignoreGravity)> defaultValues = new();
+        private readonly Dictionary<Movement.Config, Movement.Config.Type> defaultValues = new();
 
         public FlightStat(double value) : base(value)
         {
@@ -40,17 +37,20 @@ namespace SkulPatcher.Mods.SpecialStats
 
         public override void Attach()
         {
+            StatMenuFuncs.SetSpecialStat(IgnoreGravityStat.kind, true, 1);
+
             ModConfig.menu.StartCoroutine(coroutine);
         }
 
         public override void Detach()
         {
+            StatMenuFuncs.SetSpecialStat(IgnoreGravityStat.kind, false, 0);
+
             ModConfig.menu.StopCoroutine(coroutine);
 
-            foreach (KeyValuePair<Movement.Config, (Movement.Config.Type type, bool ignoreGravity) > config in defaultValues)
+            foreach (KeyValuePair<Movement.Config, Movement.Config.Type> config in defaultValues)
             {
-                new Traverse(config.Key).Field(typeFieldName).SetValue(config.Value.type);
-                new Traverse(config.Key).Field(gravityFieldName).SetValue(config.Value.ignoreGravity);
+                new Traverse(config.Key).Field(fieldName).SetValue(config.Value);
             }
             defaultValues.Clear();
         }
@@ -65,15 +65,13 @@ namespace SkulPatcher.Mods.SpecialStats
 
                     if (!defaultValues.ContainsKey(config))
                     {
-                        Traverse traverse = new(config);
+                        Traverse field = new Traverse(config).Field(fieldName);
 
-                        Movement.Config.Type typeFieldValue = (Movement.Config.Type)traverse.Field(typeFieldName).GetValue();
-                        bool gravityFieldValue = (bool)traverse.Field(gravityFieldName).GetValue();
+                        Movement.Config.Type fieldValue = (Movement.Config.Type)field.GetValue();
 
-                        defaultValues.Add(config, (typeFieldValue, gravityFieldValue));
+                        defaultValues.Add(config, fieldValue);
 
-                        traverse.Field(typeFieldName).SetValue(Movement.Config.Type.Bidimensional);
-                        traverse.Field(gravityFieldName).SetValue(true);
+                        field.SetValue(Movement.Config.Type.Bidimensional);
                     }
                 }
                 else

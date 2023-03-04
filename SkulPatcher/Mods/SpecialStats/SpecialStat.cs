@@ -7,7 +7,7 @@ namespace SkulPatcher.Mods.SpecialStats
     public abstract class SpecialStat
     {
         // Slider value
-        protected double Value { get; set; }
+        public virtual double Value { get; set; }
 
         public SpecialStat(double value)
         {

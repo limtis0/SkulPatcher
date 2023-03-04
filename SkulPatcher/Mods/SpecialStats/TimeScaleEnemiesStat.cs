@@ -12,9 +12,10 @@ namespace SkulPatcher.Mods.SpecialStats
 
         private readonly IEnumerator coroutine;
 
+        public override double Value { get => base.Value; set => base.Value = value / 100; }
+
         public TimeScaleEnemiesStat(double value) : base(value)
         {
-            Value /= 100;
             coroutine = Coroutine();
         }
 

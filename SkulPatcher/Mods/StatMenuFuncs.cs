@@ -1,22 +1,24 @@
 ﻿using Characters;
 using SkulPatcher.Mods.SpecialStats;
+using SkulPatcher.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace SkulPatcher
 {
     public static class StatMenuFuncs
     {
         private static Stat.Values prevAttachedStats;
-        private static readonly List<SpecialStat> prevAttachedSpecialStats = new();
+        private static readonly Dictionary<Stat.Kind, SpecialStat> prevAttachedSpecialStats = new();
 
         /*
         / Stat.Category.Fixed - Add fixed amount (1/1);
         / Stat.Category.Percent - Multiply by percentage (1/100);
         / Stat.Category.PercentPoint - Add perecent point (1/100);
         */
-        public static readonly (Stat.Category category, Stat.Kind kind, string name)[] stats;
+        public static readonly (Stat.Category category, Stat.Kind kind, string name)[] statList;
 
         private static readonly Dictionary<Stat.Kind, Type> specialStats;
 
@@ -40,7 +42,7 @@ namespace SkulPatcher
             statLimitInfo.Add(Stat.Category.PercentPoint, (-1000, 5000, 0, "%p"));
 
             // Stat list
-            stats = new[]
+            statList = new[]
             {
                 (Stat.Category.Fixed, Stat.Kind.Health, "[General] Health"),
                 (Stat.Category.Percent, Stat.Kind.Health, "[General] Health"),
@@ -140,10 +142,10 @@ namespace SkulPatcher
             };
 
             // Special Stats in alphabetic order
-            stats = stats.Concat(specialStatsEnumerable.OrderBy(stat => stat.Title).Select(stat => (stat.Category, stat.Kind, stat.Title))).ToArray();
+            statList = statList.Concat(specialStatsEnumerable.OrderBy(stat => stat.Title).Select(stat => (stat.Category, stat.Kind, stat.Title))).ToArray();
         }
 
-        public static void SetStats((bool toApply, double statValue)[] statValuesToApply)  // Function for StatMenu.cs
+        public static void SetStats((bool toApply, double value)[] values)  // Function for StatMenu.cs
         {
             if (!ModConfig.IsInGame)
                 return;
@@ -151,29 +153,39 @@ namespace SkulPatcher
             List<Stat.Value> statValues = new();
             ResetSpecialStats();
             
-            for (int i = 0; i < stats.Length; i++)
+            for (int i = 0; i < statList.Length; i++)
             {
-                if (statValuesToApply[i].toApply)
+                if (values[i].toApply)
                 {
-                    Stat.Category category = stats[i].category;
-                    Stat.Kind kind = stats[i].kind;
-                    double statValue = ScaleValueForCategory(category, statValuesToApply[i].statValue);
+                    Stat.Category category = statList[i].category;
+                    Stat.Kind kind = statList[i].kind;
+                    double statValue = ScaleValueForCategory(category, values[i].value);
 
+                    // If one of in-game stats
                     if (Stat.Kind.values.Contains(kind))
                     {
                         statValues.Add(new Stat.Value(category, kind, statValue));
                     }
+                    // Special stats
                     else
                     {
-                        SetSpecialStat(kind, statValue);
+                        SetSpecialStatValue(kind, statValue);
                     }
-                }    
+                }
             }
 
-            SetGameStats(new Stat.Values(statValues.ToArray()));
+            SetInGameStats(new Stat.Values(statValues.ToArray()));
         }
 
-        private static void SetGameStats(Stat.Values values)
+        public static void SetSpecialStat(Stat.Kind kind, bool toApplyUI, double value)
+        {
+            int statIndex = statList.Select((stat, index) => (stat, index)).First(v => v.stat.kind == kind).index;
+            
+            StatMenu.SetStatValue(statIndex, toApplyUI, value);
+            SetSpecialStatValue(kind, value);
+        }
+
+        private static void SetInGameStats(Stat.Values values)
         {
             if (prevAttachedStats is not null)
                 Detach(prevAttachedStats);
@@ -182,19 +194,33 @@ namespace SkulPatcher
             Attach(values);
         }
 
-        private static void SetSpecialStat(Stat.Kind kind, double value)
+        private static void SetSpecialStatValue(Stat.Kind kind, double value)
+        {
+            prevAttachedSpecialStats.TryGetValue(kind, out SpecialStat stat);
+
+            if (stat is null)
+            {
+                CreateSpecialStat(kind, value);
+            }
+            else
+            {
+                stat.Value = value;
+            }
+        }
+
+        private static void CreateSpecialStat(Stat.Kind kind, double value)
         {
             SpecialStat specialStat = (SpecialStat)Activator.CreateInstance(specialStats[kind], new object[] { value });
 
-            prevAttachedSpecialStats.Add(specialStat);
+            prevAttachedSpecialStats.Add(kind, specialStat);
             specialStat.Attach();
         }
 
         private static void ResetSpecialStats()
         {
-            foreach (SpecialStat specialStat in prevAttachedSpecialStats)
+            foreach (KeyValuePair<Stat.Kind, SpecialStat> specialStat in prevAttachedSpecialStats)
             {
-                specialStat.Detach();
+                specialStat.Value.Detach();
             }
 
             prevAttachedSpecialStats.Clear();

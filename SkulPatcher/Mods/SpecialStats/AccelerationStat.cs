@@ -16,9 +16,10 @@ namespace SkulPatcher.Mods.SpecialStats
         private readonly IEnumerator coroutine;
         private readonly Dictionary<Movement.Config, float> defaultValues = new();
 
+        public override double Value { get => base.Value; set => base.Value = value / 100; }
+
         public AccelerationStat(double value) : base(value)
         {
-            Value /= 100;
             coroutine = Coroutine();
         }
 
