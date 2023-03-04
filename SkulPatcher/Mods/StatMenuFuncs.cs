@@ -1,5 +1,4 @@
-﻿using Characters;
-using HarmonyLib;
+﻿using HarmonyLib;
 using Level;
 using SkulPatcher.Mods.SpecialStats;
 using SkulPatcher.UI;
