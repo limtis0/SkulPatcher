@@ -23,6 +23,19 @@ Assuming you have .NET Framework 4.7.2 and Visual Studio installed
 3. Add `Assembly-CSharp` and all `Plugins...` `Unity...` `UnityEngine...` .dll files from `$(SkulFolder)/SkulData/Managed/` to the references
 4. Build the solution
 
+### Want to contribute?
+You can create a custom stat for `Stat menu`:
+1. Fork the repository (Branch: `BepInEx`)
+2. Create a new class that inherits from `SpecialStat` in `SkulPatcher/SkulPatcher/Mods/SpecialStats/` folder
+3. Make any feature you want. Many examples can be found in the same folder
+4. No need to edit anything else, `SpecialStat` types are dynamically loaded into `Stat menu`
+5. Make sure everything works and create a pull request!
+
+<details> 
+  <summary>List of contributors</summary>
+   No one is here, yet. You can be first!
+</details>
+
 # Old versions (<v2.0f)
 ### Setup
 1. Extract **with replacement** into `$(SkulFolder)/Skul_Data/Managed`
