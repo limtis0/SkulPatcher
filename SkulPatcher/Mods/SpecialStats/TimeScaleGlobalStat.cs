@@ -2,12 +2,12 @@
 
 namespace SkulPatcher.Mods.SpecialStats
 {
-    public class TimeScaleGlobal : SpecialStat
+    public class TimeScaleGlobalStat : SpecialStat
     {
         public static readonly Stat.Kind kind = CreateKind("TimeScaleGlobal");
         public static readonly Stat.Category category = CreateCategory("TimeScaleGlobal");
 
-        public TimeScaleGlobal(double value) : base(value)
+        public TimeScaleGlobalStat(double value) : base(value)
         {
             Value /= 100;
         }

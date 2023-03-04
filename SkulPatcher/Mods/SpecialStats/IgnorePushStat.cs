@@ -55,7 +55,7 @@ namespace SkulPatcher.Mods.SpecialStats
         {
             while (true)
             {
-                if (ModConfig.IsInGame)
+                if (ModConfig.IsInGame && Value != 0)
                 {
                     Movement.Config config = ModConfig.Level.player.movement.config;
 
@@ -65,7 +65,7 @@ namespace SkulPatcher.Mods.SpecialStats
 
                         defaultValues.Add(config, (bool)field.GetValue());
 
-                        field.SetValue(Value != 0);
+                        field.SetValue(true);
                     }
                 }
                 else

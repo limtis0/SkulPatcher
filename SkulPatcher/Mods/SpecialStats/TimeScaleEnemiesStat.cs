@@ -5,14 +5,14 @@ using UnityEngine;
 
 namespace SkulPatcher.Mods.SpecialStats
 {
-    public class TimeScaleEnemies : SpecialStat
+    public class TimeScaleEnemiesStat : SpecialStat
     {
         public static readonly Stat.Kind kind = CreateKind("TimeScaleEnemies");
         public static readonly Stat.Category category = CreateCategory("TimeScaleEnemies");
 
         private readonly IEnumerator coroutine;
 
-        public TimeScaleEnemies(double value) : base(value)
+        public TimeScaleEnemiesStat(double value) : base(value)
         {
             Value /= 100;
             coroutine = Coroutine();
