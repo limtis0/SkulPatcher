@@ -14,7 +14,6 @@ namespace SkulPatcher.Patches
         private static readonly List<(string gearName, Rarity rarity)> hiddenItems = new()
         {
             ("LeoniasGrace", Rarity.Common),
-            ("CloneStamp", Rarity.Unique),
         };
 
         private static readonly List<(string gearName, Rarity rarity)> hiddenSkulls = new()
