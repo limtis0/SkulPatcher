@@ -1,5 +1,4 @@
-﻿using Characters.Abilities;
-using Characters.Player;
+﻿using Characters.Player;
 using HarmonyLib;
 using System.Reflection;
 
@@ -13,15 +12,12 @@ namespace SkulPatcher.Patches
             if (!ModConfig.forceEasyModeOn)
                 return true;
 
-            Traverse traverse = Traverse.Create(__instance);
-            bool? attached = traverse.Field("_attached").GetValue() as bool?;
-            if (attached is false)
+            if (!__instance._attached)
             {
-                // Attach ability
-                (traverse.Field("_abilityAttacher").GetValue() as AbilityAttacher).StartAttach();
-                traverse.Field("_attached").SetValue(true);
+                __instance._abilityAttacher.StartAttach();
+                __instance._attached = true;
             }
-            return false;  // Skip original method
+            return false;
         }
 
         public static MethodBase TargetMethod() => AccessTools.Method(typeof(PlayerEasyModeBuff), "Update");

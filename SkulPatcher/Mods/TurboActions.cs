@@ -40,7 +40,7 @@ namespace SkulPatcher
             List<Action> actions = ModConfig.Level.player.actions.Where(x => actionTypes.Contains(x.type)).ToList();
 
             foreach (Action action in actions)
-                Traverse.Create(action).Field("_inputMethod").SetValue(value);
+                action._inputMethod = (Action.InputMethod)value;
         }
     }
 }

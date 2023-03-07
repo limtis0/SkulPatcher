@@ -12,7 +12,6 @@ namespace SkulPatcher.Mods.SpecialStats
         public static readonly Stat.Kind kind = CreateKind("IgnorePush");
         public static readonly Stat.Category category = CreateCategory("IgnorePush");
 
-        private const string fieldName = "ignorePush";
         private readonly IEnumerator coroutine;
         private readonly Dictionary<Movement.Config, bool> defaultValues = new();
 
@@ -44,7 +43,7 @@ namespace SkulPatcher.Mods.SpecialStats
         {
             foreach (KeyValuePair<Movement.Config, bool> config in defaultValues)
             {
-                new Traverse(config.Key).Field(fieldName).SetValue(config.Value);
+                config.Key.ignorePush = config.Value;
             }
             defaultValues.Clear();
 
@@ -61,11 +60,9 @@ namespace SkulPatcher.Mods.SpecialStats
 
                     if (!defaultValues.ContainsKey(config))
                     {
-                        Traverse field = new Traverse(config).Field(fieldName);
+                        defaultValues.Add(config, config.ignorePush);
 
-                        defaultValues.Add(config, (bool)field.GetValue());
-
-                        field.SetValue(true);
+                        config.ignorePush = true;
                     }
                 }
                 else

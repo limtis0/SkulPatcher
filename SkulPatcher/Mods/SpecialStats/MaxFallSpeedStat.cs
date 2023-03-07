@@ -12,7 +12,6 @@ namespace SkulPatcher.Mods.SpecialStats
         public static readonly Stat.Kind kind = CreateKind("MaxFallSpeed");
         public static readonly Stat.Category category = CreateCategory("MaxFallSpeed");
 
-        private const string fieldName = "maxFallSpeed";
         private readonly IEnumerator coroutine;
         private readonly Dictionary<Movement.Config, float> defaultValues = new();
 
@@ -46,7 +45,7 @@ namespace SkulPatcher.Mods.SpecialStats
 
             foreach (KeyValuePair<Movement.Config, float> config in defaultValues)
             {
-                new Traverse(config.Key).Field(fieldName).SetValue(config.Value);
+                config.Key.maxFallSpeed = config.Value;
             }
             defaultValues.Clear();
         }
@@ -61,11 +60,9 @@ namespace SkulPatcher.Mods.SpecialStats
 
                     if (!defaultValues.ContainsKey(config))
                     {
-                        Traverse field = new Traverse(config).Field(fieldName);
+                        defaultValues.Add(config, config.maxFallSpeed);
 
-                        defaultValues.Add(config, (float)field.GetValue());
-
-                        field.SetValue((float)Value);
+                        config.maxFallSpeed = (float)Value;
                     }
                 }
                 else

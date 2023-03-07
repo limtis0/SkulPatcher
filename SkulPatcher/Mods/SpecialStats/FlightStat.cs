@@ -12,7 +12,6 @@ namespace SkulPatcher.Mods.SpecialStats
         public static readonly Stat.Kind kind = CreateKind("Flight");
         public static readonly Stat.Category category = CreateCategory("Flight");
 
-        private const string fieldName = "type";
         private readonly IEnumerator coroutine;
         private readonly Dictionary<Movement.Config, Movement.Config.Type> defaultValues = new();
 
@@ -50,7 +49,7 @@ namespace SkulPatcher.Mods.SpecialStats
 
             foreach (KeyValuePair<Movement.Config, Movement.Config.Type> config in defaultValues)
             {
-                new Traverse(config.Key).Field(fieldName).SetValue(config.Value);
+                config.Key.type = config.Value;
             }
             defaultValues.Clear();
         }
@@ -65,13 +64,9 @@ namespace SkulPatcher.Mods.SpecialStats
 
                     if (!defaultValues.ContainsKey(config))
                     {
-                        Traverse field = new Traverse(config).Field(fieldName);
+                        defaultValues.Add(config, config.type);
 
-                        Movement.Config.Type fieldValue = (Movement.Config.Type)field.GetValue();
-
-                        defaultValues.Add(config, fieldValue);
-
-                        field.SetValue(Movement.Config.Type.Bidimensional);
+                        config.type = Movement.Config.Type.Bidimensional;
                     }
                 }
                 else

@@ -8,6 +8,7 @@ using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace SkulPatcher
 {
@@ -23,6 +24,8 @@ namespace SkulPatcher
 
             T gear = (T)request.asset;
             gear.name = gearRef.name;
+
+            Debug.Log(gear.name);
 
             gear = (T)ModConfig.Level.DropGear(gear, ModConfig.Level.player.transform.position);
 

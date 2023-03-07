@@ -14,10 +14,7 @@ namespace SkulPatcher.Patches
 
         public static void Prefix(GameData.Currency __instance, ref double amount)
         {
-            // Get _key private property of Currency instance
-            string key = Traverse.Create(__instance).Field("_key").GetValue() as string;
-
-            switch (key)
+            switch (__instance._key)
             {
                 case goldKey:
                     if (ModConfig.goldMultOn)

@@ -242,7 +242,7 @@ namespace SkulPatcher
         {
             public static void Postfix(LevelManager __instance)
             {
-                switch ((Chapter.Type)new Traverse(__instance).Field("_currentChapterIndex").GetValue())
+                switch ((Chapter.Type)__instance._currentChapterIndex)
                 {
                     case Chapter.Type.Castle:
                     case Chapter.Type.HardmodeCastle:

@@ -12,7 +12,6 @@ namespace SkulPatcher.Mods.SpecialStats
         public static readonly Stat.Kind kind = CreateKind("KeepMoving");
         public static readonly Stat.Category category = CreateCategory("KeepMoving");
 
-        private const string fieldName = "keepMove";
         private readonly IEnumerator coroutine;
         private readonly Dictionary<Movement.Config, bool> defaultValues = new();
 
@@ -46,7 +45,7 @@ namespace SkulPatcher.Mods.SpecialStats
 
             foreach (KeyValuePair<Movement.Config, bool> config in defaultValues)
             {
-                new Traverse(config.Key).Field(fieldName).SetValue(config.Value);
+                config.Key.keepMove = config.Value;
             }
             defaultValues.Clear();
         }
@@ -61,11 +60,9 @@ namespace SkulPatcher.Mods.SpecialStats
 
                     if (!defaultValues.ContainsKey(config))
                     {
-                        Traverse field = new Traverse(config).Field(fieldName);
+                        defaultValues.Add(config, config.keepMove);
 
-                        defaultValues.Add(config, (bool)field.GetValue());
-
-                        field.SetValue(true);
+                        config.keepMove = true;
                     }
                 }
                 else

@@ -12,7 +12,6 @@ namespace SkulPatcher.Mods.SpecialStats
         public static readonly Stat.Kind kind = CreateKind("Gravity");
         public static readonly Stat.Category category = CreateCategory("Gravity");
 
-        private const string fieldName = "gravity";
         private readonly IEnumerator coroutine;
         private readonly Dictionary<Movement.Config, float> defaultValues = new();
 
@@ -48,7 +47,7 @@ namespace SkulPatcher.Mods.SpecialStats
 
             foreach (KeyValuePair<Movement.Config, float> config in defaultValues)
             {
-                new Traverse(config.Key).Field(fieldName).SetValue(config.Value);
+                config.Key.gravity = config.Value;
             }
             defaultValues.Clear();
         }
@@ -63,12 +62,9 @@ namespace SkulPatcher.Mods.SpecialStats
 
                     if (!defaultValues.ContainsKey(config))
                     {
-                        Traverse field = new Traverse(config).Field(fieldName);
-                        float fieldValue = (float)field.GetValue();
+                        defaultValues.Add(config, config.gravity);
 
-                        defaultValues.Add(config, fieldValue);
-
-                        field.SetValue(fieldValue * (float)Value);
+                        config.gravity *= (float)Value;
                     }
                 }
                 else

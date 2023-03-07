@@ -30,10 +30,6 @@ namespace SkulPatcher.Patches
 
         public static void Prefix(GearManager __instance)
         {
-            EnumArray<Rarity, ItemReference[]> items = new Traverse(__instance).Field("_items").GetValue() as EnumArray<Rarity, ItemReference[]>;
-            EnumArray<Rarity, WeaponReference[]> skulls = new Traverse(__instance).Field("_weapons").GetValue() as EnumArray<Rarity, WeaponReference[]>;
-            EnumArray<Rarity, EssenceReference[]> essences = new Traverse(__instance).Field("_quintessences").GetValue() as EnumArray<Rarity, EssenceReference[]>;
-
             // Future-proof, if anything gets added to the game
             if (!init)
             {
@@ -48,9 +44,9 @@ namespace SkulPatcher.Patches
             {
                 ModConfig.allowHiddenGearPreviousState = ModConfig.allowHiddenGear;
 
-                SetObtainability(hiddenItems, items, ModConfig.allowHiddenGear);
-                SetObtainability(hiddenSkulls, skulls, ModConfig.allowHiddenGear);
-                SetObtainability(hiddenEssences, essences, ModConfig.allowHiddenGear);
+                SetObtainability(hiddenItems, __instance._items, ModConfig.allowHiddenGear);
+                SetObtainability(hiddenSkulls, __instance._weapons, ModConfig.allowHiddenGear);
+                SetObtainability(hiddenEssences, __instance._quintessences, ModConfig.allowHiddenGear);
             }
         }
 

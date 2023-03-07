@@ -1,6 +1,5 @@
 ﻿using Characters;
 using Characters.Movements;
-using HarmonyLib;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,7 +11,6 @@ namespace SkulPatcher.Mods.SpecialStats
         public static readonly Stat.Kind kind = CreateKind("Acceleration");
         public static readonly Stat.Category category = CreateCategory("Acceleration");
 
-        private const string fieldName = "acceleration";
         private readonly IEnumerator coroutine;
         private readonly Dictionary<Movement.Config, float> defaultValues = new();
 
@@ -48,7 +46,7 @@ namespace SkulPatcher.Mods.SpecialStats
 
             foreach (KeyValuePair<Movement.Config, float> config in defaultValues)
             {
-                new Traverse(config.Key).Field(fieldName).SetValue(config.Value);
+                config.Key.acceleration = config.Value;
             }
             defaultValues.Clear();
         }
@@ -63,12 +61,9 @@ namespace SkulPatcher.Mods.SpecialStats
 
                     if (!defaultValues.ContainsKey(config))
                     {
-                        Traverse field = new Traverse(config).Field(fieldName);
-                        float fieldValue = (float)field.GetValue();
+                        defaultValues.Add(config, config.acceleration);
 
-                        defaultValues.Add(config, fieldValue);
-
-                        field.SetValue(fieldValue * (float)Value);
+                        config.acceleration *= (float)Value;
                     }
                 }
                 else
