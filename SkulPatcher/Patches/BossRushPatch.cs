@@ -30,6 +30,7 @@ namespace SkulPatcher.Patches
     /// This leads to a lot of edge-cases which need to be covered in order to provide a flexible system for changing the route;
     /// </summary>
 
+    [HarmonyPatch]
     public static class BossRushPatch
     {
         private static bool newStage;
@@ -46,31 +47,6 @@ namespace SkulPatcher.Patches
 
         private const int HealAmountAfterBossFight = 100;
 
-        public static void PatchAll()
-        {
-            // On new stage achieved
-            MethodInfo GeneratePath = AccessTools.Method(typeof(StageInfo), "GeneratePath");
-            MethodInfo OnNewStagePatch = AccessTools.Method(typeof(BossRushPatch), nameof(BossRushPatch.OnNewStagePatch));
-
-            ModConfig.harmony.Patch(GeneratePath, postfix: new HarmonyMethod(OnNewStagePatch));
-
-
-            // On map changed
-            MethodInfo OnMapChanged = AccessTools.Method(typeof(LevelManager), nameof(LevelManager.InvokeOnMapChangedAndFadeIn));
-            MethodInfo OnMapChangedPostfix = AccessTools.Method(typeof(BossRushPatch), nameof(BossRushPatch.OnMapChangedPatch));
-
-            ModConfig.harmony.Patch(OnMapChanged, postfix: new HarmonyMethod(OnMapChangedPostfix));
-
-
-            // On rewards
-            MethodInfo OnMapRewards = AccessTools.Method(typeof(LevelManager), nameof(LevelManager.InvokeOnActivateMapReward));
-            MethodInfo OnBossChest = AccessTools.Method(typeof(BossChest), nameof(BossChest.InteractWith));
-            MethodInfo OnMapRewardsPatch = AccessTools.Method(typeof(BossRushPatch), nameof(BossRushPatch.OnMapRewardsPatch));
-
-            ModConfig.harmony.Patch(OnMapRewards, postfix: new HarmonyMethod(OnMapRewardsPatch));
-            ModConfig.harmony.Patch(OnBossChest, postfix: new HarmonyMethod(OnMapRewardsPatch));
-        }
-
         public static void Toggle()
         {
             if (ModConfig.bossRushOn)
@@ -81,7 +57,9 @@ namespace SkulPatcher.Patches
             }
         }
 
-        private static void OnNewStagePatch(StageInfo __instance)
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(StageInfo), nameof(StageInfo.GeneratePath))]
+        private static void OnNewStagePostfix(StageInfo __instance)
         {
             originalPath = __instance._path;
 
@@ -115,7 +93,9 @@ namespace SkulPatcher.Patches
             }
         }
 
-        private static void OnMapChangedPatch()
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(LevelManager), nameof(LevelManager.InvokeOnMapChangedAndFadeIn))]
+        private static void OnMapChangedPostfix()
         {
             if (!ModConfig.bossRushOn)
                 return;
@@ -170,7 +150,10 @@ namespace SkulPatcher.Patches
             LoadMap(pathIndex);
         }
 
-        private static void OnMapRewardsPatch()
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(BossChest), nameof(BossChest.InteractWith))]
+        [HarmonyPatch(typeof(LevelManager), nameof(LevelManager.InvokeOnActivateMapReward))]
+        private static void OnMapRewardsPostfix()
         {
             if (!ModConfig.bossRushOn || !ModConfig.bossRushSkipRewards)
                 return;
@@ -197,12 +180,13 @@ namespace SkulPatcher.Patches
 
         public static void LoadChapter(Chapter.Type chapterType)
         {
-            // Convert to hardmode types
+            bool convertToHardmode = false;
+
             if (GameData.HardmodeProgress.hardmode && (int)chapterType >= 3 && (int)chapterType <= 7)
-                chapterType += 6;
+                convertToHardmode = true;
 
             pathQueue.Clear();
-            ModConfig.Level.Load(chapterType);
+            ModConfig.Level.Load(convertToHardmode ? chapterType + 6 : chapterType);
         }
     }
 }

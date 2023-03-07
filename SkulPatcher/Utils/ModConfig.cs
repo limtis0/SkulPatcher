@@ -66,7 +66,6 @@ namespace SkulPatcher
         public static int skullLimit = 2;
 
         // Utils
-        public static Harmony harmony;
         public static Menu menu;
 
         public static LevelManager Level => Singleton<Service>.Instance.levelManager;

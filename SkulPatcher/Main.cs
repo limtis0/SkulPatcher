@@ -1,5 +1,5 @@
 ﻿using BepInEx;
-using SkulPatcher.Patches;
+using HarmonyLib;
 using SkulPatcher.UI;
 using System.Reflection;
 using UnityEngine;
@@ -10,10 +10,7 @@ namespace SkulPatcher
     {
         public void Awake()
         {
-            ModConfig.harmony = new(PluginInfo.PLUGIN_GUID);
-            ModConfig.harmony.PatchAll(Assembly.GetExecutingAssembly());
-
-            BossRushPatch.PatchAll();
+            Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
 
             GameObject menu = new();
             ModConfig.menu = menu.AddComponent<Menu>();
