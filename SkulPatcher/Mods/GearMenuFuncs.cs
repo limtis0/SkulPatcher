@@ -14,20 +14,18 @@ namespace SkulPatcher
 {
     public static class GearMenuFuncs
     {
+        private const int InvPageSize = 9;
+
         public static void SpawnGear<T>(GearReference gearRef) where T : Gear
         {
             if (!ModConfig.IsInGame)
                 return;
-
-            Debug.Log(gearRef.name);
 
             GearRequest request = gearRef.LoadAsync();
             request.WaitForCompletion();
 
             T gear = (T)request.asset;
             gear.name = gearRef.name;
-
-            Debug.Log(gear.name);
 
             gear = (T)ModConfig.Level.DropGear(gear, ModConfig.Level.player.transform.position);
 
@@ -62,21 +60,46 @@ namespace SkulPatcher
             Inventory.weapon.current.RerollSkills();
         }
 
-        public static void SetItemLimit()
+        public static void SetInventoryPagesCount()
         {
             if (!ModConfig.IsInGame)
                 return;
 
             List<Item> items = Inventory.item.items;
-            if (items.Count < ModConfig.itemLimit)
+            if (items.Count / InvPageSize < ModConfig.inventoryPagesCount)
             {
-                items.AddRange(Enumerable.Repeat<Item>(null, ModConfig.itemLimit - items.Count));
+                items.AddRange(Enumerable.Repeat<Item>(null, (ModConfig.inventoryPagesCount - (items.Count / InvPageSize)) * InvPageSize));
             }
             else
             {
-                while (items.Count != ModConfig.itemLimit)
-                    items.RemoveAt(items.Count - 1);
+                while (items.Count / InvPageSize != ModConfig.inventoryPagesCount)
+                    items.RemoveRange(items.Count - InvPageSize, InvPageSize);
             }
+        }
+
+        public static void InventorySetPrevPage()
+        {
+            if (!ModConfig.IsInGame)
+                return;
+
+            List<Item> items = Inventory.item.items;
+            int preLastPageCount = items.Count - InvPageSize;
+
+            List<Item> savedItems = items.Skip(preLastPageCount).Take(InvPageSize).ToList();
+            items.RemoveRange(preLastPageCount, InvPageSize);
+            items.InsertRange(0, savedItems);
+        }
+
+        public static void InventorySetNextPage()
+        {
+            if (!ModConfig.IsInGame)
+                return;
+
+            List<Item> items = Inventory.item.items;
+
+            List<Item> savedItems = items.Take(InvPageSize).ToList();
+            items.RemoveRange(0, InvPageSize);
+            items.AddRange(savedItems);
         }
 
         public static void SetSkullLimit()

@@ -164,8 +164,15 @@ namespace SkulPatcher.UI
 
 
             // Item limit
-            GUI.Label(itemLimitLabelRect, $"Item limit ({ModConfig.itemLimit})");
-            ModConfig.itemLimit = (int)GUI.HorizontalSlider(itemLimitSliderRect, ModConfig.itemLimit, 9f, 32f);
+            GUI.Label(invCountLabelRect, $"Inv. pages ({ModConfig.inventoryPagesCount})");
+
+            if (GUI.Button(invCountButtonPrev, "◀"))
+                GearMenuFuncs.InventorySetPrevPage();
+
+            if (GUI.Button(invCountButtonNext, "▶"))
+                GearMenuFuncs.InventorySetNextPage();
+
+            ModConfig.inventoryPagesCount = (int)GUI.HorizontalSlider(invCountSliderRect, ModConfig.inventoryPagesCount, 1f, 10f);
 
             // Skull limit
             GUI.Label(skullLimitLabelRect, $"Skull limit ({ModConfig.skullLimit})");
@@ -175,7 +182,7 @@ namespace SkulPatcher.UI
             // Apply changes
             if (GUI.Button(applyChangesButton, "Apply changes"))
             {
-                GearMenuFuncs.SetItemLimit();
+                GearMenuFuncs.SetInventoryPagesCount();
                 GearMenuFuncs.SetSkullLimit();
             }
 
@@ -265,6 +272,8 @@ namespace SkulPatcher.UI
         private static Vector2 itemScrollVec = Vector2.zero;
         private static Rect[] itemScrollButtonsRects;
         private static bool[] itemScrollButtonsVisible;
+        private static Rect invCountButtonPrev;
+        private static Rect invCountButtonNext;
 
         private static Rect skullScrollPosRect;
         private static Rect skullScrollViewRect;
@@ -284,8 +293,8 @@ namespace SkulPatcher.UI
 
         private static Rect autoEquipGearToggleRect;
 
-        private static Rect itemLimitLabelRect;
-        private static Rect itemLimitSliderRect;
+        private static Rect invCountLabelRect;
+        private static Rect invCountSliderRect;
 
         private static Rect skullLimitLabelRect;
         private static Rect skullLimitSliderRect;
@@ -353,10 +362,12 @@ namespace SkulPatcher.UI
             row++;
 
             // Item limit
-            itemLimitLabelRect = new Rect(Menu.unit, Menu.unit * row * 1.5f, listWidth, Menu.unit);
+            invCountLabelRect = new Rect(Menu.unit, Menu.unit * row * 1.5f, listWidth - Menu.unit * 4, Menu.unit);
+            invCountButtonPrev = new Rect(listWidth - Menu.unit * 3.5f, Menu.unit * row * 1.5f, Menu.unit * 1.5f, Menu.unit);
+            invCountButtonNext = new Rect(listWidth - Menu.unit * 1.5f, Menu.unit * row * 1.5f, Menu.unit * 1.5f, Menu.unit);
             row++;
 
-            itemLimitSliderRect = new Rect(Menu.unit, Menu.unit * row * 1.5f, listWidth - Menu.unit, Menu.unit);
+            invCountSliderRect = new Rect(Menu.unit, Menu.unit * row * 1.5f, listWidth - Menu.unit, Menu.unit);
             row++;
 
             // Skull limit
