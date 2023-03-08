@@ -19,6 +19,8 @@ namespace SkulPatcher
             if (!ModConfig.IsInGame)
                 return;
 
+            Debug.Log(gearRef.name);
+
             GearRequest request = gearRef.LoadAsync();
             request.WaitForCompletion();
 
