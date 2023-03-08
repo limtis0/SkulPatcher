@@ -78,11 +78,11 @@ namespace SkulPatcher
                 (Category.Percent, Kind.CriticalDamage, "[Combat] CriticalDamage"),
                 (Category.PercentPoint, Kind.CriticalDamage, "[Combat] CriticalDamage"),
 
-                (Category.Fixed, Kind.BasicAttackDamage, "[Combat] BasicAttackDamage"),
                 (Category.Percent, Kind.BasicAttackDamage, "[Combat] BasicAttackDamage"),
+                (Category.PercentPoint, Kind.BasicAttackDamage, "[Combat] BasicAttackDamage"),
 
-                (Category.Fixed, Kind.SkillAttackDamage, "[Combat] SkillAttackDamage"),
                 (Category.Percent, Kind.SkillAttackDamage, "[Combat] SkillAttackDamage"),
+                (Category.PercentPoint, Kind.SkillAttackDamage, "[Combat] SkillAttackDamage"),
 
                 (Category.Percent, Kind.CooldownSpeed, "[General] CooldownSpeed"),
                 (Category.PercentPoint, Kind.CooldownSpeed, "[General] CooldownSpeed"),
