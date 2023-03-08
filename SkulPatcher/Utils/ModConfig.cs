@@ -62,7 +62,7 @@ namespace SkulPatcher
         public static bool bossRushArachnePreviousState = bossRushIncludeArachne;
 
         // Item/Skull limits
-        public static int inventoryPagesCount = 9;
+        public static int inventoryPagesCount = 1;
         public static int skullLimit = 2;
 
         // Utils
