@@ -88,6 +88,8 @@ namespace SkulPatcher
             List<Item> savedItems = items.Skip(preLastPageCount).Take(InvPageSize).ToList();
             items.RemoveRange(preLastPageCount, InvPageSize);
             items.InsertRange(0, savedItems);
+
+            ModConfig.UI.inventory.UpdateGearInfo();
         }
 
         public static void InventorySetNextPage()
@@ -100,6 +102,8 @@ namespace SkulPatcher
             List<Item> savedItems = items.Take(InvPageSize).ToList();
             items.RemoveRange(0, InvPageSize);
             items.AddRange(savedItems);
+
+            ModConfig.UI.inventory.UpdateGearInfo();
         }
 
         public static void SetSkullLimit()
