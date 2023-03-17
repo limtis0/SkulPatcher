@@ -1,5 +1,5 @@
 # SkulPatcher
-A mod for "Skul: The Hero Slayer" that lets you to create your own playing experience
+A mod for "Skul: The Hero Slayer" that lets you create your own playing experience
 <img width="960" alt="Preview" src="https://user-images.githubusercontent.com/45824078/223750601-297c3fd4-e1fd-4e81-b2ac-8c94266a2530.png">
 
 ### Setup premise
