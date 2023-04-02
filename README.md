@@ -24,7 +24,9 @@ Assuming you have .NET Framework 4.7.2 and Visual Studio installed
 4. Build the solution
 
 ### Want to contribute?
-You can create a custom stat for `Stat menu`:
+Check out the ["Issues" page](https://github.com/limtis0/SkulPatcher/issues)
+
+Or, you can create a custom stat for `Stat menu`:
 1. Fork the repository (Branch: `BepInEx`)
 2. Create a new class that inherits from `SpecialStat` in `SkulPatcher/SkulPatcher/Mods/SpecialStats/` folder
 3. Make any feature you want. Many examples can be found in the same folder
