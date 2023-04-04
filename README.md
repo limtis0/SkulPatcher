@@ -1,12 +1,15 @@
 # SkulPatcher
 A mod for "Skul: The Hero Slayer" that lets you create your own playing experience
-<img width="960" alt="Preview" src="https://user-images.githubusercontent.com/45824078/223750601-297c3fd4-e1fd-4e81-b2ac-8c94266a2530.png">
+<img width="960" alt="Untitled" src="https://user-images.githubusercontent.com/45824078/229655741-a45dc6e8-cd80-40c4-976d-8bb4f255c733.png">
 
 ### Setup premise
 `$(SkulFolder)` is a directory where the game is located on your PC
 
 # New versions (v2.0f+)
-### Setup
+### Automatic setup
+Visit [Thunderstore page of this mod](https://thunderstore.io/c/skul-the-hero-slayer/p/Limtis/SkulPatcher/)
+
+### Manual setup
 1. Extract into `$(SkulFolder)/2020.3.34` (You will need to create a folder)
     - [unstripped Unity 2020.3.34 files](https://unity.bepinex.dev/libraries/2020.3.34.zip)
     - [unstripped CoreLibs 2020.3.34 files](https://unity.bepinex.dev/corlibs/2020.3.34.zip)
