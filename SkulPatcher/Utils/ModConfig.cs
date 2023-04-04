@@ -1,4 +1,5 @@
-﻿using GameResources;
+﻿using Characters.Player;
+using GameResources;
 using Level;
 using Scenes;
 using Services;
@@ -69,6 +70,7 @@ namespace SkulPatcher
 
         public static LevelManager Level => Singleton<Service>.Instance.levelManager;
         public static GearResource Gear => GearResource.instance;
+        public static Inventory Inventory => Level.player.playerComponents.inventory;
         public static UIManager UI => Scene<GameBase>.instance.uiManager;
 
         public static bool IsInGame => Level.player is not null;

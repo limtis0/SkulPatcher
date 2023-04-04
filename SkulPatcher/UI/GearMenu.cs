@@ -2,6 +2,7 @@
 using Characters.Gear.Quintessences;
 using Characters.Gear.Weapons;
 using GameResources;
+using SkulPatcher.Mods;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -167,10 +168,10 @@ namespace SkulPatcher.UI
             GUI.Label(invCountLabelRect, $"Inv. pages ({ModConfig.inventoryPagesCount})");
 
             if (GUI.Button(invCountButtonPrev, "◀"))
-                GearMenuFuncs.InventorySetPrevPage();
+                ItemInventoryFuncs.InventorySetPrevPage();
 
             if (GUI.Button(invCountButtonNext, "▶"))
-                GearMenuFuncs.InventorySetNextPage();
+                ItemInventoryFuncs.InventorySetNextPage();
 
             ModConfig.inventoryPagesCount = (int)GUI.HorizontalSlider(invCountSliderRect, ModConfig.inventoryPagesCount, 1f, 10f);
 
@@ -182,7 +183,7 @@ namespace SkulPatcher.UI
             // Apply changes
             if (GUI.Button(applyChangesButton, "Apply changes"))
             {
-                GearMenuFuncs.SetInventoryPagesCount();
+                ItemInventoryFuncs.SetInventoryPagesCount();
                 GearMenuFuncs.SetSkullLimit();
             }
 
