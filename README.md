@@ -7,7 +7,7 @@ A mod for "Skul: The Hero Slayer" that lets you create your own playing experien
 
 # New versions (v2.0f+)
 ### Automatic setup
-Visit [Thunderstore page of this mod](https://thunderstore.io/c/skul-the-hero-slayer/p/Limtis/SkulPatcher/)
+Visit [Thunderstore page of this mod](https://thunderstore.io/c/skul-the-hero-slayer/p/Limtis/SkulPatcher/) and install it with their Mod Manager
 
 ### Manual setup
 1. Extract into `$(SkulFolder)/2020.3.34` (You will need to create a folder)
