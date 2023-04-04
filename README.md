@@ -1,12 +1,15 @@
 # SkulPatcher
-A mod for "Skul: The Hero Slayer" that lets you to create your own playing experience
-<img width="960" alt="Preview" src="https://user-images.githubusercontent.com/45824078/223750601-297c3fd4-e1fd-4e81-b2ac-8c94266a2530.png">
+A mod for "Skul: The Hero Slayer" that lets you create your own playing experience
+<img width="960" alt="Untitled" src="https://user-images.githubusercontent.com/45824078/229655741-a45dc6e8-cd80-40c4-976d-8bb4f255c733.png">
 
 ### Setup premise
 `$(SkulFolder)` is a directory where the game is located on your PC
 
 # New versions (v2.0f+)
-### Setup
+### Automatic setup
+Visit [Thunderstore page of this mod](https://thunderstore.io/c/skul-the-hero-slayer/p/Limtis/SkulPatcher/) and install it with their Mod Manager
+
+### Manual setup
 1. Extract into `$(SkulFolder)/2020.3.34` (You will need to create a folder)
     - [unstripped Unity 2020.3.34 files](https://unity.bepinex.dev/libraries/2020.3.34.zip)
     - [unstripped CoreLibs 2020.3.34 files](https://unity.bepinex.dev/corlibs/2020.3.34.zip)
@@ -24,7 +27,9 @@ Assuming you have .NET Framework 4.7.2 and Visual Studio installed
 4. Build the solution
 
 ### Want to contribute?
-You can create a custom stat for `Stat menu`:
+Check out the ["Issues" page](https://github.com/limtis0/SkulPatcher/issues)
+
+Or, you can create a custom stat for `Stat menu`:
 1. Fork the repository (Branch: `BepInEx`)
 2. Create a new class that inherits from `SpecialStat` in `SkulPatcher/SkulPatcher/Mods/SpecialStats/` folder
 3. Make any feature you want. Many examples can be found in the same folder
