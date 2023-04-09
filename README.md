@@ -6,7 +6,7 @@ A mod for "Skul: The Hero Slayer" that lets you create your own playing experien
 `$(SkulFolder)` is a directory where the game is located on your PC
 
 # New versions (v2.0f+)
-### Automatic setup
+### Automatic setup (Not working for now, but will be soon)
 Visit [Thunderstore page of this mod](https://thunderstore.io/c/skul-the-hero-slayer/p/Limtis/SkulPatcher/) and install it with their Mod Manager
 
 ### Manual setup
